@@ -56,7 +56,6 @@
                     <inputs>
                         <gpu:input>
                             <messageName>tissue_damage_report</messageName>
-
                         </gpu:input>
                     </inputs>                           <!-- optional -->
                     <outputs>
