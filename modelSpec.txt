@@ -1,0 +1,50 @@
+Brief Model Description
+=======================
+- Model to simulate the contribution of senescent fibroblasts to damaged tissue. 
+
+Agents
+======
+- Tissue. Discrete blocks with 'tunable' volume for fine or coarse graining simulations. 
+- Fibroblasts. Migrate towards and repair damaged tissue. Fibroblasts are superimposed on tissue blocks in contineous space.
+
+Fibroblast states
+=================
+- Quiescent
+- Senescent
+- early Senescent
+
+Tissue states
+=============
+- Only 1 state (default), but contains a 'damage' global variable.
+ 
+ Initial cond
+============
+- Simulation is seeded with proportion of fibrobastls early senescent (calculated from probabilities based on 10000 simulations of Piero's )
+
+Tissue Behaviour
+================
+- Tissue has a random chance of being damaged (+1 damage). This is discrete global variable and can take on integer values up to 100. 
+- Damaged tissue can be fixed by quiescent fibroblasts
+
+Fibroblast Behaviour
+====================
+
+When Quiescent
+-------------- 
+- Quiescent cells may migrate around the tissue (potentially towards damaged tissue) 
+- Quiescent cells may undergo transition to early senescent if a cell near it is senescent cell
+- Quiescent cells may proliferate
+- Should quiescent cells have a basal rate of apoptosis?
+
+When early senescent
+--------------------  
+- Early senescent fibroblasts begin counting time units. 
+  When predefined threshold is reached (either 10 days or normally distributed around 10 days), early -> full senescence
+- Early senescent cells have a chance (probability) of being cleared, and they are removed from the simulation
+ 
+When senescent
+-------------- 
+- Once fully senescent, there is no repairation.
+- should fully senescent cells die eventually or just stick around?
+- do senescent cells algo migrate around tissue like quiescent?
+

@@ -1,0 +1,263 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="FLAMEGPU_vcproj.xslt"?>
+<gpu:xmodel xmlns:gpu="http://www.dcs.shef.ac.uk/~paul/XMMLGPU" xmlns="http://www.dcs.shef.ac.uk/~paul/XMML">
+    <name>SenescenceModel</name>
+    <gpu:environment>
+        <gpu:constants>
+            <gpu:variable>
+                <type>float</type>
+                <name>PROB1</name>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
+                <name>TISSUE_SIZE</name>
+            </gpu:variable>
+        </gpu:constants>
+        <gpu:functionFiles>
+            <file>functions.c</file>
+        </gpu:functionFiles>
+        <gpu:initFunctions>
+            <gpu:initFunction>
+                <gpu:name>setConstants</gpu:name>
+            </gpu:initFunction>
+        </gpu:initFunctions>
+    </gpu:environment>
+    <xagents>
+        <gpu:xagent>
+            <name>TissueBlock</name>
+            <memory>
+                <gpu:variable>
+                    <type>int</type>
+                    <name>id</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>float</type>
+                    <name>x</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>float</type>
+                    <name>y</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>float</type>
+                    <name>z</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>int</type>
+                    <name>damage</name>
+                </gpu:variable>
+            </memory>
+            <functions>
+                <gpu:function>
+                    <name>take_damage</name>
+                    <description>Function to add damage to tissue block</description>
+                    <currentState>default</currentState>
+                    <nextState>default</nextState>
+                    <inputs>
+                        <gpu:input>
+                            <messageName>damage_report</messageName>
+                        </gpu:input>
+                    </inputs>                           <!-- optional -->
+                    <outputs>
+                        <gpu:output>
+                            <messageName>damage_report</messageName>
+                            <type>single_message</type>
+                        </gpu:output>
+                    </outputs>                         <!-- optional -->
+                    <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
+                    <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
+                </gpu:function>
+            </functions>
+            <states>
+                <gpu:state>
+                    <name>default</name>
+                    <description>Patch of dermal tissue</description>
+                </gpu:state>
+                <initislState>default</initislState>
+            </states>
+        </gpu:xagent>
+        <gpu:xagent>
+            <name>Fibroblast</name>
+            <memory>
+                <gpu:variable>
+                    <type>int</type>
+                    <name>id</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>float</type>
+                    <name>position_x</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>float</type>
+                    <name>position_y</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>float</type>
+                    <name>position_z</name>
+                </gpu:variable>
+
+                <gpu:variable>
+                    <type>float</type>
+                    <name>direction_x</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>float</type>
+                    <name>direction_y</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>float</type>
+                    <name>direction_z</name>
+                </gpu:variable>
+
+                <gpu:variable>
+                    <type>float</type>
+                    <name>doublings</name>
+                </gpu:variable>
+
+                <gpu:variable>
+                    <type>float</type>
+                    <name>damage</name>
+                </gpu:variable>
+
+            </memory>
+            <functions>
+                <gpu:function>
+                    <name>BystanderEffect</name>
+                    <description>Senescent cells influence non-senescent cells to become senescent</description>
+                    <currentState>Quiescent</currentState>
+                    <nextState>EarlySenescent</nextState>
+                    <inputs>
+                        <gpu:input>
+                            <messageName>location</messageName>
+                        </gpu:input>
+                    </inputs>                           <!-- optional --><!-- optional -->
+                    <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
+                    <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
+                </gpu:function>
+                <gpu:function>
+                    <name>QuiescentMigration</name>
+                    <description>Movement of quiescent cells</description>
+                    <currentState>Quiescent</currentState>
+                    <nextState>Quiescent</nextState>
+                    <inputs>
+                        <gpu:input>
+                            <messageName>location</messageName>
+                        </gpu:input>
+
+                        <gpu:input>
+                            <messageName>tissue_damage</messageName>
+                        </gpu:input>
+                    </inputs>                           <!-- optional -->
+                    <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
+                    <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
+                </gpu:function>
+                <gpu:function>
+                    <name>Senescent</name>
+                    <description>Movement of early senescent cells</description>
+                    <currentState>Senescent</currentState>
+                    <nextState>Senescent</nextState>
+                    <inputs>
+                        <gpu:input>
+                            <messageName>location</messageName>
+                        </gpu:input>
+
+                        <gpu:input>
+                            <messageName>tissue_damage</messageName>
+                        </gpu:input>
+                    </inputs>                           <!-- optional -->
+                    <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
+                    <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
+                </gpu:function>
+                <gpu:function>
+                    <name>EarlySenescentMigration</name>
+                    <description>Movement of early senescent cells</description>
+                    <currentState>EarlySenescent</currentState>
+                    <nextState>EarlySenescent</nextState>
+                    <inputs>
+                        <gpu:input>
+                            <messageName>location</messageName>
+                        </gpu:input>
+
+                        <gpu:input>
+                            <messageName>tissue_damage</messageName>
+                        </gpu:input>
+                    </inputs>                           <!-- optional -->
+                    <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
+                    <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
+                </gpu:function>
+                <gpu:function>
+                    <name>QuiescentTakesDamage</name>
+                    <description>Quiescent fibroblasts randomly take damage</description>
+                    <currentState>Quiescent</currentState>
+                    <nextState>Quiescent</nextState>
+                    <inputs>
+                        <gpu:input>
+                            <messageName>fibroblast_damage_report</messageName>
+                        </gpu:input>
+                    </inputs>
+                    <outputs>
+                        <gpu:output>
+                            <messageName>fibroblast_damage_report</messageName>
+                        </gpu:output>
+                    </outputs>                           <!-- optional -->
+                    <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
+                    <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
+                </gpu:function>
+            </functions>
+            <states>
+                <gpu:state>
+                    <name>Quiescent</name>
+                    <description>A quiescent fibroblast</description>
+                </gpu:state>
+                <gpu:state>
+                    <name>EarlySenescent</name>
+                    <description>A pre-senescent fibroblast</description>
+                </gpu:state>
+                <gpu:state>
+                    <name>Senescent</name>
+                    <description>Senescent fibroblast</description>
+                </gpu:state>
+                <initialState>Quiescent</initialState>
+            </states>
+        </gpu:xagent>
+    </xagents>
+    <messages>
+        <gpu:message>
+            <name>damage_report</name>
+            <variables>
+                <gpu:variable>
+                    <type>int</type>
+                    <name>id</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>float</type>
+                    <name>x</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>float</type>
+                    <name>y</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>float</type>
+                    <name>z</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>int</type>
+                    <name>damage</name>
+                </gpu:variable>
+            </variables>
+            <gpu:partitioningSpatial>
+                <gpu:radius>1</gpu:radius>
+                <gpu:xmin>0.0</gpu:xmin>
+                <gpu:xmax>10</gpu:xmax>
+                <gpu:ymin>0.0</gpu:ymin>
+                <gpu:ymax>10</gpu:ymax>
+                <gpu:zmin>0.0</gpu:zmin>
+                <gpu:zmax>10</gpu:zmax>
+            </gpu:partitioningSpatial>
+            <gpu:bufferSize>4096</gpu:bufferSize>
+        </gpu:message>
+    </messages>
+    <layers>
+    </layers>
+</gpu:xmodel>
