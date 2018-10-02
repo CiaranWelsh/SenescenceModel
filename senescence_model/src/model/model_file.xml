@@ -11,7 +11,57 @@
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
+                <name>PROLIFERATION_PROB</name>
+                <defaultValue>0.1</defaultValue>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
                 <name>TISSUE_SIZE</name>
+                <defaultValue>0.1</defaultValue>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
+                <name>EARLY_SENESCENT_MIGRATION_SCALE</name>
+                <defaultValue>0.001</defaultValue>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
+                <name>SENESCENT_MIGRATION_SCALE</name>
+                <defaultValue>0.001</defaultValue>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
+                <name>QUIESCENT_MIGRATION_SCALE</name>
+                <defaultValue>0.1</defaultValue>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
+                <name>BYSTANDER_DISTANCE</name>
+                <defaultValue>0.1</defaultValue>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
+                <name>BYSTANDER_PROB</name>
+                <defaultValue>0.1</defaultValue>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
+                <name>EXCESSIVE_DAMAGE_AMOUNT</name>
+                <defaultValue>100</defaultValue>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
+                <name>EXCESSIVE_DAMAGE_PROB</name>
+                <defaultValue>0.1</defaultValue>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
+                <name>REPLICATIVE_SEN_AGE</name>
+                <defaultValue>2500</defaultValue>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
+                <name>REPLICATIVE_SEN_PROB</name>
                 <defaultValue>0.1</defaultValue>
             </gpu:variable>
         </gpu:constants>
@@ -107,8 +157,16 @@
                     <name>doublings</name>
                 </gpu:variable>
                 <gpu:variable>
-                    <type>float</type>
+                    <type>int</type>
                     <name>damage</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>int</type>
+                    <name>proliferate_bool</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>int</type>
+                    <name>transition_to_early_sen</name>
                 </gpu:variable>
             </memory>
             <functions>
@@ -179,10 +237,27 @@
                     <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
                 <gpu:function>
-                    <name>Proliferation</name>
+                    <name>Quiescent2Proliferating</name>
                     <description>A fibroblast undergoing cell division</description>
                     <currentState>Quiescent</currentState>
                     <nextState>Proliferating</nextState>
+                    <condition>
+                        <lhs>
+                            <agentVariable>proliferate_bool</agentVariable>
+                        </lhs>
+                        <operator>==</operator>
+                        <rhs>
+                            <value>1</value>
+                        </rhs>
+                    </condition>
+                    <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
+                    <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
+                </gpu:function>
+                <gpu:function>
+                    <name>Proliferation</name>
+                    <description>Cell divides and returns to quiescent</description>
+                    <currentState>Proliferating</currentState>
+                    <nextState>Quiescent</nextState>
                     <xagentOutputs>
                         <gpu:xagentOutput>
                             <xagentName>Fibroblast</xagentName>
@@ -193,49 +268,58 @@
                     <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
                 <gpu:function>
-                    <name>ProliferationCompletion</name>
-                    <description>Proliferation finished</description>
-                    <currentState>Proliferating</currentState>
-                    <nextState>Quiescent</nextState>
-                    <gpu:reallocate>true</gpu:reallocate>          <!-- optional -->
-                    <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
-                </gpu:function>
-                <gpu:function>
                     <name>BystanderEffect</name>
                     <description>Senescent cells influence non-senescent cells to become senescent</description>
                     <currentState>Quiescent</currentState>
-                    <nextState>EarlySenescent</nextState>
+                    <nextState>Quiescent</nextState>
                     <inputs>
                         <gpu:input>
-                            <messageName>location_report</messageName>
+                            <messageName>senescent_location_report</messageName>
                         </gpu:input>
                     </inputs>                           <!-- optional --><!-- optional -->
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
-                    <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
+                    <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
                 <gpu:function>
                     <name>ExcessiveDamage</name>
                     <description>Once a threshold is reached a quiescent cell turns to early senescent</description>
                     <currentState>Quiescent</currentState>
-                    <nextState>EarlySenescent</nextState>
-                    <inputs>
-                        <gpu:input>
-                            <messageName>fibroblast_damage_report</messageName>
-                        </gpu:input>
-                    </inputs>                           <!-- optional --><!-- optional -->
+                    <nextState>Quiescent</nextState>
+                    <!--<inputs>-->
+                        <!--<gpu:input>-->
+                            <!--<messageName>fibroblast_damage_report</messageName>-->
+                        <!--</gpu:input>-->
+                    <!--</inputs>                           &lt;!&ndash; optional &ndash;&gt;&lt;!&ndash; optional &ndash;&gt;-->
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
-                    <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
+                    <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
                 <gpu:function>
                     <name>ReplicativeSenescence</name>
                     <description>Cells have a replicative limit which turns them to early senescent</description>
                     <currentState>Quiescent</currentState>
-                    <nextState>EarlySenescent</nextState>
+                    <nextState>Quiescent</nextState>
                     <inputs>
                         <gpu:input>
                             <messageName>doublings</messageName>
                         </gpu:input>
                     </inputs>                           <!-- optional --><!-- optional -->
+                    <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
+                    <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
+                </gpu:function>
+                <gpu:function>
+                    <name>TransitionToEarlySen</name>
+                    <description>If the transition_to_early_sen variable is 1, execute</description>
+                    <currentState>Quiescent</currentState>
+                    <nextState>EarlySenescent</nextState>
+                    <condition>
+                        <lhs>
+                            <agentVariable>transition_to_early_sen</agentVariable>
+                        </lhs>
+                        <operator>==</operator>
+                        <rhs>
+                            <value>1</value>
+                        </rhs>
+                    </condition>
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
                     <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
@@ -421,7 +505,38 @@
             <gpu:bufferSize>4096</gpu:bufferSize>
         </gpu:message>
         <gpu:message>
-            <name>location_report</name>
+            <name>quiescent_location_report</name>
+            <variables>
+                <gpu:variable>
+                    <type>int</type>
+                    <name>id</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>float</type>
+                    <name>x</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>float</type>
+                    <name>y</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>float</type>
+                    <name>z</name>
+                </gpu:variable>
+            </variables>
+            <gpu:partitioningSpatial>
+                <gpu:radius>1</gpu:radius>
+                <gpu:xmin>0.0</gpu:xmin>
+                <gpu:xmax>10</gpu:xmax>
+                <gpu:ymin>0.0</gpu:ymin>
+                <gpu:ymax>10</gpu:ymax>
+                <gpu:zmin>0.0</gpu:zmin>
+                <gpu:zmax>10</gpu:zmax>
+            </gpu:partitioningSpatial>
+            <gpu:bufferSize>4096</gpu:bufferSize>
+        </gpu:message>
+        <gpu:message>
+            <name>senescent_location_report</name>
             <variables>
                 <gpu:variable>
                     <type>int</type>
@@ -490,7 +605,7 @@
         </layer>
         <layer>
             <gpu:layerFunction>
-                <name>ProliferationCompletion</name>
+                <name>Proliferation</name>
             </gpu:layerFunction>
         </layer>
         <layer>

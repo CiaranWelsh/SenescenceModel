@@ -182,10 +182,50 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
     sprintf(data, "%f", (*get_TISSUE_DAMAGE_PROB()));
     fputs(data, file);
     fputs("</TISSUE_DAMAGE_PROB>\n", file);
+    fputs("\t<PROLIFERATION_PROB>", file);
+    sprintf(data, "%f", (*get_PROLIFERATION_PROB()));
+    fputs(data, file);
+    fputs("</PROLIFERATION_PROB>\n", file);
     fputs("\t<TISSUE_SIZE>", file);
     sprintf(data, "%f", (*get_TISSUE_SIZE()));
     fputs(data, file);
     fputs("</TISSUE_SIZE>\n", file);
+    fputs("\t<EARLY_SENESCENT_MIGRATION_SCALE>", file);
+    sprintf(data, "%f", (*get_EARLY_SENESCENT_MIGRATION_SCALE()));
+    fputs(data, file);
+    fputs("</EARLY_SENESCENT_MIGRATION_SCALE>\n", file);
+    fputs("\t<SENESCENT_MIGRATION_SCALE>", file);
+    sprintf(data, "%f", (*get_SENESCENT_MIGRATION_SCALE()));
+    fputs(data, file);
+    fputs("</SENESCENT_MIGRATION_SCALE>\n", file);
+    fputs("\t<QUIESCENT_MIGRATION_SCALE>", file);
+    sprintf(data, "%f", (*get_QUIESCENT_MIGRATION_SCALE()));
+    fputs(data, file);
+    fputs("</QUIESCENT_MIGRATION_SCALE>\n", file);
+    fputs("\t<BYSTANDER_DISTANCE>", file);
+    sprintf(data, "%f", (*get_BYSTANDER_DISTANCE()));
+    fputs(data, file);
+    fputs("</BYSTANDER_DISTANCE>\n", file);
+    fputs("\t<BYSTANDER_PROB>", file);
+    sprintf(data, "%f", (*get_BYSTANDER_PROB()));
+    fputs(data, file);
+    fputs("</BYSTANDER_PROB>\n", file);
+    fputs("\t<EXCESSIVE_DAMAGE_AMOUNT>", file);
+    sprintf(data, "%f", (*get_EXCESSIVE_DAMAGE_AMOUNT()));
+    fputs(data, file);
+    fputs("</EXCESSIVE_DAMAGE_AMOUNT>\n", file);
+    fputs("\t<EXCESSIVE_DAMAGE_PROB>", file);
+    sprintf(data, "%f", (*get_EXCESSIVE_DAMAGE_PROB()));
+    fputs(data, file);
+    fputs("</EXCESSIVE_DAMAGE_PROB>\n", file);
+    fputs("\t<REPLICATIVE_SEN_AGE>", file);
+    sprintf(data, "%f", (*get_REPLICATIVE_SEN_AGE()));
+    fputs(data, file);
+    fputs("</REPLICATIVE_SEN_AGE>\n", file);
+    fputs("\t<REPLICATIVE_SEN_PROB>", file);
+    sprintf(data, "%f", (*get_REPLICATIVE_SEN_PROB()));
+    fputs(data, file);
+    fputs("</REPLICATIVE_SEN_PROB>\n", file);
 	fputs("</environment>\n" , file);
 
 	//Write each TissueBlock agent to xml
@@ -251,9 +291,19 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
 		fputs("</doublings>\n", file);
         
 		fputs("<damage>", file);
-        sprintf(data, "%f", h_Fibroblasts_Quiescent->damage[i]);
+        sprintf(data, "%d", h_Fibroblasts_Quiescent->damage[i]);
 		fputs(data, file);
 		fputs("</damage>\n", file);
+        
+		fputs("<proliferate_bool>", file);
+        sprintf(data, "%d", h_Fibroblasts_Quiescent->proliferate_bool[i]);
+		fputs(data, file);
+		fputs("</proliferate_bool>\n", file);
+        
+		fputs("<transition_to_early_sen>", file);
+        sprintf(data, "%d", h_Fibroblasts_Quiescent->transition_to_early_sen[i]);
+		fputs(data, file);
+		fputs("</transition_to_early_sen>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
@@ -288,9 +338,19 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
 		fputs("</doublings>\n", file);
         
 		fputs("<damage>", file);
-        sprintf(data, "%f", h_Fibroblasts_EarlySenescent->damage[i]);
+        sprintf(data, "%d", h_Fibroblasts_EarlySenescent->damage[i]);
 		fputs(data, file);
 		fputs("</damage>\n", file);
+        
+		fputs("<proliferate_bool>", file);
+        sprintf(data, "%d", h_Fibroblasts_EarlySenescent->proliferate_bool[i]);
+		fputs(data, file);
+		fputs("</proliferate_bool>\n", file);
+        
+		fputs("<transition_to_early_sen>", file);
+        sprintf(data, "%d", h_Fibroblasts_EarlySenescent->transition_to_early_sen[i]);
+		fputs(data, file);
+		fputs("</transition_to_early_sen>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
@@ -325,9 +385,19 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
 		fputs("</doublings>\n", file);
         
 		fputs("<damage>", file);
-        sprintf(data, "%f", h_Fibroblasts_Senescent->damage[i]);
+        sprintf(data, "%d", h_Fibroblasts_Senescent->damage[i]);
 		fputs(data, file);
 		fputs("</damage>\n", file);
+        
+		fputs("<proliferate_bool>", file);
+        sprintf(data, "%d", h_Fibroblasts_Senescent->proliferate_bool[i]);
+		fputs(data, file);
+		fputs("</proliferate_bool>\n", file);
+        
+		fputs("<transition_to_early_sen>", file);
+        sprintf(data, "%d", h_Fibroblasts_Senescent->transition_to_early_sen[i]);
+		fputs(data, file);
+		fputs("</transition_to_early_sen>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
@@ -362,9 +432,19 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
 		fputs("</doublings>\n", file);
         
 		fputs("<damage>", file);
-        sprintf(data, "%f", h_Fibroblasts_Proliferating->damage[i]);
+        sprintf(data, "%d", h_Fibroblasts_Proliferating->damage[i]);
 		fputs(data, file);
 		fputs("</damage>\n", file);
+        
+		fputs("<proliferate_bool>", file);
+        sprintf(data, "%d", h_Fibroblasts_Proliferating->proliferate_bool[i]);
+		fputs(data, file);
+		fputs("</proliferate_bool>\n", file);
+        
+		fputs("<transition_to_early_sen>", file);
+        sprintf(data, "%d", h_Fibroblasts_Proliferating->transition_to_early_sen[i]);
+		fputs(data, file);
+		fputs("</transition_to_early_sen>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
@@ -399,9 +479,19 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
 		fputs("</doublings>\n", file);
         
 		fputs("<damage>", file);
-        sprintf(data, "%f", h_Fibroblasts_Repair->damage[i]);
+        sprintf(data, "%d", h_Fibroblasts_Repair->damage[i]);
 		fputs(data, file);
 		fputs("</damage>\n", file);
+        
+		fputs("<proliferate_bool>", file);
+        sprintf(data, "%d", h_Fibroblasts_Repair->proliferate_bool[i]);
+		fputs(data, file);
+		fputs("</proliferate_bool>\n", file);
+        
+		fputs("<transition_to_early_sen>", file);
+        sprintf(data, "%d", h_Fibroblasts_Repair->transition_to_early_sen[i]);
+		fputs(data, file);
+		fputs("</transition_to_early_sen>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
@@ -421,8 +511,28 @@ PROFILE_SCOPED_RANGE("initEnvVars");
 
     float t_TISSUE_DAMAGE_PROB = (float)0.1;
     set_TISSUE_DAMAGE_PROB(&t_TISSUE_DAMAGE_PROB);
+    float t_PROLIFERATION_PROB = (float)0.1;
+    set_PROLIFERATION_PROB(&t_PROLIFERATION_PROB);
     float t_TISSUE_SIZE = (float)0.1;
     set_TISSUE_SIZE(&t_TISSUE_SIZE);
+    float t_EARLY_SENESCENT_MIGRATION_SCALE = (float)0.001;
+    set_EARLY_SENESCENT_MIGRATION_SCALE(&t_EARLY_SENESCENT_MIGRATION_SCALE);
+    float t_SENESCENT_MIGRATION_SCALE = (float)0.001;
+    set_SENESCENT_MIGRATION_SCALE(&t_SENESCENT_MIGRATION_SCALE);
+    float t_QUIESCENT_MIGRATION_SCALE = (float)0.1;
+    set_QUIESCENT_MIGRATION_SCALE(&t_QUIESCENT_MIGRATION_SCALE);
+    float t_BYSTANDER_DISTANCE = (float)0.1;
+    set_BYSTANDER_DISTANCE(&t_BYSTANDER_DISTANCE);
+    float t_BYSTANDER_PROB = (float)0.1;
+    set_BYSTANDER_PROB(&t_BYSTANDER_PROB);
+    float t_EXCESSIVE_DAMAGE_AMOUNT = (float)100;
+    set_EXCESSIVE_DAMAGE_AMOUNT(&t_EXCESSIVE_DAMAGE_AMOUNT);
+    float t_EXCESSIVE_DAMAGE_PROB = (float)0.1;
+    set_EXCESSIVE_DAMAGE_PROB(&t_EXCESSIVE_DAMAGE_PROB);
+    float t_REPLICATIVE_SEN_AGE = (float)2500;
+    set_REPLICATIVE_SEN_AGE(&t_REPLICATIVE_SEN_AGE);
+    float t_REPLICATIVE_SEN_PROB = (float)0.1;
+    set_REPLICATIVE_SEN_PROB(&t_REPLICATIVE_SEN_PROB);
 }
 
 void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_TissueBlocks, int* h_xmachine_memory_TissueBlock_count,xmachine_memory_Fibroblast_list* h_Fibroblasts, int* h_xmachine_memory_Fibroblast_count)
@@ -456,12 +566,34 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
     int in_Fibroblast_z;
     int in_Fibroblast_doublings;
     int in_Fibroblast_damage;
+    int in_Fibroblast_proliferate_bool;
+    int in_Fibroblast_transition_to_early_sen;
     
     /* tags for environment global variables */
     int in_env;
     int in_env_TISSUE_DAMAGE_PROB;
     
+    int in_env_PROLIFERATION_PROB;
+    
     int in_env_TISSUE_SIZE;
+    
+    int in_env_EARLY_SENESCENT_MIGRATION_SCALE;
+    
+    int in_env_SENESCENT_MIGRATION_SCALE;
+    
+    int in_env_QUIESCENT_MIGRATION_SCALE;
+    
+    int in_env_BYSTANDER_DISTANCE;
+    
+    int in_env_BYSTANDER_PROB;
+    
+    int in_env_EXCESSIVE_DAMAGE_AMOUNT;
+    
+    int in_env_EXCESSIVE_DAMAGE_PROB;
+    
+    int in_env_REPLICATIVE_SEN_AGE;
+    
+    int in_env_REPLICATIVE_SEN_PROB;
     
 	/* set agent count to zero */
 	*h_xmachine_memory_TissueBlock_count = 0;
@@ -478,11 +610,23 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 	float Fibroblast_y;
 	float Fibroblast_z;
 	float Fibroblast_doublings;
-	float Fibroblast_damage;
+	int Fibroblast_damage;
+	int Fibroblast_proliferate_bool;
+	int Fibroblast_transition_to_early_sen;
 
     /* Variables for environment variables */
     float env_TISSUE_DAMAGE_PROB;
+    float env_PROLIFERATION_PROB;
     float env_TISSUE_SIZE;
+    float env_EARLY_SENESCENT_MIGRATION_SCALE;
+    float env_SENESCENT_MIGRATION_SCALE;
+    float env_QUIESCENT_MIGRATION_SCALE;
+    float env_BYSTANDER_DISTANCE;
+    float env_BYSTANDER_PROB;
+    float env_EXCESSIVE_DAMAGE_AMOUNT;
+    float env_EXCESSIVE_DAMAGE_PROB;
+    float env_REPLICATIVE_SEN_AGE;
+    float env_REPLICATIVE_SEN_PROB;
     
 
 
@@ -512,8 +656,20 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 	in_Fibroblast_z = 0;
 	in_Fibroblast_doublings = 0;
 	in_Fibroblast_damage = 0;
+	in_Fibroblast_proliferate_bool = 0;
+	in_Fibroblast_transition_to_early_sen = 0;
     in_env_TISSUE_DAMAGE_PROB = 0;
+    in_env_PROLIFERATION_PROB = 0;
     in_env_TISSUE_SIZE = 0;
+    in_env_EARLY_SENESCENT_MIGRATION_SCALE = 0;
+    in_env_SENESCENT_MIGRATION_SCALE = 0;
+    in_env_QUIESCENT_MIGRATION_SCALE = 0;
+    in_env_BYSTANDER_DISTANCE = 0;
+    in_env_BYSTANDER_PROB = 0;
+    in_env_EXCESSIVE_DAMAGE_AMOUNT = 0;
+    in_env_EXCESSIVE_DAMAGE_PROB = 0;
+    in_env_REPLICATIVE_SEN_AGE = 0;
+    in_env_REPLICATIVE_SEN_PROB = 0;
 	//set all TissueBlock values to 0
 	//If this is not done then it will cause errors in emu mode where undefined memory is not 0
 	for (int k=0; k<xmachine_memory_TissueBlock_MAX; k++)
@@ -535,6 +691,8 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 		h_Fibroblasts->z[k] = 0;
 		h_Fibroblasts->doublings[k] = 0;
 		h_Fibroblasts->damage[k] = 0;
+		h_Fibroblasts->proliferate_bool[k] = 0;
+		h_Fibroblasts->transition_to_early_sen[k] = 0;
 	}
 	
 
@@ -550,10 +708,22 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
     Fibroblast_z = 0;
     Fibroblast_doublings = 0;
     Fibroblast_damage = 0;
+    Fibroblast_proliferate_bool = 0;
+    Fibroblast_transition_to_early_sen = 0;
 
     /* Default variables for environment variables */
     env_TISSUE_DAMAGE_PROB = 0.1;
+    env_PROLIFERATION_PROB = 0.1;
     env_TISSUE_SIZE = 0.1;
+    env_EARLY_SENESCENT_MIGRATION_SCALE = 0.001;
+    env_SENESCENT_MIGRATION_SCALE = 0.001;
+    env_QUIESCENT_MIGRATION_SCALE = 0.1;
+    env_BYSTANDER_DISTANCE = 0.1;
+    env_BYSTANDER_PROB = 0.1;
+    env_EXCESSIVE_DAMAGE_AMOUNT = 100;
+    env_EXCESSIVE_DAMAGE_PROB = 0.1;
+    env_REPLICATIVE_SEN_AGE = 2500;
+    env_REPLICATIVE_SEN_PROB = 0.1;
     
     
     // If no input path was specified, issue a message and return.
@@ -710,6 +880,8 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
                     
 					h_Fibroblasts->doublings[*h_xmachine_memory_Fibroblast_count] = Fibroblast_doublings;
 					h_Fibroblasts->damage[*h_xmachine_memory_Fibroblast_count] = Fibroblast_damage;
+					h_Fibroblasts->proliferate_bool[*h_xmachine_memory_Fibroblast_count] = Fibroblast_proliferate_bool;
+					h_Fibroblasts->transition_to_early_sen[*h_xmachine_memory_Fibroblast_count] = Fibroblast_transition_to_early_sen;
 					(*h_xmachine_memory_Fibroblast_count) ++;	
 				}
 				else
@@ -731,6 +903,8 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
                 Fibroblast_z = 0;
                 Fibroblast_doublings = 0;
                 Fibroblast_damage = 0;
+                Fibroblast_proliferate_bool = 0;
+                Fibroblast_transition_to_early_sen = 0;
                 
                 in_xagent = 0;
 			}
@@ -756,12 +930,36 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 			if(strcmp(buffer, "/doublings") == 0) in_Fibroblast_doublings = 0;
 			if(strcmp(buffer, "damage") == 0) in_Fibroblast_damage = 1;
 			if(strcmp(buffer, "/damage") == 0) in_Fibroblast_damage = 0;
+			if(strcmp(buffer, "proliferate_bool") == 0) in_Fibroblast_proliferate_bool = 1;
+			if(strcmp(buffer, "/proliferate_bool") == 0) in_Fibroblast_proliferate_bool = 0;
+			if(strcmp(buffer, "transition_to_early_sen") == 0) in_Fibroblast_transition_to_early_sen = 1;
+			if(strcmp(buffer, "/transition_to_early_sen") == 0) in_Fibroblast_transition_to_early_sen = 0;
 			
             /* environment variables */
             if(strcmp(buffer, "TISSUE_DAMAGE_PROB") == 0) in_env_TISSUE_DAMAGE_PROB = 1;
             if(strcmp(buffer, "/TISSUE_DAMAGE_PROB") == 0) in_env_TISSUE_DAMAGE_PROB = 0;
+			if(strcmp(buffer, "PROLIFERATION_PROB") == 0) in_env_PROLIFERATION_PROB = 1;
+            if(strcmp(buffer, "/PROLIFERATION_PROB") == 0) in_env_PROLIFERATION_PROB = 0;
 			if(strcmp(buffer, "TISSUE_SIZE") == 0) in_env_TISSUE_SIZE = 1;
             if(strcmp(buffer, "/TISSUE_SIZE") == 0) in_env_TISSUE_SIZE = 0;
+			if(strcmp(buffer, "EARLY_SENESCENT_MIGRATION_SCALE") == 0) in_env_EARLY_SENESCENT_MIGRATION_SCALE = 1;
+            if(strcmp(buffer, "/EARLY_SENESCENT_MIGRATION_SCALE") == 0) in_env_EARLY_SENESCENT_MIGRATION_SCALE = 0;
+			if(strcmp(buffer, "SENESCENT_MIGRATION_SCALE") == 0) in_env_SENESCENT_MIGRATION_SCALE = 1;
+            if(strcmp(buffer, "/SENESCENT_MIGRATION_SCALE") == 0) in_env_SENESCENT_MIGRATION_SCALE = 0;
+			if(strcmp(buffer, "QUIESCENT_MIGRATION_SCALE") == 0) in_env_QUIESCENT_MIGRATION_SCALE = 1;
+            if(strcmp(buffer, "/QUIESCENT_MIGRATION_SCALE") == 0) in_env_QUIESCENT_MIGRATION_SCALE = 0;
+			if(strcmp(buffer, "BYSTANDER_DISTANCE") == 0) in_env_BYSTANDER_DISTANCE = 1;
+            if(strcmp(buffer, "/BYSTANDER_DISTANCE") == 0) in_env_BYSTANDER_DISTANCE = 0;
+			if(strcmp(buffer, "BYSTANDER_PROB") == 0) in_env_BYSTANDER_PROB = 1;
+            if(strcmp(buffer, "/BYSTANDER_PROB") == 0) in_env_BYSTANDER_PROB = 0;
+			if(strcmp(buffer, "EXCESSIVE_DAMAGE_AMOUNT") == 0) in_env_EXCESSIVE_DAMAGE_AMOUNT = 1;
+            if(strcmp(buffer, "/EXCESSIVE_DAMAGE_AMOUNT") == 0) in_env_EXCESSIVE_DAMAGE_AMOUNT = 0;
+			if(strcmp(buffer, "EXCESSIVE_DAMAGE_PROB") == 0) in_env_EXCESSIVE_DAMAGE_PROB = 1;
+            if(strcmp(buffer, "/EXCESSIVE_DAMAGE_PROB") == 0) in_env_EXCESSIVE_DAMAGE_PROB = 0;
+			if(strcmp(buffer, "REPLICATIVE_SEN_AGE") == 0) in_env_REPLICATIVE_SEN_AGE = 1;
+            if(strcmp(buffer, "/REPLICATIVE_SEN_AGE") == 0) in_env_REPLICATIVE_SEN_AGE = 0;
+			if(strcmp(buffer, "REPLICATIVE_SEN_PROB") == 0) in_env_REPLICATIVE_SEN_PROB = 1;
+            if(strcmp(buffer, "/REPLICATIVE_SEN_PROB") == 0) in_env_REPLICATIVE_SEN_PROB = 0;
 			
 
 			/* End of tag and reset buffer */
@@ -811,7 +1009,13 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
                     Fibroblast_doublings = (float) fgpu_atof(buffer); 
                 }
 				if(in_Fibroblast_damage){
-                    Fibroblast_damage = (float) fgpu_atof(buffer); 
+                    Fibroblast_damage = (int) fpgu_strtol(buffer); 
+                }
+				if(in_Fibroblast_proliferate_bool){
+                    Fibroblast_proliferate_bool = (int) fpgu_strtol(buffer); 
+                }
+				if(in_Fibroblast_transition_to_early_sen){
+                    Fibroblast_transition_to_early_sen = (int) fpgu_strtol(buffer); 
                 }
 				
             }
@@ -823,11 +1027,81 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
                     set_TISSUE_DAMAGE_PROB(&env_TISSUE_DAMAGE_PROB);
                   
               }
+            if(in_env_PROLIFERATION_PROB){
+              
+                    env_PROLIFERATION_PROB = (float) fgpu_atof(buffer);
+                    
+                    set_PROLIFERATION_PROB(&env_PROLIFERATION_PROB);
+                  
+              }
             if(in_env_TISSUE_SIZE){
               
                     env_TISSUE_SIZE = (float) fgpu_atof(buffer);
                     
                     set_TISSUE_SIZE(&env_TISSUE_SIZE);
+                  
+              }
+            if(in_env_EARLY_SENESCENT_MIGRATION_SCALE){
+              
+                    env_EARLY_SENESCENT_MIGRATION_SCALE = (float) fgpu_atof(buffer);
+                    
+                    set_EARLY_SENESCENT_MIGRATION_SCALE(&env_EARLY_SENESCENT_MIGRATION_SCALE);
+                  
+              }
+            if(in_env_SENESCENT_MIGRATION_SCALE){
+              
+                    env_SENESCENT_MIGRATION_SCALE = (float) fgpu_atof(buffer);
+                    
+                    set_SENESCENT_MIGRATION_SCALE(&env_SENESCENT_MIGRATION_SCALE);
+                  
+              }
+            if(in_env_QUIESCENT_MIGRATION_SCALE){
+              
+                    env_QUIESCENT_MIGRATION_SCALE = (float) fgpu_atof(buffer);
+                    
+                    set_QUIESCENT_MIGRATION_SCALE(&env_QUIESCENT_MIGRATION_SCALE);
+                  
+              }
+            if(in_env_BYSTANDER_DISTANCE){
+              
+                    env_BYSTANDER_DISTANCE = (float) fgpu_atof(buffer);
+                    
+                    set_BYSTANDER_DISTANCE(&env_BYSTANDER_DISTANCE);
+                  
+              }
+            if(in_env_BYSTANDER_PROB){
+              
+                    env_BYSTANDER_PROB = (float) fgpu_atof(buffer);
+                    
+                    set_BYSTANDER_PROB(&env_BYSTANDER_PROB);
+                  
+              }
+            if(in_env_EXCESSIVE_DAMAGE_AMOUNT){
+              
+                    env_EXCESSIVE_DAMAGE_AMOUNT = (float) fgpu_atof(buffer);
+                    
+                    set_EXCESSIVE_DAMAGE_AMOUNT(&env_EXCESSIVE_DAMAGE_AMOUNT);
+                  
+              }
+            if(in_env_EXCESSIVE_DAMAGE_PROB){
+              
+                    env_EXCESSIVE_DAMAGE_PROB = (float) fgpu_atof(buffer);
+                    
+                    set_EXCESSIVE_DAMAGE_PROB(&env_EXCESSIVE_DAMAGE_PROB);
+                  
+              }
+            if(in_env_REPLICATIVE_SEN_AGE){
+              
+                    env_REPLICATIVE_SEN_AGE = (float) fgpu_atof(buffer);
+                    
+                    set_REPLICATIVE_SEN_AGE(&env_REPLICATIVE_SEN_AGE);
+                  
+              }
+            if(in_env_REPLICATIVE_SEN_PROB){
+              
+                    env_REPLICATIVE_SEN_PROB = (float) fgpu_atof(buffer);
+                    
+                    set_REPLICATIVE_SEN_PROB(&env_REPLICATIVE_SEN_PROB);
                   
               }
             

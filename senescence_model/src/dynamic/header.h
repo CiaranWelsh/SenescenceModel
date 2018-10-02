@@ -92,8 +92,11 @@ typedef glm::dvec4 dvec4;
 //Maximum population size of xmachine_mmessage_count
 #define xmachine_message_count_MAX 4096
 
-//Maximum population size of xmachine_mmessage_location_report
-#define xmachine_message_location_report_MAX 4096
+//Maximum population size of xmachine_mmessage_quiescent_location_report
+#define xmachine_message_quiescent_location_report_MAX 4096
+
+//Maximum population size of xmachine_mmessage_senescent_location_report
+#define xmachine_message_senescent_location_report_MAX 4096
 
 
 /* Define preprocessor symbols for each message to specify the type, to simplify / improve portability */
@@ -102,15 +105,18 @@ typedef glm::dvec4 dvec4;
 #define xmachine_message_tissue_damage_report_partitioningSpatial
 #define xmachine_message_doublings_partitioningNone
 #define xmachine_message_count_partitioningNone
-#define xmachine_message_location_report_partitioningSpatial
+#define xmachine_message_quiescent_location_report_partitioningSpatial
+#define xmachine_message_senescent_location_report_partitioningSpatial
 
 /* Spatial partitioning grid size definitions */
 //xmachine_message_fibroblast_damage_report partition grid size (gridDim.X*gridDim.Y*gridDim.Z)
 #define xmachine_message_fibroblast_damage_report_grid_size 1000
 //xmachine_message_tissue_damage_report partition grid size (gridDim.X*gridDim.Y*gridDim.Z)
 #define xmachine_message_tissue_damage_report_grid_size 1000
-//xmachine_message_location_report partition grid size (gridDim.X*gridDim.Y*gridDim.Z)
-#define xmachine_message_location_report_grid_size 1000
+//xmachine_message_quiescent_location_report partition grid size (gridDim.X*gridDim.Y*gridDim.Z)
+#define xmachine_message_quiescent_location_report_grid_size 1000
+//xmachine_message_senescent_location_report partition grid size (gridDim.X*gridDim.Y*gridDim.Z)
+#define xmachine_message_senescent_location_report_grid_size 1000
 
 /* Static Graph size definitions*/
   
@@ -172,7 +178,9 @@ struct __align__(16) xmachine_memory_Fibroblast
     float y;    /**< X-machine memory variable y of type float.*/
     float z;    /**< X-machine memory variable z of type float.*/
     float doublings;    /**< X-machine memory variable doublings of type float.*/
-    float damage;    /**< X-machine memory variable damage of type float.*/
+    int damage;    /**< X-machine memory variable damage of type int.*/
+    int proliferate_bool;    /**< X-machine memory variable proliferate_bool of type int.*/
+    int transition_to_early_sen;    /**< X-machine memory variable transition_to_early_sen of type int.*/
 };
 
 
@@ -241,11 +249,29 @@ struct __align__(16) xmachine_message_count
     int number;        /**< Message variable number of type int.*/
 };
 
-/** struct xmachine_message_location_report
+/** struct xmachine_message_quiescent_location_report
  * Spatial Partitioning
  * Holds all message variables and is aligned to help with coalesced reads on the GPU
  */
-struct __align__(16) xmachine_message_location_report
+struct __align__(16) xmachine_message_quiescent_location_report
+{	
+    /* Spatial Partitioning Variables */
+    glm::ivec3 _relative_cell;    /**< Relative cell position from agent grid cell position range -1 to 1 */
+    int _cell_index_max;    /**< Max boundary value of current cell */
+    glm::ivec3 _agent_grid_cell;  /**< Agents partition cell position */
+    int _cell_index;        /**< Index of position in current cell */  
+      
+    int id;        /**< Message variable id of type int.*/  
+    float x;        /**< Message variable x of type float.*/  
+    float y;        /**< Message variable y of type float.*/  
+    float z;        /**< Message variable z of type float.*/
+};
+
+/** struct xmachine_message_senescent_location_report
+ * Spatial Partitioning
+ * Holds all message variables and is aligned to help with coalesced reads on the GPU
+ */
+struct __align__(16) xmachine_message_senescent_location_report
 {	
     /* Spatial Partitioning Variables */
     glm::ivec3 _relative_cell;    /**< Relative cell position from agent grid cell position range -1 to 1 */
@@ -295,7 +321,9 @@ struct xmachine_memory_Fibroblast_list
     float y [xmachine_memory_Fibroblast_MAX];    /**< X-machine memory variable list y of type float.*/
     float z [xmachine_memory_Fibroblast_MAX];    /**< X-machine memory variable list z of type float.*/
     float doublings [xmachine_memory_Fibroblast_MAX];    /**< X-machine memory variable list doublings of type float.*/
-    float damage [xmachine_memory_Fibroblast_MAX];    /**< X-machine memory variable list damage of type float.*/
+    int damage [xmachine_memory_Fibroblast_MAX];    /**< X-machine memory variable list damage of type int.*/
+    int proliferate_bool [xmachine_memory_Fibroblast_MAX];    /**< X-machine memory variable list proliferate_bool of type int.*/
+    int transition_to_early_sen [xmachine_memory_Fibroblast_MAX];    /**< X-machine memory variable list transition_to_early_sen of type int.*/
 };
 
 
@@ -366,20 +394,37 @@ struct xmachine_message_count_list
     
 };
 
-/** struct xmachine_message_location_report_list
+/** struct xmachine_message_quiescent_location_report_list
  * Spatial Partitioning
  * Structure of Array for memory coalescing 
  */
-struct xmachine_message_location_report_list
+struct xmachine_message_quiescent_location_report_list
 {
     /* Non discrete messages have temp variables used for reductions with optional message outputs */
-    int _position [xmachine_message_location_report_MAX];    /**< Holds agents position in the 1D agent list */
-    int _scan_input [xmachine_message_location_report_MAX];  /**< Used during parallel prefix sum */
+    int _position [xmachine_message_quiescent_location_report_MAX];    /**< Holds agents position in the 1D agent list */
+    int _scan_input [xmachine_message_quiescent_location_report_MAX];  /**< Used during parallel prefix sum */
     
-    int id [xmachine_message_location_report_MAX];    /**< Message memory variable list id of type int.*/
-    float x [xmachine_message_location_report_MAX];    /**< Message memory variable list x of type float.*/
-    float y [xmachine_message_location_report_MAX];    /**< Message memory variable list y of type float.*/
-    float z [xmachine_message_location_report_MAX];    /**< Message memory variable list z of type float.*/
+    int id [xmachine_message_quiescent_location_report_MAX];    /**< Message memory variable list id of type int.*/
+    float x [xmachine_message_quiescent_location_report_MAX];    /**< Message memory variable list x of type float.*/
+    float y [xmachine_message_quiescent_location_report_MAX];    /**< Message memory variable list y of type float.*/
+    float z [xmachine_message_quiescent_location_report_MAX];    /**< Message memory variable list z of type float.*/
+    
+};
+
+/** struct xmachine_message_senescent_location_report_list
+ * Spatial Partitioning
+ * Structure of Array for memory coalescing 
+ */
+struct xmachine_message_senescent_location_report_list
+{
+    /* Non discrete messages have temp variables used for reductions with optional message outputs */
+    int _position [xmachine_message_senescent_location_report_MAX];    /**< Holds agents position in the 1D agent list */
+    int _scan_input [xmachine_message_senescent_location_report_MAX];  /**< Used during parallel prefix sum */
+    
+    int id [xmachine_message_senescent_location_report_MAX];    /**< Message memory variable list id of type int.*/
+    float x [xmachine_message_senescent_location_report_MAX];    /**< Message memory variable list x of type float.*/
+    float y [xmachine_message_senescent_location_report_MAX];    /**< Message memory variable list y of type float.*/
+    float z [xmachine_message_senescent_location_report_MAX];    /**< Message memory variable list z of type float.*/
     
 };
 
@@ -405,13 +450,22 @@ struct xmachine_message_tissue_damage_report_PBM
 	int end_or_count[xmachine_message_tissue_damage_report_grid_size];
 };
 
-/** struct xmachine_message_location_report_PBM
- * Partition Boundary Matrix (PBM) for xmachine_message_location_report 
+/** struct xmachine_message_quiescent_location_report_PBM
+ * Partition Boundary Matrix (PBM) for xmachine_message_quiescent_location_report 
  */
-struct xmachine_message_location_report_PBM
+struct xmachine_message_quiescent_location_report_PBM
 {
-	int start[xmachine_message_location_report_grid_size];
-	int end_or_count[xmachine_message_location_report_grid_size];
+	int start[xmachine_message_quiescent_location_report_grid_size];
+	int end_or_count[xmachine_message_quiescent_location_report_grid_size];
+};
+
+/** struct xmachine_message_senescent_location_report_PBM
+ * Partition Boundary Matrix (PBM) for xmachine_message_senescent_location_report 
+ */
+struct xmachine_message_senescent_location_report_PBM
+{
+	int start[xmachine_message_senescent_location_report_grid_size];
+	int end_or_count[xmachine_message_senescent_location_report_grid_size];
 };
 
 
@@ -511,6 +565,13 @@ __FLAME_GPU_FUNC__ int QuiescentTakesDamage(xmachine_memory_Fibroblast* agent, x
 __FLAME_GPU_FUNC__ int QuiescentSendDamageReport(xmachine_memory_Fibroblast* agent, xmachine_message_fibroblast_damage_report_list* fibroblast_damage_report_messages, RNG_rand48* rand48);
 
 /**
+ * Quiescent2Proliferating FLAMEGPU Agent Function
+ * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
+ * @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
+ */
+__FLAME_GPU_FUNC__ int Quiescent2Proliferating(xmachine_memory_Fibroblast* agent, RNG_rand48* rand48);
+
+/**
  * Proliferation FLAMEGPU Agent Function
  * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
  * @param Fibroblast_agents Pointer to agent list of type xmachine_memory_Fibroblast_list. This must be passed as an argument to the add_Fibroblast_agent function to add a new agent.
@@ -518,32 +579,32 @@ __FLAME_GPU_FUNC__ int QuiescentSendDamageReport(xmachine_memory_Fibroblast* age
 __FLAME_GPU_FUNC__ int Proliferation(xmachine_memory_Fibroblast* agent, xmachine_memory_Fibroblast_list* Fibroblast_agents);
 
 /**
- * ProliferationCompletion FLAMEGPU Agent Function
- * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- 
- */
-__FLAME_GPU_FUNC__ int ProliferationCompletion(xmachine_memory_Fibroblast* agent);
-
-/**
  * BystanderEffect FLAMEGPU Agent Function
  * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- * @param location_report_messages  location_report_messages Pointer to input message list of type xmachine_message__list. Must be passed as an argument to the get_first_location_report_message and get_next_location_report_message functions.* @param partition_matrix Pointer to the partition matrix of type xmachine_message_location_report_PBM. Used within the get_first__message and get_next__message functions for spatially partitioned message access.
+ * @param senescent_location_report_messages  senescent_location_report_messages Pointer to input message list of type xmachine_message__list. Must be passed as an argument to the get_first_senescent_location_report_message and get_next_senescent_location_report_message functions.* @param partition_matrix Pointer to the partition matrix of type xmachine_message_senescent_location_report_PBM. Used within the get_first__message and get_next__message functions for spatially partitioned message access.* @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
  */
-__FLAME_GPU_FUNC__ int BystanderEffect(xmachine_memory_Fibroblast* agent, xmachine_message_location_report_list* location_report_messages, xmachine_message_location_report_PBM* partition_matrix);
+__FLAME_GPU_FUNC__ int BystanderEffect(xmachine_memory_Fibroblast* agent, xmachine_message_senescent_location_report_list* senescent_location_report_messages, xmachine_message_senescent_location_report_PBM* partition_matrix, RNG_rand48* rand48);
 
 /**
  * ExcessiveDamage FLAMEGPU Agent Function
  * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- * @param fibroblast_damage_report_messages  fibroblast_damage_report_messages Pointer to input message list of type xmachine_message__list. Must be passed as an argument to the get_first_fibroblast_damage_report_message and get_next_fibroblast_damage_report_message functions.* @param partition_matrix Pointer to the partition matrix of type xmachine_message_fibroblast_damage_report_PBM. Used within the get_first__message and get_next__message functions for spatially partitioned message access.
+ * @param fibroblast_damage_report_messages  fibroblast_damage_report_messages Pointer to input message list of type xmachine_message__list. Must be passed as an argument to the get_first_fibroblast_damage_report_message and get_next_fibroblast_damage_report_message functions.* @param partition_matrix Pointer to the partition matrix of type xmachine_message_fibroblast_damage_report_PBM. Used within the get_first__message and get_next__message functions for spatially partitioned message access.* @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
  */
-__FLAME_GPU_FUNC__ int ExcessiveDamage(xmachine_memory_Fibroblast* agent, xmachine_message_fibroblast_damage_report_list* fibroblast_damage_report_messages, xmachine_message_fibroblast_damage_report_PBM* partition_matrix);
+__FLAME_GPU_FUNC__ int ExcessiveDamage(xmachine_memory_Fibroblast* agent, xmachine_message_fibroblast_damage_report_list* fibroblast_damage_report_messages, xmachine_message_fibroblast_damage_report_PBM* partition_matrix, RNG_rand48* rand48);
 
 /**
  * ReplicativeSenescence FLAMEGPU Agent Function
  * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- * @param doublings_messages  doublings_messages Pointer to input message list of type xmachine_message__list. Must be passed as an argument to the get_first_doublings_message and get_next_doublings_message functions.
+ * @param doublings_messages  doublings_messages Pointer to input message list of type xmachine_message__list. Must be passed as an argument to the get_first_doublings_message and get_next_doublings_message functions.* @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
  */
-__FLAME_GPU_FUNC__ int ReplicativeSenescence(xmachine_memory_Fibroblast* agent, xmachine_message_doublings_list* doublings_messages);
+__FLAME_GPU_FUNC__ int ReplicativeSenescence(xmachine_memory_Fibroblast* agent, xmachine_message_doublings_list* doublings_messages, RNG_rand48* rand48);
+
+/**
+ * TransitionToEarlySen FLAMEGPU Agent Function
+ * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
+ 
+ */
+__FLAME_GPU_FUNC__ int TransitionToEarlySen(xmachine_memory_Fibroblast* agent);
 
 /**
  * FullSenescence FLAMEGPU Agent Function
@@ -714,39 +775,74 @@ __FLAME_GPU_FUNC__ xmachine_message_count * get_first_count_message(xmachine_mes
 __FLAME_GPU_FUNC__ xmachine_message_count * get_next_count_message(xmachine_message_count* current, xmachine_message_count_list* count_messages);
 
   
-/* Message Function Prototypes for Spatially Partitioned location_report message implemented in FLAMEGPU_Kernels */
+/* Message Function Prototypes for Spatially Partitioned quiescent_location_report message implemented in FLAMEGPU_Kernels */
 
-/** add_location_report_message
+/** add_quiescent_location_report_message
  * Function for all types of message partitioning
- * Adds a new location_report agent to the xmachine_memory_location_report_list list using a linear mapping
- * @param agents	xmachine_memory_location_report_list agent list
+ * Adds a new quiescent_location_report agent to the xmachine_memory_quiescent_location_report_list list using a linear mapping
+ * @param agents	xmachine_memory_quiescent_location_report_list agent list
  * @param id	message variable of type int
  * @param x	message variable of type float
  * @param y	message variable of type float
  * @param z	message variable of type float
  */
  
- __FLAME_GPU_FUNC__ void add_location_report_message(xmachine_message_location_report_list* location_report_messages, int id, float x, float y, float z);
+ __FLAME_GPU_FUNC__ void add_quiescent_location_report_message(xmachine_message_quiescent_location_report_list* quiescent_location_report_messages, int id, float x, float y, float z);
  
-/** get_first_location_report_message
+/** get_first_quiescent_location_report_message
  * Get first message function for spatially partitioned messages
- * @param location_report_messages message list
+ * @param quiescent_location_report_messages message list
  * @param partition_matrix the boundary partition matrix for the spatially partitioned message list
  * @param agentx x position of the agent
  * @param agenty y position of the agent
  * @param agentz z position of the agent
  * @return        returns the first message from the message list (offset depending on agent block)
  */
-__FLAME_GPU_FUNC__ xmachine_message_location_report * get_first_location_report_message(xmachine_message_location_report_list* location_report_messages, xmachine_message_location_report_PBM* partition_matrix, float x, float y, float z);
+__FLAME_GPU_FUNC__ xmachine_message_quiescent_location_report * get_first_quiescent_location_report_message(xmachine_message_quiescent_location_report_list* quiescent_location_report_messages, xmachine_message_quiescent_location_report_PBM* partition_matrix, float x, float y, float z);
 
-/** get_next_location_report_message
+/** get_next_quiescent_location_report_message
  * Get first message function for discrete partitioned messages. Template function will call either shared memory or texture cache implementation depending on AGENT_TYPE
  * @param current the current message struct
- * @param location_report_messages message list
+ * @param quiescent_location_report_messages message list
  * @param partition_matrix the boundary partition matrix for the spatially partitioned message list
  * @return        returns the first message from the message list (offset depending on agent block)
  */
-__FLAME_GPU_FUNC__ xmachine_message_location_report * get_next_location_report_message(xmachine_message_location_report* current, xmachine_message_location_report_list* location_report_messages, xmachine_message_location_report_PBM* partition_matrix);
+__FLAME_GPU_FUNC__ xmachine_message_quiescent_location_report * get_next_quiescent_location_report_message(xmachine_message_quiescent_location_report* current, xmachine_message_quiescent_location_report_list* quiescent_location_report_messages, xmachine_message_quiescent_location_report_PBM* partition_matrix);
+
+  
+/* Message Function Prototypes for Spatially Partitioned senescent_location_report message implemented in FLAMEGPU_Kernels */
+
+/** add_senescent_location_report_message
+ * Function for all types of message partitioning
+ * Adds a new senescent_location_report agent to the xmachine_memory_senescent_location_report_list list using a linear mapping
+ * @param agents	xmachine_memory_senescent_location_report_list agent list
+ * @param id	message variable of type int
+ * @param x	message variable of type float
+ * @param y	message variable of type float
+ * @param z	message variable of type float
+ */
+ 
+ __FLAME_GPU_FUNC__ void add_senescent_location_report_message(xmachine_message_senescent_location_report_list* senescent_location_report_messages, int id, float x, float y, float z);
+ 
+/** get_first_senescent_location_report_message
+ * Get first message function for spatially partitioned messages
+ * @param senescent_location_report_messages message list
+ * @param partition_matrix the boundary partition matrix for the spatially partitioned message list
+ * @param agentx x position of the agent
+ * @param agenty y position of the agent
+ * @param agentz z position of the agent
+ * @return        returns the first message from the message list (offset depending on agent block)
+ */
+__FLAME_GPU_FUNC__ xmachine_message_senescent_location_report * get_first_senescent_location_report_message(xmachine_message_senescent_location_report_list* senescent_location_report_messages, xmachine_message_senescent_location_report_PBM* partition_matrix, float x, float y, float z);
+
+/** get_next_senescent_location_report_message
+ * Get first message function for discrete partitioned messages. Template function will call either shared memory or texture cache implementation depending on AGENT_TYPE
+ * @param current the current message struct
+ * @param senescent_location_report_messages message list
+ * @param partition_matrix the boundary partition matrix for the spatially partitioned message list
+ * @return        returns the first message from the message list (offset depending on agent block)
+ */
+__FLAME_GPU_FUNC__ xmachine_message_senescent_location_report * get_next_senescent_location_report_message(xmachine_message_senescent_location_report* current, xmachine_message_senescent_location_report_list* senescent_location_report_messages, xmachine_message_senescent_location_report_PBM* partition_matrix);
 
   
 /* Agent Function Prototypes implemented in FLAMEGPU_Kernels */
@@ -770,9 +866,11 @@ __FLAME_GPU_FUNC__ void add_TissueBlock_agent(xmachine_memory_TissueBlock_list* 
  * @param y	agent agent variable of type float
  * @param z	agent agent variable of type float
  * @param doublings	agent agent variable of type float
- * @param damage	agent agent variable of type float
+ * @param damage	agent agent variable of type int
+ * @param proliferate_bool	agent agent variable of type int
+ * @param transition_to_early_sen	agent agent variable of type int
  */
-__FLAME_GPU_FUNC__ void add_Fibroblast_agent(xmachine_memory_Fibroblast_list* agents, int id, float x, float y, float z, float doublings, float damage);
+__FLAME_GPU_FUNC__ void add_Fibroblast_agent(xmachine_memory_Fibroblast_list* agents, int id, float x, float y, float z, float doublings, int damage, int proliferate_bool, int transition_to_early_sen);
 
 
 /* Graph loading function prototypes implemented in io.cu */
@@ -1137,14 +1235,32 @@ __host__ float get_Fibroblast_Quiescent_variable_z(unsigned int index);
  */
 __host__ float get_Fibroblast_Quiescent_variable_doublings(unsigned int index);
 
-/** float get_Fibroblast_Quiescent_variable_damage(unsigned int index)
+/** int get_Fibroblast_Quiescent_variable_damage(unsigned int index)
  * Gets the value of the damage variable of an Fibroblast agent in the Quiescent state on the host. 
  * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
  * This has a potentially significant performance impact if used improperly.
  * @param index the index of the agent within the list.
  * @return value of agent variable damage
  */
-__host__ float get_Fibroblast_Quiescent_variable_damage(unsigned int index);
+__host__ int get_Fibroblast_Quiescent_variable_damage(unsigned int index);
+
+/** int get_Fibroblast_Quiescent_variable_proliferate_bool(unsigned int index)
+ * Gets the value of the proliferate_bool variable of an Fibroblast agent in the Quiescent state on the host. 
+ * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
+ * This has a potentially significant performance impact if used improperly.
+ * @param index the index of the agent within the list.
+ * @return value of agent variable proliferate_bool
+ */
+__host__ int get_Fibroblast_Quiescent_variable_proliferate_bool(unsigned int index);
+
+/** int get_Fibroblast_Quiescent_variable_transition_to_early_sen(unsigned int index)
+ * Gets the value of the transition_to_early_sen variable of an Fibroblast agent in the Quiescent state on the host. 
+ * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
+ * This has a potentially significant performance impact if used improperly.
+ * @param index the index of the agent within the list.
+ * @return value of agent variable transition_to_early_sen
+ */
+__host__ int get_Fibroblast_Quiescent_variable_transition_to_early_sen(unsigned int index);
 
 /** int get_Fibroblast_EarlySenescent_variable_id(unsigned int index)
  * Gets the value of the id variable of an Fibroblast agent in the EarlySenescent state on the host. 
@@ -1191,14 +1307,32 @@ __host__ float get_Fibroblast_EarlySenescent_variable_z(unsigned int index);
  */
 __host__ float get_Fibroblast_EarlySenescent_variable_doublings(unsigned int index);
 
-/** float get_Fibroblast_EarlySenescent_variable_damage(unsigned int index)
+/** int get_Fibroblast_EarlySenescent_variable_damage(unsigned int index)
  * Gets the value of the damage variable of an Fibroblast agent in the EarlySenescent state on the host. 
  * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
  * This has a potentially significant performance impact if used improperly.
  * @param index the index of the agent within the list.
  * @return value of agent variable damage
  */
-__host__ float get_Fibroblast_EarlySenescent_variable_damage(unsigned int index);
+__host__ int get_Fibroblast_EarlySenescent_variable_damage(unsigned int index);
+
+/** int get_Fibroblast_EarlySenescent_variable_proliferate_bool(unsigned int index)
+ * Gets the value of the proliferate_bool variable of an Fibroblast agent in the EarlySenescent state on the host. 
+ * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
+ * This has a potentially significant performance impact if used improperly.
+ * @param index the index of the agent within the list.
+ * @return value of agent variable proliferate_bool
+ */
+__host__ int get_Fibroblast_EarlySenescent_variable_proliferate_bool(unsigned int index);
+
+/** int get_Fibroblast_EarlySenescent_variable_transition_to_early_sen(unsigned int index)
+ * Gets the value of the transition_to_early_sen variable of an Fibroblast agent in the EarlySenescent state on the host. 
+ * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
+ * This has a potentially significant performance impact if used improperly.
+ * @param index the index of the agent within the list.
+ * @return value of agent variable transition_to_early_sen
+ */
+__host__ int get_Fibroblast_EarlySenescent_variable_transition_to_early_sen(unsigned int index);
 
 /** int get_Fibroblast_Senescent_variable_id(unsigned int index)
  * Gets the value of the id variable of an Fibroblast agent in the Senescent state on the host. 
@@ -1245,14 +1379,32 @@ __host__ float get_Fibroblast_Senescent_variable_z(unsigned int index);
  */
 __host__ float get_Fibroblast_Senescent_variable_doublings(unsigned int index);
 
-/** float get_Fibroblast_Senescent_variable_damage(unsigned int index)
+/** int get_Fibroblast_Senescent_variable_damage(unsigned int index)
  * Gets the value of the damage variable of an Fibroblast agent in the Senescent state on the host. 
  * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
  * This has a potentially significant performance impact if used improperly.
  * @param index the index of the agent within the list.
  * @return value of agent variable damage
  */
-__host__ float get_Fibroblast_Senescent_variable_damage(unsigned int index);
+__host__ int get_Fibroblast_Senescent_variable_damage(unsigned int index);
+
+/** int get_Fibroblast_Senescent_variable_proliferate_bool(unsigned int index)
+ * Gets the value of the proliferate_bool variable of an Fibroblast agent in the Senescent state on the host. 
+ * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
+ * This has a potentially significant performance impact if used improperly.
+ * @param index the index of the agent within the list.
+ * @return value of agent variable proliferate_bool
+ */
+__host__ int get_Fibroblast_Senescent_variable_proliferate_bool(unsigned int index);
+
+/** int get_Fibroblast_Senescent_variable_transition_to_early_sen(unsigned int index)
+ * Gets the value of the transition_to_early_sen variable of an Fibroblast agent in the Senescent state on the host. 
+ * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
+ * This has a potentially significant performance impact if used improperly.
+ * @param index the index of the agent within the list.
+ * @return value of agent variable transition_to_early_sen
+ */
+__host__ int get_Fibroblast_Senescent_variable_transition_to_early_sen(unsigned int index);
 
 /** int get_Fibroblast_Proliferating_variable_id(unsigned int index)
  * Gets the value of the id variable of an Fibroblast agent in the Proliferating state on the host. 
@@ -1299,14 +1451,32 @@ __host__ float get_Fibroblast_Proliferating_variable_z(unsigned int index);
  */
 __host__ float get_Fibroblast_Proliferating_variable_doublings(unsigned int index);
 
-/** float get_Fibroblast_Proliferating_variable_damage(unsigned int index)
+/** int get_Fibroblast_Proliferating_variable_damage(unsigned int index)
  * Gets the value of the damage variable of an Fibroblast agent in the Proliferating state on the host. 
  * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
  * This has a potentially significant performance impact if used improperly.
  * @param index the index of the agent within the list.
  * @return value of agent variable damage
  */
-__host__ float get_Fibroblast_Proliferating_variable_damage(unsigned int index);
+__host__ int get_Fibroblast_Proliferating_variable_damage(unsigned int index);
+
+/** int get_Fibroblast_Proliferating_variable_proliferate_bool(unsigned int index)
+ * Gets the value of the proliferate_bool variable of an Fibroblast agent in the Proliferating state on the host. 
+ * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
+ * This has a potentially significant performance impact if used improperly.
+ * @param index the index of the agent within the list.
+ * @return value of agent variable proliferate_bool
+ */
+__host__ int get_Fibroblast_Proliferating_variable_proliferate_bool(unsigned int index);
+
+/** int get_Fibroblast_Proliferating_variable_transition_to_early_sen(unsigned int index)
+ * Gets the value of the transition_to_early_sen variable of an Fibroblast agent in the Proliferating state on the host. 
+ * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
+ * This has a potentially significant performance impact if used improperly.
+ * @param index the index of the agent within the list.
+ * @return value of agent variable transition_to_early_sen
+ */
+__host__ int get_Fibroblast_Proliferating_variable_transition_to_early_sen(unsigned int index);
 
 /** int get_Fibroblast_Repair_variable_id(unsigned int index)
  * Gets the value of the id variable of an Fibroblast agent in the Repair state on the host. 
@@ -1353,14 +1523,32 @@ __host__ float get_Fibroblast_Repair_variable_z(unsigned int index);
  */
 __host__ float get_Fibroblast_Repair_variable_doublings(unsigned int index);
 
-/** float get_Fibroblast_Repair_variable_damage(unsigned int index)
+/** int get_Fibroblast_Repair_variable_damage(unsigned int index)
  * Gets the value of the damage variable of an Fibroblast agent in the Repair state on the host. 
  * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
  * This has a potentially significant performance impact if used improperly.
  * @param index the index of the agent within the list.
  * @return value of agent variable damage
  */
-__host__ float get_Fibroblast_Repair_variable_damage(unsigned int index);
+__host__ int get_Fibroblast_Repair_variable_damage(unsigned int index);
+
+/** int get_Fibroblast_Repair_variable_proliferate_bool(unsigned int index)
+ * Gets the value of the proliferate_bool variable of an Fibroblast agent in the Repair state on the host. 
+ * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
+ * This has a potentially significant performance impact if used improperly.
+ * @param index the index of the agent within the list.
+ * @return value of agent variable proliferate_bool
+ */
+__host__ int get_Fibroblast_Repair_variable_proliferate_bool(unsigned int index);
+
+/** int get_Fibroblast_Repair_variable_transition_to_early_sen(unsigned int index)
+ * Gets the value of the transition_to_early_sen variable of an Fibroblast agent in the Repair state on the host. 
+ * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
+ * This has a potentially significant performance impact if used improperly.
+ * @param index the index of the agent within the list.
+ * @return value of agent variable transition_to_early_sen
+ */
+__host__ int get_Fibroblast_Repair_variable_transition_to_early_sen(unsigned int index);
 
 
 
@@ -1738,24 +1926,83 @@ float min_Fibroblast_Quiescent_doublings_variable();
  */
 float max_Fibroblast_Quiescent_doublings_variable();
 
-/** float reduce_Fibroblast_Quiescent_damage_variable();
+/** int reduce_Fibroblast_Quiescent_damage_variable();
  * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the reduced variable value of the specified agent name and state
  */
-float reduce_Fibroblast_Quiescent_damage_variable();
+int reduce_Fibroblast_Quiescent_damage_variable();
 
 
 
-/** float min_Fibroblast_Quiescent_damage_variable();
+/** int count_Fibroblast_Quiescent_damage_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Quiescent_damage_variable(int count_value);
+
+/** int min_Fibroblast_Quiescent_damage_variable();
  * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the minimum variable value of the specified agent name and state
  */
-float min_Fibroblast_Quiescent_damage_variable();
-/** float max_Fibroblast_Quiescent_damage_variable();
+int min_Fibroblast_Quiescent_damage_variable();
+/** int max_Fibroblast_Quiescent_damage_variable();
  * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the minimum variable value of the specified agent name and state
  */
-float max_Fibroblast_Quiescent_damage_variable();
+int max_Fibroblast_Quiescent_damage_variable();
+
+/** int reduce_Fibroblast_Quiescent_proliferate_bool_variable();
+ * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the reduced variable value of the specified agent name and state
+ */
+int reduce_Fibroblast_Quiescent_proliferate_bool_variable();
+
+
+
+/** int count_Fibroblast_Quiescent_proliferate_bool_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Quiescent_proliferate_bool_variable(int count_value);
+
+/** int min_Fibroblast_Quiescent_proliferate_bool_variable();
+ * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int min_Fibroblast_Quiescent_proliferate_bool_variable();
+/** int max_Fibroblast_Quiescent_proliferate_bool_variable();
+ * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int max_Fibroblast_Quiescent_proliferate_bool_variable();
+
+/** int reduce_Fibroblast_Quiescent_transition_to_early_sen_variable();
+ * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the reduced variable value of the specified agent name and state
+ */
+int reduce_Fibroblast_Quiescent_transition_to_early_sen_variable();
+
+
+
+/** int count_Fibroblast_Quiescent_transition_to_early_sen_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Quiescent_transition_to_early_sen_variable(int count_value);
+
+/** int min_Fibroblast_Quiescent_transition_to_early_sen_variable();
+ * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int min_Fibroblast_Quiescent_transition_to_early_sen_variable();
+/** int max_Fibroblast_Quiescent_transition_to_early_sen_variable();
+ * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int max_Fibroblast_Quiescent_transition_to_early_sen_variable();
 
 /** int reduce_Fibroblast_EarlySenescent_id_variable();
  * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
@@ -1859,24 +2106,83 @@ float min_Fibroblast_EarlySenescent_doublings_variable();
  */
 float max_Fibroblast_EarlySenescent_doublings_variable();
 
-/** float reduce_Fibroblast_EarlySenescent_damage_variable();
+/** int reduce_Fibroblast_EarlySenescent_damage_variable();
  * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the reduced variable value of the specified agent name and state
  */
-float reduce_Fibroblast_EarlySenescent_damage_variable();
+int reduce_Fibroblast_EarlySenescent_damage_variable();
 
 
 
-/** float min_Fibroblast_EarlySenescent_damage_variable();
+/** int count_Fibroblast_EarlySenescent_damage_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_EarlySenescent_damage_variable(int count_value);
+
+/** int min_Fibroblast_EarlySenescent_damage_variable();
  * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the minimum variable value of the specified agent name and state
  */
-float min_Fibroblast_EarlySenescent_damage_variable();
-/** float max_Fibroblast_EarlySenescent_damage_variable();
+int min_Fibroblast_EarlySenescent_damage_variable();
+/** int max_Fibroblast_EarlySenescent_damage_variable();
  * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the minimum variable value of the specified agent name and state
  */
-float max_Fibroblast_EarlySenescent_damage_variable();
+int max_Fibroblast_EarlySenescent_damage_variable();
+
+/** int reduce_Fibroblast_EarlySenescent_proliferate_bool_variable();
+ * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the reduced variable value of the specified agent name and state
+ */
+int reduce_Fibroblast_EarlySenescent_proliferate_bool_variable();
+
+
+
+/** int count_Fibroblast_EarlySenescent_proliferate_bool_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_EarlySenescent_proliferate_bool_variable(int count_value);
+
+/** int min_Fibroblast_EarlySenescent_proliferate_bool_variable();
+ * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int min_Fibroblast_EarlySenescent_proliferate_bool_variable();
+/** int max_Fibroblast_EarlySenescent_proliferate_bool_variable();
+ * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int max_Fibroblast_EarlySenescent_proliferate_bool_variable();
+
+/** int reduce_Fibroblast_EarlySenescent_transition_to_early_sen_variable();
+ * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the reduced variable value of the specified agent name and state
+ */
+int reduce_Fibroblast_EarlySenescent_transition_to_early_sen_variable();
+
+
+
+/** int count_Fibroblast_EarlySenescent_transition_to_early_sen_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_EarlySenescent_transition_to_early_sen_variable(int count_value);
+
+/** int min_Fibroblast_EarlySenescent_transition_to_early_sen_variable();
+ * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int min_Fibroblast_EarlySenescent_transition_to_early_sen_variable();
+/** int max_Fibroblast_EarlySenescent_transition_to_early_sen_variable();
+ * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int max_Fibroblast_EarlySenescent_transition_to_early_sen_variable();
 
 /** int reduce_Fibroblast_Senescent_id_variable();
  * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
@@ -1980,24 +2286,83 @@ float min_Fibroblast_Senescent_doublings_variable();
  */
 float max_Fibroblast_Senescent_doublings_variable();
 
-/** float reduce_Fibroblast_Senescent_damage_variable();
+/** int reduce_Fibroblast_Senescent_damage_variable();
  * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the reduced variable value of the specified agent name and state
  */
-float reduce_Fibroblast_Senescent_damage_variable();
+int reduce_Fibroblast_Senescent_damage_variable();
 
 
 
-/** float min_Fibroblast_Senescent_damage_variable();
+/** int count_Fibroblast_Senescent_damage_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Senescent_damage_variable(int count_value);
+
+/** int min_Fibroblast_Senescent_damage_variable();
  * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the minimum variable value of the specified agent name and state
  */
-float min_Fibroblast_Senescent_damage_variable();
-/** float max_Fibroblast_Senescent_damage_variable();
+int min_Fibroblast_Senescent_damage_variable();
+/** int max_Fibroblast_Senescent_damage_variable();
  * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the minimum variable value of the specified agent name and state
  */
-float max_Fibroblast_Senescent_damage_variable();
+int max_Fibroblast_Senescent_damage_variable();
+
+/** int reduce_Fibroblast_Senescent_proliferate_bool_variable();
+ * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the reduced variable value of the specified agent name and state
+ */
+int reduce_Fibroblast_Senescent_proliferate_bool_variable();
+
+
+
+/** int count_Fibroblast_Senescent_proliferate_bool_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Senescent_proliferate_bool_variable(int count_value);
+
+/** int min_Fibroblast_Senescent_proliferate_bool_variable();
+ * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int min_Fibroblast_Senescent_proliferate_bool_variable();
+/** int max_Fibroblast_Senescent_proliferate_bool_variable();
+ * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int max_Fibroblast_Senescent_proliferate_bool_variable();
+
+/** int reduce_Fibroblast_Senescent_transition_to_early_sen_variable();
+ * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the reduced variable value of the specified agent name and state
+ */
+int reduce_Fibroblast_Senescent_transition_to_early_sen_variable();
+
+
+
+/** int count_Fibroblast_Senescent_transition_to_early_sen_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Senescent_transition_to_early_sen_variable(int count_value);
+
+/** int min_Fibroblast_Senescent_transition_to_early_sen_variable();
+ * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int min_Fibroblast_Senescent_transition_to_early_sen_variable();
+/** int max_Fibroblast_Senescent_transition_to_early_sen_variable();
+ * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int max_Fibroblast_Senescent_transition_to_early_sen_variable();
 
 /** int reduce_Fibroblast_Proliferating_id_variable();
  * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
@@ -2101,24 +2466,83 @@ float min_Fibroblast_Proliferating_doublings_variable();
  */
 float max_Fibroblast_Proliferating_doublings_variable();
 
-/** float reduce_Fibroblast_Proliferating_damage_variable();
+/** int reduce_Fibroblast_Proliferating_damage_variable();
  * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the reduced variable value of the specified agent name and state
  */
-float reduce_Fibroblast_Proliferating_damage_variable();
+int reduce_Fibroblast_Proliferating_damage_variable();
 
 
 
-/** float min_Fibroblast_Proliferating_damage_variable();
+/** int count_Fibroblast_Proliferating_damage_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Proliferating_damage_variable(int count_value);
+
+/** int min_Fibroblast_Proliferating_damage_variable();
  * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the minimum variable value of the specified agent name and state
  */
-float min_Fibroblast_Proliferating_damage_variable();
-/** float max_Fibroblast_Proliferating_damage_variable();
+int min_Fibroblast_Proliferating_damage_variable();
+/** int max_Fibroblast_Proliferating_damage_variable();
  * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the minimum variable value of the specified agent name and state
  */
-float max_Fibroblast_Proliferating_damage_variable();
+int max_Fibroblast_Proliferating_damage_variable();
+
+/** int reduce_Fibroblast_Proliferating_proliferate_bool_variable();
+ * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the reduced variable value of the specified agent name and state
+ */
+int reduce_Fibroblast_Proliferating_proliferate_bool_variable();
+
+
+
+/** int count_Fibroblast_Proliferating_proliferate_bool_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Proliferating_proliferate_bool_variable(int count_value);
+
+/** int min_Fibroblast_Proliferating_proliferate_bool_variable();
+ * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int min_Fibroblast_Proliferating_proliferate_bool_variable();
+/** int max_Fibroblast_Proliferating_proliferate_bool_variable();
+ * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int max_Fibroblast_Proliferating_proliferate_bool_variable();
+
+/** int reduce_Fibroblast_Proliferating_transition_to_early_sen_variable();
+ * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the reduced variable value of the specified agent name and state
+ */
+int reduce_Fibroblast_Proliferating_transition_to_early_sen_variable();
+
+
+
+/** int count_Fibroblast_Proliferating_transition_to_early_sen_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Proliferating_transition_to_early_sen_variable(int count_value);
+
+/** int min_Fibroblast_Proliferating_transition_to_early_sen_variable();
+ * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int min_Fibroblast_Proliferating_transition_to_early_sen_variable();
+/** int max_Fibroblast_Proliferating_transition_to_early_sen_variable();
+ * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int max_Fibroblast_Proliferating_transition_to_early_sen_variable();
 
 /** int reduce_Fibroblast_Repair_id_variable();
  * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
@@ -2222,24 +2646,83 @@ float min_Fibroblast_Repair_doublings_variable();
  */
 float max_Fibroblast_Repair_doublings_variable();
 
-/** float reduce_Fibroblast_Repair_damage_variable();
+/** int reduce_Fibroblast_Repair_damage_variable();
  * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the reduced variable value of the specified agent name and state
  */
-float reduce_Fibroblast_Repair_damage_variable();
+int reduce_Fibroblast_Repair_damage_variable();
 
 
 
-/** float min_Fibroblast_Repair_damage_variable();
+/** int count_Fibroblast_Repair_damage_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Repair_damage_variable(int count_value);
+
+/** int min_Fibroblast_Repair_damage_variable();
  * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the minimum variable value of the specified agent name and state
  */
-float min_Fibroblast_Repair_damage_variable();
-/** float max_Fibroblast_Repair_damage_variable();
+int min_Fibroblast_Repair_damage_variable();
+/** int max_Fibroblast_Repair_damage_variable();
  * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the minimum variable value of the specified agent name and state
  */
-float max_Fibroblast_Repair_damage_variable();
+int max_Fibroblast_Repair_damage_variable();
+
+/** int reduce_Fibroblast_Repair_proliferate_bool_variable();
+ * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the reduced variable value of the specified agent name and state
+ */
+int reduce_Fibroblast_Repair_proliferate_bool_variable();
+
+
+
+/** int count_Fibroblast_Repair_proliferate_bool_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Repair_proliferate_bool_variable(int count_value);
+
+/** int min_Fibroblast_Repair_proliferate_bool_variable();
+ * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int min_Fibroblast_Repair_proliferate_bool_variable();
+/** int max_Fibroblast_Repair_proliferate_bool_variable();
+ * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int max_Fibroblast_Repair_proliferate_bool_variable();
+
+/** int reduce_Fibroblast_Repair_transition_to_early_sen_variable();
+ * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the reduced variable value of the specified agent name and state
+ */
+int reduce_Fibroblast_Repair_transition_to_early_sen_variable();
+
+
+
+/** int count_Fibroblast_Repair_transition_to_early_sen_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Repair_transition_to_early_sen_variable(int count_value);
+
+/** int min_Fibroblast_Repair_transition_to_early_sen_variable();
+ * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int min_Fibroblast_Repair_transition_to_early_sen_variable();
+/** int max_Fibroblast_Repair_transition_to_early_sen_variable();
+ * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int max_Fibroblast_Repair_transition_to_early_sen_variable();
 
 
   
@@ -2247,7 +2730,27 @@ float max_Fibroblast_Repair_damage_variable();
 
 __constant__ float TISSUE_DAMAGE_PROB;
 
+__constant__ float PROLIFERATION_PROB;
+
 __constant__ float TISSUE_SIZE;
+
+__constant__ float EARLY_SENESCENT_MIGRATION_SCALE;
+
+__constant__ float SENESCENT_MIGRATION_SCALE;
+
+__constant__ float QUIESCENT_MIGRATION_SCALE;
+
+__constant__ float BYSTANDER_DISTANCE;
+
+__constant__ float BYSTANDER_PROB;
+
+__constant__ float EXCESSIVE_DAMAGE_AMOUNT;
+
+__constant__ float EXCESSIVE_DAMAGE_PROB;
+
+__constant__ float REPLICATIVE_SEN_AGE;
+
+__constant__ float REPLICATIVE_SEN_PROB;
 
 /** set_TISSUE_DAMAGE_PROB
  * Sets the constant variable TISSUE_DAMAGE_PROB on the device which can then be used in the agent functions.
@@ -2260,6 +2763,17 @@ extern const float* get_TISSUE_DAMAGE_PROB();
 
 extern float h_env_TISSUE_DAMAGE_PROB;
 
+/** set_PROLIFERATION_PROB
+ * Sets the constant variable PROLIFERATION_PROB on the device which can then be used in the agent functions.
+ * @param h_PROLIFERATION_PROB value to set the variable
+ */
+extern void set_PROLIFERATION_PROB(float* h_PROLIFERATION_PROB);
+
+extern const float* get_PROLIFERATION_PROB();
+
+
+extern float h_env_PROLIFERATION_PROB;
+
 /** set_TISSUE_SIZE
  * Sets the constant variable TISSUE_SIZE on the device which can then be used in the agent functions.
  * @param h_TISSUE_SIZE value to set the variable
@@ -2270,6 +2784,105 @@ extern const float* get_TISSUE_SIZE();
 
 
 extern float h_env_TISSUE_SIZE;
+
+/** set_EARLY_SENESCENT_MIGRATION_SCALE
+ * Sets the constant variable EARLY_SENESCENT_MIGRATION_SCALE on the device which can then be used in the agent functions.
+ * @param h_EARLY_SENESCENT_MIGRATION_SCALE value to set the variable
+ */
+extern void set_EARLY_SENESCENT_MIGRATION_SCALE(float* h_EARLY_SENESCENT_MIGRATION_SCALE);
+
+extern const float* get_EARLY_SENESCENT_MIGRATION_SCALE();
+
+
+extern float h_env_EARLY_SENESCENT_MIGRATION_SCALE;
+
+/** set_SENESCENT_MIGRATION_SCALE
+ * Sets the constant variable SENESCENT_MIGRATION_SCALE on the device which can then be used in the agent functions.
+ * @param h_SENESCENT_MIGRATION_SCALE value to set the variable
+ */
+extern void set_SENESCENT_MIGRATION_SCALE(float* h_SENESCENT_MIGRATION_SCALE);
+
+extern const float* get_SENESCENT_MIGRATION_SCALE();
+
+
+extern float h_env_SENESCENT_MIGRATION_SCALE;
+
+/** set_QUIESCENT_MIGRATION_SCALE
+ * Sets the constant variable QUIESCENT_MIGRATION_SCALE on the device which can then be used in the agent functions.
+ * @param h_QUIESCENT_MIGRATION_SCALE value to set the variable
+ */
+extern void set_QUIESCENT_MIGRATION_SCALE(float* h_QUIESCENT_MIGRATION_SCALE);
+
+extern const float* get_QUIESCENT_MIGRATION_SCALE();
+
+
+extern float h_env_QUIESCENT_MIGRATION_SCALE;
+
+/** set_BYSTANDER_DISTANCE
+ * Sets the constant variable BYSTANDER_DISTANCE on the device which can then be used in the agent functions.
+ * @param h_BYSTANDER_DISTANCE value to set the variable
+ */
+extern void set_BYSTANDER_DISTANCE(float* h_BYSTANDER_DISTANCE);
+
+extern const float* get_BYSTANDER_DISTANCE();
+
+
+extern float h_env_BYSTANDER_DISTANCE;
+
+/** set_BYSTANDER_PROB
+ * Sets the constant variable BYSTANDER_PROB on the device which can then be used in the agent functions.
+ * @param h_BYSTANDER_PROB value to set the variable
+ */
+extern void set_BYSTANDER_PROB(float* h_BYSTANDER_PROB);
+
+extern const float* get_BYSTANDER_PROB();
+
+
+extern float h_env_BYSTANDER_PROB;
+
+/** set_EXCESSIVE_DAMAGE_AMOUNT
+ * Sets the constant variable EXCESSIVE_DAMAGE_AMOUNT on the device which can then be used in the agent functions.
+ * @param h_EXCESSIVE_DAMAGE_AMOUNT value to set the variable
+ */
+extern void set_EXCESSIVE_DAMAGE_AMOUNT(float* h_EXCESSIVE_DAMAGE_AMOUNT);
+
+extern const float* get_EXCESSIVE_DAMAGE_AMOUNT();
+
+
+extern float h_env_EXCESSIVE_DAMAGE_AMOUNT;
+
+/** set_EXCESSIVE_DAMAGE_PROB
+ * Sets the constant variable EXCESSIVE_DAMAGE_PROB on the device which can then be used in the agent functions.
+ * @param h_EXCESSIVE_DAMAGE_PROB value to set the variable
+ */
+extern void set_EXCESSIVE_DAMAGE_PROB(float* h_EXCESSIVE_DAMAGE_PROB);
+
+extern const float* get_EXCESSIVE_DAMAGE_PROB();
+
+
+extern float h_env_EXCESSIVE_DAMAGE_PROB;
+
+/** set_REPLICATIVE_SEN_AGE
+ * Sets the constant variable REPLICATIVE_SEN_AGE on the device which can then be used in the agent functions.
+ * @param h_REPLICATIVE_SEN_AGE value to set the variable
+ */
+extern void set_REPLICATIVE_SEN_AGE(float* h_REPLICATIVE_SEN_AGE);
+
+extern const float* get_REPLICATIVE_SEN_AGE();
+
+
+extern float h_env_REPLICATIVE_SEN_AGE;
+
+/** set_REPLICATIVE_SEN_PROB
+ * Sets the constant variable REPLICATIVE_SEN_PROB on the device which can then be used in the agent functions.
+ * @param h_REPLICATIVE_SEN_PROB value to set the variable
+ */
+extern void set_REPLICATIVE_SEN_PROB(float* h_REPLICATIVE_SEN_PROB);
+
+extern const float* get_REPLICATIVE_SEN_PROB();
+
+
+extern float h_env_REPLICATIVE_SEN_PROB;
 
 
 /** getMaximumBound
