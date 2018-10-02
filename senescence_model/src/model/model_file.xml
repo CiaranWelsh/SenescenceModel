@@ -6,11 +6,13 @@
         <gpu:constants>
             <gpu:variable>
                 <type>float</type>
-                <name>PROB1</name>
+                <name>TISSUE_DAMAGE_PROB</name>
+                <defaultValue>0.1</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>TISSUE_SIZE</name>
+                <defaultValue>0.1</defaultValue>
             </gpu:variable>
         </gpu:constants>
         <gpu:functionFiles>
@@ -53,11 +55,14 @@
                     <description>Function to add damage to tissue block</description>
                     <currentState>default</currentState>
                     <nextState>default</nextState>
-                    <inputs>
-                        <gpu:input>
-                            <messageName>tissue_damage_report</messageName>
-                        </gpu:input>
-                    </inputs>                           <!-- optional -->
+                    <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
+                    <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
+                </gpu:function>
+                <gpu:function>
+                    <name>TissueSendDamageReport</name>
+                    <description>Tissue send damage message</description>
+                    <currentState>default</currentState>
+                    <nextState>default</nextState>
                     <outputs>
                         <gpu:output>
                             <messageName>tissue_damage_report</messageName>
@@ -77,7 +82,6 @@
             </states>
             <gpu:type>continuous</gpu:type>
             <gpu:bufferSize>1024</gpu:bufferSize>
-
         </gpu:xagent>
         <gpu:xagent>
             <name>Fibroblast</name>
@@ -88,40 +92,24 @@
                 </gpu:variable>
                 <gpu:variable>
                     <type>float</type>
-                    <name>position_x</name>
+                    <name>x</name>
                 </gpu:variable>
                 <gpu:variable>
                     <type>float</type>
-                    <name>position_y</name>
+                    <name>y</name>
                 </gpu:variable>
                 <gpu:variable>
                     <type>float</type>
-                    <name>position_z</name>
+                    <name>z</name>
                 </gpu:variable>
-
-                <gpu:variable>
-                    <type>float</type>
-                    <name>direction_x</name>
-                </gpu:variable>
-                <gpu:variable>
-                    <type>float</type>
-                    <name>direction_y</name>
-                </gpu:variable>
-                <gpu:variable>
-                    <type>float</type>
-                    <name>direction_z</name>
-                </gpu:variable>
-
                 <gpu:variable>
                     <type>float</type>
                     <name>doublings</name>
                 </gpu:variable>
-
                 <gpu:variable>
                     <type>float</type>
                     <name>damage</name>
                 </gpu:variable>
-
             </memory>
             <functions>
                 <gpu:function>
@@ -131,12 +119,8 @@
                     <nextState>Quiescent</nextState>
                     <inputs>
                         <gpu:input>
-                            <messageName>location_report</messageName>
+                            <messageName>tissue_damage_report</messageName>
                         </gpu:input>
-
-                        <!--<gpu:input>-->
-                        <!--<messageName>tissue_damage</messageName>-->
-                        <!--</gpu:input>-->
                     </inputs>                           <!-- optional -->
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
                     <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
@@ -148,12 +132,8 @@
                     <nextState>Senescent</nextState>
                     <inputs>
                         <gpu:input>
-                            <messageName>location_report</messageName>
+                            <messageName>tissue_damage_report</messageName>
                         </gpu:input>
-
-                        <!--<gpu:input>-->
-                        <!--<messageName>tissue_damage</messageName>-->
-                        <!--</gpu:input>-->
                     </inputs>                           <!-- optional -->
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
                     <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
@@ -165,12 +145,8 @@
                     <nextState>EarlySenescent</nextState>
                     <inputs>
                         <gpu:input>
-                            <messageName>location_report</messageName>
+                            <messageName>tissue_damage_report</messageName>
                         </gpu:input>
-
-                        <!--<gpu:input>-->
-                        <!--<messageName>tissue_damage</messageName>-->
-                        <!--</gpu:input>-->
                     </inputs>                           <!-- optional -->
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
                     <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
@@ -185,6 +161,14 @@
                             <messageName>fibroblast_damage_report</messageName>
                         </gpu:input>
                     </inputs>
+                    <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
+                    <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
+                </gpu:function>
+                <gpu:function>
+                    <name>QuiescentSendDamageReport</name>
+                    <description>Quiescent report their damage status</description>
+                    <currentState>Quiescent</currentState>
+                    <nextState>Quiescent</nextState>
                     <outputs>
                         <gpu:output>
                             <messageName>fibroblast_damage_report</messageName>
@@ -196,7 +180,7 @@
                 </gpu:function>
                 <gpu:function>
                     <name>Proliferation</name>
-                    <description>Proliferation</description>
+                    <description>A fibroblast undergoing cell division</description>
                     <currentState>Quiescent</currentState>
                     <nextState>Proliferating</nextState>
                     <xagentOutputs>
@@ -291,6 +275,11 @@
                     </description>
                     <currentState>Quiescent</currentState>
                     <nextState>Repair</nextState>
+                    <inputs>
+                        <gpu:input>
+                            <messageName>tissue_damage_report</messageName>
+                        </gpu:input>
+                    </inputs>
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
                     <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
                 </gpu:function>

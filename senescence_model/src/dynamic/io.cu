@@ -117,47 +117,47 @@ void readArrayInputVectorType( BASE_T (*parseFunc)(const char*), char* buffer, T
     }
 }
 
-void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_A_list* h_As_moving_A, xmachine_memory_A_list* d_As_moving_A, int h_xmachine_memory_A_moving_A_count,xmachine_memory_A_list* h_As_change_direction_A, xmachine_memory_A_list* d_As_change_direction_A, int h_xmachine_memory_A_change_direction_A_count,xmachine_memory_A_list* h_As_get_going_again_A, xmachine_memory_A_list* d_As_get_going_again_A, int h_xmachine_memory_A_get_going_again_A_count,xmachine_memory_B_list* h_Bs_moving_B, xmachine_memory_B_list* d_Bs_moving_B, int h_xmachine_memory_B_moving_B_count,xmachine_memory_B_list* h_Bs_change_direction_B, xmachine_memory_B_list* d_Bs_change_direction_B, int h_xmachine_memory_B_change_direction_B_count,xmachine_memory_B_list* h_Bs_get_going_again_B, xmachine_memory_B_list* d_Bs_get_going_again_B, int h_xmachine_memory_B_get_going_again_B_count)
+void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_TissueBlock_list* h_TissueBlocks_default, xmachine_memory_TissueBlock_list* d_TissueBlocks_default, int h_xmachine_memory_TissueBlock_default_count,xmachine_memory_Fibroblast_list* h_Fibroblasts_Quiescent, xmachine_memory_Fibroblast_list* d_Fibroblasts_Quiescent, int h_xmachine_memory_Fibroblast_Quiescent_count,xmachine_memory_Fibroblast_list* h_Fibroblasts_EarlySenescent, xmachine_memory_Fibroblast_list* d_Fibroblasts_EarlySenescent, int h_xmachine_memory_Fibroblast_EarlySenescent_count,xmachine_memory_Fibroblast_list* h_Fibroblasts_Senescent, xmachine_memory_Fibroblast_list* d_Fibroblasts_Senescent, int h_xmachine_memory_Fibroblast_Senescent_count,xmachine_memory_Fibroblast_list* h_Fibroblasts_Proliferating, xmachine_memory_Fibroblast_list* d_Fibroblasts_Proliferating, int h_xmachine_memory_Fibroblast_Proliferating_count,xmachine_memory_Fibroblast_list* h_Fibroblasts_Repair, xmachine_memory_Fibroblast_list* d_Fibroblasts_Repair, int h_xmachine_memory_Fibroblast_Repair_count)
 {
     PROFILE_SCOPED_RANGE("saveIterationData");
 	cudaError_t cudaStatus;
 	
 	//Device to host memory transfer
 	
-	cudaStatus = cudaMemcpy( h_As_moving_A, d_As_moving_A, sizeof(xmachine_memory_A_list), cudaMemcpyDeviceToHost);
+	cudaStatus = cudaMemcpy( h_TissueBlocks_default, d_TissueBlocks_default, sizeof(xmachine_memory_TissueBlock_list), cudaMemcpyDeviceToHost);
 	if (cudaStatus != cudaSuccess)
 	{
-		fprintf(stderr,"Error Copying A Agent moving_A State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
+		fprintf(stderr,"Error Copying TissueBlock Agent default State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
 		exit(cudaStatus);
 	}
-	cudaStatus = cudaMemcpy( h_As_change_direction_A, d_As_change_direction_A, sizeof(xmachine_memory_A_list), cudaMemcpyDeviceToHost);
+	cudaStatus = cudaMemcpy( h_Fibroblasts_Quiescent, d_Fibroblasts_Quiescent, sizeof(xmachine_memory_Fibroblast_list), cudaMemcpyDeviceToHost);
 	if (cudaStatus != cudaSuccess)
 	{
-		fprintf(stderr,"Error Copying A Agent change_direction_A State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
+		fprintf(stderr,"Error Copying Fibroblast Agent Quiescent State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
 		exit(cudaStatus);
 	}
-	cudaStatus = cudaMemcpy( h_As_get_going_again_A, d_As_get_going_again_A, sizeof(xmachine_memory_A_list), cudaMemcpyDeviceToHost);
+	cudaStatus = cudaMemcpy( h_Fibroblasts_EarlySenescent, d_Fibroblasts_EarlySenescent, sizeof(xmachine_memory_Fibroblast_list), cudaMemcpyDeviceToHost);
 	if (cudaStatus != cudaSuccess)
 	{
-		fprintf(stderr,"Error Copying A Agent get_going_again_A State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
+		fprintf(stderr,"Error Copying Fibroblast Agent EarlySenescent State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
 		exit(cudaStatus);
 	}
-	cudaStatus = cudaMemcpy( h_Bs_moving_B, d_Bs_moving_B, sizeof(xmachine_memory_B_list), cudaMemcpyDeviceToHost);
+	cudaStatus = cudaMemcpy( h_Fibroblasts_Senescent, d_Fibroblasts_Senescent, sizeof(xmachine_memory_Fibroblast_list), cudaMemcpyDeviceToHost);
 	if (cudaStatus != cudaSuccess)
 	{
-		fprintf(stderr,"Error Copying B Agent moving_B State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
+		fprintf(stderr,"Error Copying Fibroblast Agent Senescent State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
 		exit(cudaStatus);
 	}
-	cudaStatus = cudaMemcpy( h_Bs_change_direction_B, d_Bs_change_direction_B, sizeof(xmachine_memory_B_list), cudaMemcpyDeviceToHost);
+	cudaStatus = cudaMemcpy( h_Fibroblasts_Proliferating, d_Fibroblasts_Proliferating, sizeof(xmachine_memory_Fibroblast_list), cudaMemcpyDeviceToHost);
 	if (cudaStatus != cudaSuccess)
 	{
-		fprintf(stderr,"Error Copying B Agent change_direction_B State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
+		fprintf(stderr,"Error Copying Fibroblast Agent Proliferating State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
 		exit(cudaStatus);
 	}
-	cudaStatus = cudaMemcpy( h_Bs_get_going_again_B, d_Bs_get_going_again_B, sizeof(xmachine_memory_B_list), cudaMemcpyDeviceToHost);
+	cudaStatus = cudaMemcpy( h_Fibroblasts_Repair, d_Fibroblasts_Repair, sizeof(xmachine_memory_Fibroblast_list), cudaMemcpyDeviceToHost);
 	if (cudaStatus != cudaSuccess)
 	{
-		fprintf(stderr,"Error Copying B Agent get_going_again_B State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
+		fprintf(stderr,"Error Copying Fibroblast Agent Repair State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
 		exit(cudaStatus);
 	}
 	
@@ -178,287 +178,230 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_A
     fputs("</itno>\n", file);
     fputs("<environment>\n" , file);
     
+    fputs("\t<TISSUE_DAMAGE_PROB>", file);
+    sprintf(data, "%f", (*get_TISSUE_DAMAGE_PROB()));
+    fputs(data, file);
+    fputs("</TISSUE_DAMAGE_PROB>\n", file);
+    fputs("\t<TISSUE_SIZE>", file);
+    sprintf(data, "%f", (*get_TISSUE_SIZE()));
+    fputs(data, file);
+    fputs("</TISSUE_SIZE>\n", file);
 	fputs("</environment>\n" , file);
 
-	//Write each A agent to xml
-	for (int i=0; i<h_xmachine_memory_A_moving_A_count; i++){
+	//Write each TissueBlock agent to xml
+	for (int i=0; i<h_xmachine_memory_TissueBlock_default_count; i++){
 		fputs("<xagent>\n" , file);
-		fputs("<name>A</name>\n", file);
+		fputs("<name>TissueBlock</name>\n", file);
         
 		fputs("<id>", file);
-        sprintf(data, "%d", h_As_moving_A->id[i]);
+        sprintf(data, "%d", h_TissueBlocks_default->id[i]);
 		fputs(data, file);
 		fputs("</id>\n", file);
         
 		fputs("<x>", file);
-        sprintf(data, "%f", h_As_moving_A->x[i]);
+        sprintf(data, "%f", h_TissueBlocks_default->x[i]);
 		fputs(data, file);
 		fputs("</x>\n", file);
         
 		fputs("<y>", file);
-        sprintf(data, "%f", h_As_moving_A->y[i]);
+        sprintf(data, "%f", h_TissueBlocks_default->y[i]);
 		fputs(data, file);
 		fputs("</y>\n", file);
         
 		fputs("<z>", file);
-        sprintf(data, "%f", h_As_moving_A->z[i]);
+        sprintf(data, "%f", h_TissueBlocks_default->z[i]);
 		fputs(data, file);
 		fputs("</z>\n", file);
         
-		fputs("<fx>", file);
-        sprintf(data, "%f", h_As_moving_A->fx[i]);
+		fputs("<damage>", file);
+        sprintf(data, "%d", h_TissueBlocks_default->damage[i]);
 		fputs(data, file);
-		fputs("</fx>\n", file);
-        
-		fputs("<fy>", file);
-        sprintf(data, "%f", h_As_moving_A->fy[i]);
-		fputs(data, file);
-		fputs("</fy>\n", file);
-        
-		fputs("<fz>", file);
-        sprintf(data, "%f", h_As_moving_A->fz[i]);
-		fputs(data, file);
-		fputs("</fz>\n", file);
-        
-		fputs("<colour>", file);
-        sprintf(data, "%d", h_As_moving_A->colour[i]);
-		fputs(data, file);
-		fputs("</colour>\n", file);
+		fputs("</damage>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
-	//Write each A agent to xml
-	for (int i=0; i<h_xmachine_memory_A_change_direction_A_count; i++){
+	//Write each Fibroblast agent to xml
+	for (int i=0; i<h_xmachine_memory_Fibroblast_Quiescent_count; i++){
 		fputs("<xagent>\n" , file);
-		fputs("<name>A</name>\n", file);
+		fputs("<name>Fibroblast</name>\n", file);
         
 		fputs("<id>", file);
-        sprintf(data, "%d", h_As_change_direction_A->id[i]);
+        sprintf(data, "%d", h_Fibroblasts_Quiescent->id[i]);
 		fputs(data, file);
 		fputs("</id>\n", file);
         
 		fputs("<x>", file);
-        sprintf(data, "%f", h_As_change_direction_A->x[i]);
+        sprintf(data, "%f", h_Fibroblasts_Quiescent->x[i]);
 		fputs(data, file);
 		fputs("</x>\n", file);
         
 		fputs("<y>", file);
-        sprintf(data, "%f", h_As_change_direction_A->y[i]);
+        sprintf(data, "%f", h_Fibroblasts_Quiescent->y[i]);
 		fputs(data, file);
 		fputs("</y>\n", file);
         
 		fputs("<z>", file);
-        sprintf(data, "%f", h_As_change_direction_A->z[i]);
+        sprintf(data, "%f", h_Fibroblasts_Quiescent->z[i]);
 		fputs(data, file);
 		fputs("</z>\n", file);
         
-		fputs("<fx>", file);
-        sprintf(data, "%f", h_As_change_direction_A->fx[i]);
+		fputs("<doublings>", file);
+        sprintf(data, "%f", h_Fibroblasts_Quiescent->doublings[i]);
 		fputs(data, file);
-		fputs("</fx>\n", file);
+		fputs("</doublings>\n", file);
         
-		fputs("<fy>", file);
-        sprintf(data, "%f", h_As_change_direction_A->fy[i]);
+		fputs("<damage>", file);
+        sprintf(data, "%f", h_Fibroblasts_Quiescent->damage[i]);
 		fputs(data, file);
-		fputs("</fy>\n", file);
-        
-		fputs("<fz>", file);
-        sprintf(data, "%f", h_As_change_direction_A->fz[i]);
-		fputs(data, file);
-		fputs("</fz>\n", file);
-        
-		fputs("<colour>", file);
-        sprintf(data, "%d", h_As_change_direction_A->colour[i]);
-		fputs(data, file);
-		fputs("</colour>\n", file);
+		fputs("</damage>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
-	//Write each A agent to xml
-	for (int i=0; i<h_xmachine_memory_A_get_going_again_A_count; i++){
+	//Write each Fibroblast agent to xml
+	for (int i=0; i<h_xmachine_memory_Fibroblast_EarlySenescent_count; i++){
 		fputs("<xagent>\n" , file);
-		fputs("<name>A</name>\n", file);
+		fputs("<name>Fibroblast</name>\n", file);
         
 		fputs("<id>", file);
-        sprintf(data, "%d", h_As_get_going_again_A->id[i]);
+        sprintf(data, "%d", h_Fibroblasts_EarlySenescent->id[i]);
 		fputs(data, file);
 		fputs("</id>\n", file);
         
 		fputs("<x>", file);
-        sprintf(data, "%f", h_As_get_going_again_A->x[i]);
+        sprintf(data, "%f", h_Fibroblasts_EarlySenescent->x[i]);
 		fputs(data, file);
 		fputs("</x>\n", file);
         
 		fputs("<y>", file);
-        sprintf(data, "%f", h_As_get_going_again_A->y[i]);
+        sprintf(data, "%f", h_Fibroblasts_EarlySenescent->y[i]);
 		fputs(data, file);
 		fputs("</y>\n", file);
         
 		fputs("<z>", file);
-        sprintf(data, "%f", h_As_get_going_again_A->z[i]);
+        sprintf(data, "%f", h_Fibroblasts_EarlySenescent->z[i]);
 		fputs(data, file);
 		fputs("</z>\n", file);
         
-		fputs("<fx>", file);
-        sprintf(data, "%f", h_As_get_going_again_A->fx[i]);
+		fputs("<doublings>", file);
+        sprintf(data, "%f", h_Fibroblasts_EarlySenescent->doublings[i]);
 		fputs(data, file);
-		fputs("</fx>\n", file);
+		fputs("</doublings>\n", file);
         
-		fputs("<fy>", file);
-        sprintf(data, "%f", h_As_get_going_again_A->fy[i]);
+		fputs("<damage>", file);
+        sprintf(data, "%f", h_Fibroblasts_EarlySenescent->damage[i]);
 		fputs(data, file);
-		fputs("</fy>\n", file);
-        
-		fputs("<fz>", file);
-        sprintf(data, "%f", h_As_get_going_again_A->fz[i]);
-		fputs(data, file);
-		fputs("</fz>\n", file);
-        
-		fputs("<colour>", file);
-        sprintf(data, "%d", h_As_get_going_again_A->colour[i]);
-		fputs(data, file);
-		fputs("</colour>\n", file);
+		fputs("</damage>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
-	//Write each B agent to xml
-	for (int i=0; i<h_xmachine_memory_B_moving_B_count; i++){
+	//Write each Fibroblast agent to xml
+	for (int i=0; i<h_xmachine_memory_Fibroblast_Senescent_count; i++){
 		fputs("<xagent>\n" , file);
-		fputs("<name>B</name>\n", file);
+		fputs("<name>Fibroblast</name>\n", file);
         
 		fputs("<id>", file);
-        sprintf(data, "%d", h_Bs_moving_B->id[i]);
+        sprintf(data, "%d", h_Fibroblasts_Senescent->id[i]);
 		fputs(data, file);
 		fputs("</id>\n", file);
         
 		fputs("<x>", file);
-        sprintf(data, "%f", h_Bs_moving_B->x[i]);
+        sprintf(data, "%f", h_Fibroblasts_Senescent->x[i]);
 		fputs(data, file);
 		fputs("</x>\n", file);
         
 		fputs("<y>", file);
-        sprintf(data, "%f", h_Bs_moving_B->y[i]);
+        sprintf(data, "%f", h_Fibroblasts_Senescent->y[i]);
 		fputs(data, file);
 		fputs("</y>\n", file);
         
 		fputs("<z>", file);
-        sprintf(data, "%f", h_Bs_moving_B->z[i]);
+        sprintf(data, "%f", h_Fibroblasts_Senescent->z[i]);
 		fputs(data, file);
 		fputs("</z>\n", file);
         
-		fputs("<fx>", file);
-        sprintf(data, "%f", h_Bs_moving_B->fx[i]);
+		fputs("<doublings>", file);
+        sprintf(data, "%f", h_Fibroblasts_Senescent->doublings[i]);
 		fputs(data, file);
-		fputs("</fx>\n", file);
+		fputs("</doublings>\n", file);
         
-		fputs("<fy>", file);
-        sprintf(data, "%f", h_Bs_moving_B->fy[i]);
+		fputs("<damage>", file);
+        sprintf(data, "%f", h_Fibroblasts_Senescent->damage[i]);
 		fputs(data, file);
-		fputs("</fy>\n", file);
-        
-		fputs("<fz>", file);
-        sprintf(data, "%f", h_Bs_moving_B->fz[i]);
-		fputs(data, file);
-		fputs("</fz>\n", file);
-        
-		fputs("<colour>", file);
-        sprintf(data, "%d", h_Bs_moving_B->colour[i]);
-		fputs(data, file);
-		fputs("</colour>\n", file);
+		fputs("</damage>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
-	//Write each B agent to xml
-	for (int i=0; i<h_xmachine_memory_B_change_direction_B_count; i++){
+	//Write each Fibroblast agent to xml
+	for (int i=0; i<h_xmachine_memory_Fibroblast_Proliferating_count; i++){
 		fputs("<xagent>\n" , file);
-		fputs("<name>B</name>\n", file);
+		fputs("<name>Fibroblast</name>\n", file);
         
 		fputs("<id>", file);
-        sprintf(data, "%d", h_Bs_change_direction_B->id[i]);
+        sprintf(data, "%d", h_Fibroblasts_Proliferating->id[i]);
 		fputs(data, file);
 		fputs("</id>\n", file);
         
 		fputs("<x>", file);
-        sprintf(data, "%f", h_Bs_change_direction_B->x[i]);
+        sprintf(data, "%f", h_Fibroblasts_Proliferating->x[i]);
 		fputs(data, file);
 		fputs("</x>\n", file);
         
 		fputs("<y>", file);
-        sprintf(data, "%f", h_Bs_change_direction_B->y[i]);
+        sprintf(data, "%f", h_Fibroblasts_Proliferating->y[i]);
 		fputs(data, file);
 		fputs("</y>\n", file);
         
 		fputs("<z>", file);
-        sprintf(data, "%f", h_Bs_change_direction_B->z[i]);
+        sprintf(data, "%f", h_Fibroblasts_Proliferating->z[i]);
 		fputs(data, file);
 		fputs("</z>\n", file);
         
-		fputs("<fx>", file);
-        sprintf(data, "%f", h_Bs_change_direction_B->fx[i]);
+		fputs("<doublings>", file);
+        sprintf(data, "%f", h_Fibroblasts_Proliferating->doublings[i]);
 		fputs(data, file);
-		fputs("</fx>\n", file);
+		fputs("</doublings>\n", file);
         
-		fputs("<fy>", file);
-        sprintf(data, "%f", h_Bs_change_direction_B->fy[i]);
+		fputs("<damage>", file);
+        sprintf(data, "%f", h_Fibroblasts_Proliferating->damage[i]);
 		fputs(data, file);
-		fputs("</fy>\n", file);
-        
-		fputs("<fz>", file);
-        sprintf(data, "%f", h_Bs_change_direction_B->fz[i]);
-		fputs(data, file);
-		fputs("</fz>\n", file);
-        
-		fputs("<colour>", file);
-        sprintf(data, "%d", h_Bs_change_direction_B->colour[i]);
-		fputs(data, file);
-		fputs("</colour>\n", file);
+		fputs("</damage>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
-	//Write each B agent to xml
-	for (int i=0; i<h_xmachine_memory_B_get_going_again_B_count; i++){
+	//Write each Fibroblast agent to xml
+	for (int i=0; i<h_xmachine_memory_Fibroblast_Repair_count; i++){
 		fputs("<xagent>\n" , file);
-		fputs("<name>B</name>\n", file);
+		fputs("<name>Fibroblast</name>\n", file);
         
 		fputs("<id>", file);
-        sprintf(data, "%d", h_Bs_get_going_again_B->id[i]);
+        sprintf(data, "%d", h_Fibroblasts_Repair->id[i]);
 		fputs(data, file);
 		fputs("</id>\n", file);
         
 		fputs("<x>", file);
-        sprintf(data, "%f", h_Bs_get_going_again_B->x[i]);
+        sprintf(data, "%f", h_Fibroblasts_Repair->x[i]);
 		fputs(data, file);
 		fputs("</x>\n", file);
         
 		fputs("<y>", file);
-        sprintf(data, "%f", h_Bs_get_going_again_B->y[i]);
+        sprintf(data, "%f", h_Fibroblasts_Repair->y[i]);
 		fputs(data, file);
 		fputs("</y>\n", file);
         
 		fputs("<z>", file);
-        sprintf(data, "%f", h_Bs_get_going_again_B->z[i]);
+        sprintf(data, "%f", h_Fibroblasts_Repair->z[i]);
 		fputs(data, file);
 		fputs("</z>\n", file);
         
-		fputs("<fx>", file);
-        sprintf(data, "%f", h_Bs_get_going_again_B->fx[i]);
+		fputs("<doublings>", file);
+        sprintf(data, "%f", h_Fibroblasts_Repair->doublings[i]);
 		fputs(data, file);
-		fputs("</fx>\n", file);
+		fputs("</doublings>\n", file);
         
-		fputs("<fy>", file);
-        sprintf(data, "%f", h_Bs_get_going_again_B->fy[i]);
+		fputs("<damage>", file);
+        sprintf(data, "%f", h_Fibroblasts_Repair->damage[i]);
 		fputs(data, file);
-		fputs("</fy>\n", file);
-        
-		fputs("<fz>", file);
-        sprintf(data, "%f", h_Bs_get_going_again_B->fz[i]);
-		fputs(data, file);
-		fputs("</fz>\n", file);
-        
-		fputs("<colour>", file);
-        sprintf(data, "%d", h_Bs_get_going_again_B->colour[i]);
-		fputs(data, file);
-		fputs("</colour>\n", file);
+		fputs("</damage>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
@@ -472,7 +415,17 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_A
 
 }
 
-void readInitialStates(char* inputpath, xmachine_memory_A_list* h_As, int* h_xmachine_memory_A_count,xmachine_memory_B_list* h_Bs, int* h_xmachine_memory_B_count)
+void initEnvVars()
+{
+PROFILE_SCOPED_RANGE("initEnvVars");
+
+    float t_TISSUE_DAMAGE_PROB = (float)0.1;
+    set_TISSUE_DAMAGE_PROB(&t_TISSUE_DAMAGE_PROB);
+    float t_TISSUE_SIZE = (float)0.1;
+    set_TISSUE_SIZE(&t_TISSUE_SIZE);
+}
+
+void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_TissueBlocks, int* h_xmachine_memory_TissueBlock_count,xmachine_memory_Fibroblast_list* h_Fibroblasts, int* h_xmachine_memory_Fibroblast_count)
 {
     PROFILE_SCOPED_RANGE("readInitialStates");
 
@@ -492,52 +445,49 @@ void readInitialStates(char* inputpath, xmachine_memory_A_list* h_As, int* h_xma
 	/* Variables for checking tags */
 	int reading, i;
 	int in_tag, in_itno, in_xagent, in_name, in_comment;
-    int in_A_id;
-    int in_A_x;
-    int in_A_y;
-    int in_A_z;
-    int in_A_fx;
-    int in_A_fy;
-    int in_A_fz;
-    int in_A_colour;
-    int in_B_id;
-    int in_B_x;
-    int in_B_y;
-    int in_B_z;
-    int in_B_fx;
-    int in_B_fy;
-    int in_B_fz;
-    int in_B_colour;
+    int in_TissueBlock_id;
+    int in_TissueBlock_x;
+    int in_TissueBlock_y;
+    int in_TissueBlock_z;
+    int in_TissueBlock_damage;
+    int in_Fibroblast_id;
+    int in_Fibroblast_x;
+    int in_Fibroblast_y;
+    int in_Fibroblast_z;
+    int in_Fibroblast_doublings;
+    int in_Fibroblast_damage;
     
     /* tags for environment global variables */
     int in_env;
+    int in_env_TISSUE_DAMAGE_PROB;
+    
+    int in_env_TISSUE_SIZE;
+    
 	/* set agent count to zero */
-	*h_xmachine_memory_A_count = 0;
-	*h_xmachine_memory_B_count = 0;
+	*h_xmachine_memory_TissueBlock_count = 0;
+	*h_xmachine_memory_Fibroblast_count = 0;
 	
 	/* Variables for initial state data */
-	int A_id;
-	float A_x;
-	float A_y;
-	float A_z;
-	float A_fx;
-	float A_fy;
-	float A_fz;
-	int A_colour;
-	int B_id;
-	float B_x;
-	float B_y;
-	float B_z;
-	float B_fx;
-	float B_fy;
-	float B_fz;
-	int B_colour;
+	int TissueBlock_id;
+	float TissueBlock_x;
+	float TissueBlock_y;
+	float TissueBlock_z;
+	int TissueBlock_damage;
+	int Fibroblast_id;
+	float Fibroblast_x;
+	float Fibroblast_y;
+	float Fibroblast_z;
+	float Fibroblast_doublings;
+	float Fibroblast_damage;
 
     /* Variables for environment variables */
+    float env_TISSUE_DAMAGE_PROB;
+    float env_TISSUE_SIZE;
     
 
 
 	/* Initialise variables */
+    initEnvVars();
     agent_maximum.x = 0;
     agent_maximum.y = 0;
     agent_maximum.z = 0;
@@ -551,70 +501,59 @@ void readInitialStates(char* inputpath, xmachine_memory_A_list* h_As, int* h_xma
     in_env = 0;
     in_xagent = 0;
 	in_name = 0;
-	in_A_id = 0;
-	in_A_x = 0;
-	in_A_y = 0;
-	in_A_z = 0;
-	in_A_fx = 0;
-	in_A_fy = 0;
-	in_A_fz = 0;
-	in_A_colour = 0;
-	in_B_id = 0;
-	in_B_x = 0;
-	in_B_y = 0;
-	in_B_z = 0;
-	in_B_fx = 0;
-	in_B_fy = 0;
-	in_B_fz = 0;
-	in_B_colour = 0;
-	//set all A values to 0
+	in_TissueBlock_id = 0;
+	in_TissueBlock_x = 0;
+	in_TissueBlock_y = 0;
+	in_TissueBlock_z = 0;
+	in_TissueBlock_damage = 0;
+	in_Fibroblast_id = 0;
+	in_Fibroblast_x = 0;
+	in_Fibroblast_y = 0;
+	in_Fibroblast_z = 0;
+	in_Fibroblast_doublings = 0;
+	in_Fibroblast_damage = 0;
+    in_env_TISSUE_DAMAGE_PROB = 0;
+    in_env_TISSUE_SIZE = 0;
+	//set all TissueBlock values to 0
 	//If this is not done then it will cause errors in emu mode where undefined memory is not 0
-	for (int k=0; k<xmachine_memory_A_MAX; k++)
+	for (int k=0; k<xmachine_memory_TissueBlock_MAX; k++)
 	{	
-		h_As->id[k] = 0;
-		h_As->x[k] = 0;
-		h_As->y[k] = 0;
-		h_As->z[k] = 0;
-		h_As->fx[k] = 0;
-		h_As->fy[k] = 0;
-		h_As->fz[k] = 0;
-		h_As->colour[k] = 0;
+		h_TissueBlocks->id[k] = 0;
+		h_TissueBlocks->x[k] = 0;
+		h_TissueBlocks->y[k] = 0;
+		h_TissueBlocks->z[k] = 0;
+		h_TissueBlocks->damage[k] = 0;
 	}
 	
-	//set all B values to 0
+	//set all Fibroblast values to 0
 	//If this is not done then it will cause errors in emu mode where undefined memory is not 0
-	for (int k=0; k<xmachine_memory_B_MAX; k++)
+	for (int k=0; k<xmachine_memory_Fibroblast_MAX; k++)
 	{	
-		h_Bs->id[k] = 0;
-		h_Bs->x[k] = 0;
-		h_Bs->y[k] = 0;
-		h_Bs->z[k] = 0;
-		h_Bs->fx[k] = 0;
-		h_Bs->fy[k] = 0;
-		h_Bs->fz[k] = 0;
-		h_Bs->colour[k] = 0;
+		h_Fibroblasts->id[k] = 0;
+		h_Fibroblasts->x[k] = 0;
+		h_Fibroblasts->y[k] = 0;
+		h_Fibroblasts->z[k] = 0;
+		h_Fibroblasts->doublings[k] = 0;
+		h_Fibroblasts->damage[k] = 0;
 	}
 	
 
 	/* Default variables for memory */
-    A_id = 0;
-    A_x = 0;
-    A_y = 0;
-    A_z = 0;
-    A_fx = 0;
-    A_fy = 0;
-    A_fz = 0;
-    A_colour = 0;
-    B_id = 0;
-    B_x = 0;
-    B_y = 0;
-    B_z = 0;
-    B_fx = 0;
-    B_fy = 0;
-    B_fz = 0;
-    B_colour = 0;
+    TissueBlock_id = 0;
+    TissueBlock_x = 0;
+    TissueBlock_y = 0;
+    TissueBlock_z = 0;
+    TissueBlock_damage = 0;
+    Fibroblast_id = 0;
+    Fibroblast_x = 0;
+    Fibroblast_y = 0;
+    Fibroblast_z = 0;
+    Fibroblast_doublings = 0;
+    Fibroblast_damage = 0;
 
     /* Default variables for environment variables */
+    env_TISSUE_DAMAGE_PROB = 0.1;
+    env_TISSUE_SIZE = 0.1;
     
     
     // If no input path was specified, issue a message and return.
@@ -704,79 +643,74 @@ void readInitialStates(char* inputpath, xmachine_memory_A_list* h_As, int* h_xma
             if(strcmp(buffer, "xagent") == 0) in_xagent = 1;
 			if(strcmp(buffer, "/xagent") == 0)
 			{
-				if(strcmp(agentname, "A") == 0)
+				if(strcmp(agentname, "TissueBlock") == 0)
 				{
-					if (*h_xmachine_memory_A_count > xmachine_memory_A_MAX){
-						printf("ERROR: MAX Buffer size (%i) for agent A exceeded whilst reading data\n", xmachine_memory_A_MAX);
+					if (*h_xmachine_memory_TissueBlock_count > xmachine_memory_TissueBlock_MAX){
+						printf("ERROR: MAX Buffer size (%i) for agent TissueBlock exceeded whilst reading data\n", xmachine_memory_TissueBlock_MAX);
 						// Close the file and stop reading
 						fclose(file);
 						exit(EXIT_FAILURE);
 					}
                     
-					h_As->id[*h_xmachine_memory_A_count] = A_id;
-					h_As->x[*h_xmachine_memory_A_count] = A_x;//Check maximum x value
-                    if(agent_maximum.x < A_x)
-                        agent_maximum.x = (float)A_x;
+					h_TissueBlocks->id[*h_xmachine_memory_TissueBlock_count] = TissueBlock_id;
+					h_TissueBlocks->x[*h_xmachine_memory_TissueBlock_count] = TissueBlock_x;//Check maximum x value
+                    if(agent_maximum.x < TissueBlock_x)
+                        agent_maximum.x = (float)TissueBlock_x;
                     //Check minimum x value
-                    if(agent_minimum.x > A_x)
-                        agent_minimum.x = (float)A_x;
+                    if(agent_minimum.x > TissueBlock_x)
+                        agent_minimum.x = (float)TissueBlock_x;
                     
-					h_As->y[*h_xmachine_memory_A_count] = A_y;//Check maximum y value
-                    if(agent_maximum.y < A_y)
-                        agent_maximum.y = (float)A_y;
+					h_TissueBlocks->y[*h_xmachine_memory_TissueBlock_count] = TissueBlock_y;//Check maximum y value
+                    if(agent_maximum.y < TissueBlock_y)
+                        agent_maximum.y = (float)TissueBlock_y;
                     //Check minimum y value
-                    if(agent_minimum.y > A_y)
-                        agent_minimum.y = (float)A_y;
+                    if(agent_minimum.y > TissueBlock_y)
+                        agent_minimum.y = (float)TissueBlock_y;
                     
-					h_As->z[*h_xmachine_memory_A_count] = A_z;//Check maximum z value
-                    if(agent_maximum.z < A_z)
-                        agent_maximum.z = (float)A_z;
+					h_TissueBlocks->z[*h_xmachine_memory_TissueBlock_count] = TissueBlock_z;//Check maximum z value
+                    if(agent_maximum.z < TissueBlock_z)
+                        agent_maximum.z = (float)TissueBlock_z;
                     //Check minimum z value
-                    if(agent_minimum.z > A_z)
-                        agent_minimum.z = (float)A_z;
+                    if(agent_minimum.z > TissueBlock_z)
+                        agent_minimum.z = (float)TissueBlock_z;
                     
-					h_As->fx[*h_xmachine_memory_A_count] = A_fx;
-					h_As->fy[*h_xmachine_memory_A_count] = A_fy;
-					h_As->fz[*h_xmachine_memory_A_count] = A_fz;
-					h_As->colour[*h_xmachine_memory_A_count] = A_colour;
-					(*h_xmachine_memory_A_count) ++;	
+					h_TissueBlocks->damage[*h_xmachine_memory_TissueBlock_count] = TissueBlock_damage;
+					(*h_xmachine_memory_TissueBlock_count) ++;	
 				}
-				else if(strcmp(agentname, "B") == 0)
+				else if(strcmp(agentname, "Fibroblast") == 0)
 				{
-					if (*h_xmachine_memory_B_count > xmachine_memory_B_MAX){
-						printf("ERROR: MAX Buffer size (%i) for agent B exceeded whilst reading data\n", xmachine_memory_B_MAX);
+					if (*h_xmachine_memory_Fibroblast_count > xmachine_memory_Fibroblast_MAX){
+						printf("ERROR: MAX Buffer size (%i) for agent Fibroblast exceeded whilst reading data\n", xmachine_memory_Fibroblast_MAX);
 						// Close the file and stop reading
 						fclose(file);
 						exit(EXIT_FAILURE);
 					}
                     
-					h_Bs->id[*h_xmachine_memory_B_count] = B_id;
-					h_Bs->x[*h_xmachine_memory_B_count] = B_x;//Check maximum x value
-                    if(agent_maximum.x < B_x)
-                        agent_maximum.x = (float)B_x;
+					h_Fibroblasts->id[*h_xmachine_memory_Fibroblast_count] = Fibroblast_id;
+					h_Fibroblasts->x[*h_xmachine_memory_Fibroblast_count] = Fibroblast_x;//Check maximum x value
+                    if(agent_maximum.x < Fibroblast_x)
+                        agent_maximum.x = (float)Fibroblast_x;
                     //Check minimum x value
-                    if(agent_minimum.x > B_x)
-                        agent_minimum.x = (float)B_x;
+                    if(agent_minimum.x > Fibroblast_x)
+                        agent_minimum.x = (float)Fibroblast_x;
                     
-					h_Bs->y[*h_xmachine_memory_B_count] = B_y;//Check maximum y value
-                    if(agent_maximum.y < B_y)
-                        agent_maximum.y = (float)B_y;
+					h_Fibroblasts->y[*h_xmachine_memory_Fibroblast_count] = Fibroblast_y;//Check maximum y value
+                    if(agent_maximum.y < Fibroblast_y)
+                        agent_maximum.y = (float)Fibroblast_y;
                     //Check minimum y value
-                    if(agent_minimum.y > B_y)
-                        agent_minimum.y = (float)B_y;
+                    if(agent_minimum.y > Fibroblast_y)
+                        agent_minimum.y = (float)Fibroblast_y;
                     
-					h_Bs->z[*h_xmachine_memory_B_count] = B_z;//Check maximum z value
-                    if(agent_maximum.z < B_z)
-                        agent_maximum.z = (float)B_z;
+					h_Fibroblasts->z[*h_xmachine_memory_Fibroblast_count] = Fibroblast_z;//Check maximum z value
+                    if(agent_maximum.z < Fibroblast_z)
+                        agent_maximum.z = (float)Fibroblast_z;
                     //Check minimum z value
-                    if(agent_minimum.z > B_z)
-                        agent_minimum.z = (float)B_z;
+                    if(agent_minimum.z > Fibroblast_z)
+                        agent_minimum.z = (float)Fibroblast_z;
                     
-					h_Bs->fx[*h_xmachine_memory_B_count] = B_fx;
-					h_Bs->fy[*h_xmachine_memory_B_count] = B_fy;
-					h_Bs->fz[*h_xmachine_memory_B_count] = B_fz;
-					h_Bs->colour[*h_xmachine_memory_B_count] = B_colour;
-					(*h_xmachine_memory_B_count) ++;	
+					h_Fibroblasts->doublings[*h_xmachine_memory_Fibroblast_count] = Fibroblast_doublings;
+					h_Fibroblasts->damage[*h_xmachine_memory_Fibroblast_count] = Fibroblast_damage;
+					(*h_xmachine_memory_Fibroblast_count) ++;	
 				}
 				else
 				{
@@ -786,60 +720,49 @@ void readInitialStates(char* inputpath, xmachine_memory_A_list* h_As, int* h_xma
 
 
 				/* Reset xagent variables */
-                A_id = 0;
-                A_x = 0;
-                A_y = 0;
-                A_z = 0;
-                A_fx = 0;
-                A_fy = 0;
-                A_fz = 0;
-                A_colour = 0;
-                B_id = 0;
-                B_x = 0;
-                B_y = 0;
-                B_z = 0;
-                B_fx = 0;
-                B_fy = 0;
-                B_fz = 0;
-                B_colour = 0;
+                TissueBlock_id = 0;
+                TissueBlock_x = 0;
+                TissueBlock_y = 0;
+                TissueBlock_z = 0;
+                TissueBlock_damage = 0;
+                Fibroblast_id = 0;
+                Fibroblast_x = 0;
+                Fibroblast_y = 0;
+                Fibroblast_z = 0;
+                Fibroblast_doublings = 0;
+                Fibroblast_damage = 0;
                 
                 in_xagent = 0;
 			}
-			if(strcmp(buffer, "id") == 0) in_A_id = 1;
-			if(strcmp(buffer, "/id") == 0) in_A_id = 0;
-			if(strcmp(buffer, "x") == 0) in_A_x = 1;
-			if(strcmp(buffer, "/x") == 0) in_A_x = 0;
-			if(strcmp(buffer, "y") == 0) in_A_y = 1;
-			if(strcmp(buffer, "/y") == 0) in_A_y = 0;
-			if(strcmp(buffer, "z") == 0) in_A_z = 1;
-			if(strcmp(buffer, "/z") == 0) in_A_z = 0;
-			if(strcmp(buffer, "fx") == 0) in_A_fx = 1;
-			if(strcmp(buffer, "/fx") == 0) in_A_fx = 0;
-			if(strcmp(buffer, "fy") == 0) in_A_fy = 1;
-			if(strcmp(buffer, "/fy") == 0) in_A_fy = 0;
-			if(strcmp(buffer, "fz") == 0) in_A_fz = 1;
-			if(strcmp(buffer, "/fz") == 0) in_A_fz = 0;
-			if(strcmp(buffer, "colour") == 0) in_A_colour = 1;
-			if(strcmp(buffer, "/colour") == 0) in_A_colour = 0;
-			if(strcmp(buffer, "id") == 0) in_B_id = 1;
-			if(strcmp(buffer, "/id") == 0) in_B_id = 0;
-			if(strcmp(buffer, "x") == 0) in_B_x = 1;
-			if(strcmp(buffer, "/x") == 0) in_B_x = 0;
-			if(strcmp(buffer, "y") == 0) in_B_y = 1;
-			if(strcmp(buffer, "/y") == 0) in_B_y = 0;
-			if(strcmp(buffer, "z") == 0) in_B_z = 1;
-			if(strcmp(buffer, "/z") == 0) in_B_z = 0;
-			if(strcmp(buffer, "fx") == 0) in_B_fx = 1;
-			if(strcmp(buffer, "/fx") == 0) in_B_fx = 0;
-			if(strcmp(buffer, "fy") == 0) in_B_fy = 1;
-			if(strcmp(buffer, "/fy") == 0) in_B_fy = 0;
-			if(strcmp(buffer, "fz") == 0) in_B_fz = 1;
-			if(strcmp(buffer, "/fz") == 0) in_B_fz = 0;
-			if(strcmp(buffer, "colour") == 0) in_B_colour = 1;
-			if(strcmp(buffer, "/colour") == 0) in_B_colour = 0;
+			if(strcmp(buffer, "id") == 0) in_TissueBlock_id = 1;
+			if(strcmp(buffer, "/id") == 0) in_TissueBlock_id = 0;
+			if(strcmp(buffer, "x") == 0) in_TissueBlock_x = 1;
+			if(strcmp(buffer, "/x") == 0) in_TissueBlock_x = 0;
+			if(strcmp(buffer, "y") == 0) in_TissueBlock_y = 1;
+			if(strcmp(buffer, "/y") == 0) in_TissueBlock_y = 0;
+			if(strcmp(buffer, "z") == 0) in_TissueBlock_z = 1;
+			if(strcmp(buffer, "/z") == 0) in_TissueBlock_z = 0;
+			if(strcmp(buffer, "damage") == 0) in_TissueBlock_damage = 1;
+			if(strcmp(buffer, "/damage") == 0) in_TissueBlock_damage = 0;
+			if(strcmp(buffer, "id") == 0) in_Fibroblast_id = 1;
+			if(strcmp(buffer, "/id") == 0) in_Fibroblast_id = 0;
+			if(strcmp(buffer, "x") == 0) in_Fibroblast_x = 1;
+			if(strcmp(buffer, "/x") == 0) in_Fibroblast_x = 0;
+			if(strcmp(buffer, "y") == 0) in_Fibroblast_y = 1;
+			if(strcmp(buffer, "/y") == 0) in_Fibroblast_y = 0;
+			if(strcmp(buffer, "z") == 0) in_Fibroblast_z = 1;
+			if(strcmp(buffer, "/z") == 0) in_Fibroblast_z = 0;
+			if(strcmp(buffer, "doublings") == 0) in_Fibroblast_doublings = 1;
+			if(strcmp(buffer, "/doublings") == 0) in_Fibroblast_doublings = 0;
+			if(strcmp(buffer, "damage") == 0) in_Fibroblast_damage = 1;
+			if(strcmp(buffer, "/damage") == 0) in_Fibroblast_damage = 0;
 			
             /* environment variables */
-            
+            if(strcmp(buffer, "TISSUE_DAMAGE_PROB") == 0) in_env_TISSUE_DAMAGE_PROB = 1;
+            if(strcmp(buffer, "/TISSUE_DAMAGE_PROB") == 0) in_env_TISSUE_DAMAGE_PROB = 0;
+			if(strcmp(buffer, "TISSUE_SIZE") == 0) in_env_TISSUE_SIZE = 1;
+            if(strcmp(buffer, "/TISSUE_SIZE") == 0) in_env_TISSUE_SIZE = 0;
+			
 
 			/* End of tag and reset buffer */
 			in_tag = 0;
@@ -857,57 +780,56 @@ void readInitialStates(char* inputpath, xmachine_memory_A_list* h_As, int* h_xma
 			if(in_name) strcpy(agentname, buffer);
 			else if (in_xagent)
 			{
-				if(in_A_id){
-                    A_id = (int) fpgu_strtol(buffer); 
+				if(in_TissueBlock_id){
+                    TissueBlock_id = (int) fpgu_strtol(buffer); 
                 }
-				if(in_A_x){
-                    A_x = (float) fgpu_atof(buffer); 
+				if(in_TissueBlock_x){
+                    TissueBlock_x = (float) fgpu_atof(buffer); 
                 }
-				if(in_A_y){
-                    A_y = (float) fgpu_atof(buffer); 
+				if(in_TissueBlock_y){
+                    TissueBlock_y = (float) fgpu_atof(buffer); 
                 }
-				if(in_A_z){
-                    A_z = (float) fgpu_atof(buffer); 
+				if(in_TissueBlock_z){
+                    TissueBlock_z = (float) fgpu_atof(buffer); 
                 }
-				if(in_A_fx){
-                    A_fx = (float) fgpu_atof(buffer); 
+				if(in_TissueBlock_damage){
+                    TissueBlock_damage = (int) fpgu_strtol(buffer); 
                 }
-				if(in_A_fy){
-                    A_fy = (float) fgpu_atof(buffer); 
+				if(in_Fibroblast_id){
+                    Fibroblast_id = (int) fpgu_strtol(buffer); 
                 }
-				if(in_A_fz){
-                    A_fz = (float) fgpu_atof(buffer); 
+				if(in_Fibroblast_x){
+                    Fibroblast_x = (float) fgpu_atof(buffer); 
                 }
-				if(in_A_colour){
-                    A_colour = (int) fpgu_strtol(buffer); 
+				if(in_Fibroblast_y){
+                    Fibroblast_y = (float) fgpu_atof(buffer); 
                 }
-				if(in_B_id){
-                    B_id = (int) fpgu_strtol(buffer); 
+				if(in_Fibroblast_z){
+                    Fibroblast_z = (float) fgpu_atof(buffer); 
                 }
-				if(in_B_x){
-                    B_x = (float) fgpu_atof(buffer); 
+				if(in_Fibroblast_doublings){
+                    Fibroblast_doublings = (float) fgpu_atof(buffer); 
                 }
-				if(in_B_y){
-                    B_y = (float) fgpu_atof(buffer); 
-                }
-				if(in_B_z){
-                    B_z = (float) fgpu_atof(buffer); 
-                }
-				if(in_B_fx){
-                    B_fx = (float) fgpu_atof(buffer); 
-                }
-				if(in_B_fy){
-                    B_fy = (float) fgpu_atof(buffer); 
-                }
-				if(in_B_fz){
-                    B_fz = (float) fgpu_atof(buffer); 
-                }
-				if(in_B_colour){
-                    B_colour = (int) fpgu_strtol(buffer); 
+				if(in_Fibroblast_damage){
+                    Fibroblast_damage = (float) fgpu_atof(buffer); 
                 }
 				
             }
             else if (in_env){
+            if(in_env_TISSUE_DAMAGE_PROB){
+              
+                    env_TISSUE_DAMAGE_PROB = (float) fgpu_atof(buffer);
+                    
+                    set_TISSUE_DAMAGE_PROB(&env_TISSUE_DAMAGE_PROB);
+                  
+              }
+            if(in_env_TISSUE_SIZE){
+              
+                    env_TISSUE_SIZE = (float) fgpu_atof(buffer);
+                    
+                    set_TISSUE_SIZE(&env_TISSUE_SIZE);
+                  
+              }
             
             }
 		/* Reset buffer */
