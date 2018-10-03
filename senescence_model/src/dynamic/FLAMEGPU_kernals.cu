@@ -242,12 +242,12 @@ __device__ bool next_cell2D(glm::ivec3* relative_cell)
 }
 
 
-/** Quiescent2Proliferating_function_filter
+/** TransitionToProliferating_function_filter
  *	Standard agent condition function. Filters agents from one state list to the next depending on the condition
  * @param currentState xmachine_memory_Fibroblast_list representing agent i the current state
  * @param nextState xmachine_memory_Fibroblast_list representing agent i the next state
  */
- __global__ void Quiescent2Proliferating_function_filter(xmachine_memory_Fibroblast_list* currentState, xmachine_memory_Fibroblast_list* nextState)
+ __global__ void TransitionToProliferating_function_filter(xmachine_memory_Fibroblast_list* currentState, xmachine_memory_Fibroblast_list* nextState)
  {
 	//global thread index
 	int index = (blockIdx.x*blockDim.x) + threadIdx.x;
@@ -266,42 +266,9 @@ __device__ bool next_cell2D(glm::ivec3* relative_cell)
 			nextState->damage[index] = currentState->damage[index];
 			nextState->proliferate_bool[index] = currentState->proliferate_bool[index];
 			nextState->transition_to_early_sen[index] = currentState->transition_to_early_sen[index];
-			//set scan input flag to 1
-			nextState->_scan_input[index] = 1;
-		}
-		else
-		{
-			//set scan input flag of current state to 1 (keep agent)
-			currentState->_scan_input[index] = 1;
-		}
-	
-	}
- }
-
-/** TransitionToEarlySen_function_filter
- *	Standard agent condition function. Filters agents from one state list to the next depending on the condition
- * @param currentState xmachine_memory_Fibroblast_list representing agent i the current state
- * @param nextState xmachine_memory_Fibroblast_list representing agent i the next state
- */
- __global__ void TransitionToEarlySen_function_filter(xmachine_memory_Fibroblast_list* currentState, xmachine_memory_Fibroblast_list* nextState)
- {
-	//global thread index
-	int index = (blockIdx.x*blockDim.x) + threadIdx.x;
-	
-	//check thread max
-	if (index < d_xmachine_memory_Fibroblast_count){
-	
-		//apply the filter
-		if (currentState->transition_to_early_sen[index]==1)
-		{	//copy agent data to newstate list
-			nextState->id[index] = currentState->id[index];
-			nextState->x[index] = currentState->x[index];
-			nextState->y[index] = currentState->y[index];
-			nextState->z[index] = currentState->z[index];
-			nextState->doublings[index] = currentState->doublings[index];
-			nextState->damage[index] = currentState->damage[index];
-			nextState->proliferate_bool[index] = currentState->proliferate_bool[index];
-			nextState->transition_to_early_sen[index] = currentState->transition_to_early_sen[index];
+			nextState->transition_to_full_sen[index] = currentState->transition_to_full_sen[index];
+			nextState->early_sen_time_counter[index] = currentState->early_sen_time_counter[index];
+			nextState->current_state[index] = currentState->current_state[index];
 			//set scan input flag to 1
 			nextState->_scan_input[index] = 1;
 		}
@@ -489,7 +456,10 @@ __global__ void scatter_Fibroblast_Agents(xmachine_memory_Fibroblast_list* agent
 		agents_dst->doublings[output_index] = agents_src->doublings[index];        
 		agents_dst->damage[output_index] = agents_src->damage[index];        
 		agents_dst->proliferate_bool[output_index] = agents_src->proliferate_bool[index];        
-		agents_dst->transition_to_early_sen[output_index] = agents_src->transition_to_early_sen[index];
+		agents_dst->transition_to_early_sen[output_index] = agents_src->transition_to_early_sen[index];        
+		agents_dst->transition_to_full_sen[output_index] = agents_src->transition_to_full_sen[index];        
+		agents_dst->early_sen_time_counter[output_index] = agents_src->early_sen_time_counter[index];        
+		agents_dst->current_state[output_index] = agents_src->current_state[index];
 	}
 }
 
@@ -517,6 +487,9 @@ __global__ void append_Fibroblast_Agents(xmachine_memory_Fibroblast_list* agents
 	    agents_dst->damage[output_index] = agents_src->damage[index];
 	    agents_dst->proliferate_bool[output_index] = agents_src->proliferate_bool[index];
 	    agents_dst->transition_to_early_sen[output_index] = agents_src->transition_to_early_sen[index];
+	    agents_dst->transition_to_full_sen[output_index] = agents_src->transition_to_full_sen[index];
+	    agents_dst->early_sen_time_counter[output_index] = agents_src->early_sen_time_counter[index];
+	    agents_dst->current_state[output_index] = agents_src->current_state[index];
     }
 }
 
@@ -531,9 +504,12 @@ __global__ void append_Fibroblast_Agents(xmachine_memory_Fibroblast_list* agents
  * @param damage agent variable of type int
  * @param proliferate_bool agent variable of type int
  * @param transition_to_early_sen agent variable of type int
+ * @param transition_to_full_sen agent variable of type int
+ * @param early_sen_time_counter agent variable of type int
+ * @param current_state agent variable of type int
  */
 template <int AGENT_TYPE>
-__device__ void add_Fibroblast_agent(xmachine_memory_Fibroblast_list* agents, int id, float x, float y, float z, float doublings, int damage, int proliferate_bool, int transition_to_early_sen){
+__device__ void add_Fibroblast_agent(xmachine_memory_Fibroblast_list* agents, int id, float x, float y, float z, float doublings, int damage, int proliferate_bool, int transition_to_early_sen, int transition_to_full_sen, int early_sen_time_counter, int current_state){
 	
 	int index;
     
@@ -560,12 +536,15 @@ __device__ void add_Fibroblast_agent(xmachine_memory_Fibroblast_list* agents, in
 	agents->damage[index] = damage;
 	agents->proliferate_bool[index] = proliferate_bool;
 	agents->transition_to_early_sen[index] = transition_to_early_sen;
+	agents->transition_to_full_sen[index] = transition_to_full_sen;
+	agents->early_sen_time_counter[index] = early_sen_time_counter;
+	agents->current_state[index] = current_state;
 
 }
 
 //non templated version assumes DISCRETE_2D but works also for CONTINUOUS
-__device__ void add_Fibroblast_agent(xmachine_memory_Fibroblast_list* agents, int id, float x, float y, float z, float doublings, int damage, int proliferate_bool, int transition_to_early_sen){
-    add_Fibroblast_agent<DISCRETE_2D>(agents, id, x, y, z, doublings, damage, proliferate_bool, transition_to_early_sen);
+__device__ void add_Fibroblast_agent(xmachine_memory_Fibroblast_list* agents, int id, float x, float y, float z, float doublings, int damage, int proliferate_bool, int transition_to_early_sen, int transition_to_full_sen, int early_sen_time_counter, int current_state){
+    add_Fibroblast_agent<DISCRETE_2D>(agents, id, x, y, z, doublings, damage, proliferate_bool, transition_to_early_sen, transition_to_full_sen, early_sen_time_counter, current_state);
 }
 
 /** reorder_Fibroblast_agents
@@ -589,6 +568,9 @@ __global__ void reorder_Fibroblast_agents(unsigned int* values, xmachine_memory_
 	ordered_agents->damage[index] = unordered_agents->damage[old_pos];
 	ordered_agents->proliferate_bool[index] = unordered_agents->proliferate_bool[old_pos];
 	ordered_agents->transition_to_early_sen[index] = unordered_agents->transition_to_early_sen[old_pos];
+	ordered_agents->transition_to_full_sen[index] = unordered_agents->transition_to_full_sen[old_pos];
+	ordered_agents->early_sen_time_counter[index] = unordered_agents->early_sen_time_counter[old_pos];
+	ordered_agents->current_state[index] = unordered_agents->current_state[old_pos];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2543,6 +2525,9 @@ __global__ void GPUFLAME_QuiescentMigration(xmachine_memory_Fibroblast_list* age
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
 	int dead = !QuiescentMigration(&agent, tissue_damage_report_messages, partition_matrix);
@@ -2560,6 +2545,9 @@ __global__ void GPUFLAME_QuiescentMigration(xmachine_memory_Fibroblast_list* age
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 /**
@@ -2588,6 +2576,9 @@ __global__ void GPUFLAME_SenescentMigration(xmachine_memory_Fibroblast_list* age
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
 	int dead = !SenescentMigration(&agent, tissue_damage_report_messages, partition_matrix);
@@ -2605,6 +2596,9 @@ __global__ void GPUFLAME_SenescentMigration(xmachine_memory_Fibroblast_list* age
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 /**
@@ -2633,6 +2627,9 @@ __global__ void GPUFLAME_EarlySenescentMigration(xmachine_memory_Fibroblast_list
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
 	int dead = !EarlySenescentMigration(&agent, tissue_damage_report_messages, partition_matrix);
@@ -2650,6 +2647,9 @@ __global__ void GPUFLAME_EarlySenescentMigration(xmachine_memory_Fibroblast_list
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 /**
@@ -2678,6 +2678,9 @@ __global__ void GPUFLAME_QuiescentTakesDamage(xmachine_memory_Fibroblast_list* a
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
 	int dead = !QuiescentTakesDamage(&agent, fibroblast_damage_report_messages, partition_matrix, rand48);
@@ -2695,6 +2698,9 @@ __global__ void GPUFLAME_QuiescentTakesDamage(xmachine_memory_Fibroblast_list* a
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 /**
@@ -2723,6 +2729,9 @@ __global__ void GPUFLAME_QuiescentSendDamageReport(xmachine_memory_Fibroblast_li
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
 	int dead = !QuiescentSendDamageReport(&agent, fibroblast_damage_report_messages	, rand48);
@@ -2740,12 +2749,15 @@ __global__ void GPUFLAME_QuiescentSendDamageReport(xmachine_memory_Fibroblast_li
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 /**
  *
  */
-__global__ void GPUFLAME_Quiescent2Proliferating(xmachine_memory_Fibroblast_list* agents, RNG_rand48* rand48){
+__global__ void GPUFLAME_TransitionToProliferating(xmachine_memory_Fibroblast_list* agents, RNG_rand48* rand48){
 	
 	//continuous agent: index is agent position in 1D agent list
 	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
@@ -2755,7 +2767,7 @@ __global__ void GPUFLAME_Quiescent2Proliferating(xmachine_memory_Fibroblast_list
         return;
     
 
-	//SoA to AoS - xmachine_memory_Quiescent2Proliferating Coalesced memory read (arrays point to first item for agent index)
+	//SoA to AoS - xmachine_memory_TransitionToProliferating Coalesced memory read (arrays point to first item for agent index)
 	xmachine_memory_Fibroblast agent;
     
     // Thread bounds already checked, but the agent function will still execute. load default values?
@@ -2768,15 +2780,18 @@ __global__ void GPUFLAME_Quiescent2Proliferating(xmachine_memory_Fibroblast_list
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
-	int dead = !Quiescent2Proliferating(&agent, rand48);
+	int dead = !TransitionToProliferating(&agent, rand48);
 	
 
 	//continuous agent: set reallocation flag
 	agents->_scan_input[index]  = dead; 
 
-	//AoS to SoA - xmachine_memory_Quiescent2Proliferating Coalesced memory write (ignore arrays)
+	//AoS to SoA - xmachine_memory_TransitionToProliferating Coalesced memory write (ignore arrays)
 	agents->id[index] = agent.id;
 	agents->x[index] = agent.x;
 	agents->y[index] = agent.y;
@@ -2785,6 +2800,9 @@ __global__ void GPUFLAME_Quiescent2Proliferating(xmachine_memory_Fibroblast_list
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 /**
@@ -2813,6 +2831,9 @@ __global__ void GPUFLAME_Proliferation(xmachine_memory_Fibroblast_list* agents, 
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
 	int dead = !Proliferation(&agent, Fibroblast_agents);
@@ -2830,6 +2851,9 @@ __global__ void GPUFLAME_Proliferation(xmachine_memory_Fibroblast_list* agents, 
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 /**
@@ -2858,6 +2882,9 @@ __global__ void GPUFLAME_BystanderEffect(xmachine_memory_Fibroblast_list* agents
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
 	int dead = !BystanderEffect(&agent, senescent_location_report_messages, partition_matrix, rand48);
@@ -2875,12 +2902,15 @@ __global__ void GPUFLAME_BystanderEffect(xmachine_memory_Fibroblast_list* agents
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 /**
  *
  */
-__global__ void GPUFLAME_ExcessiveDamage(xmachine_memory_Fibroblast_list* agents, xmachine_message_fibroblast_damage_report_list* fibroblast_damage_report_messages, xmachine_message_fibroblast_damage_report_PBM* partition_matrix, RNG_rand48* rand48){
+__global__ void GPUFLAME_ExcessiveDamage(xmachine_memory_Fibroblast_list* agents, RNG_rand48* rand48){
 	
 	//continuous agent: index is agent position in 1D agent list
 	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
@@ -2903,9 +2933,12 @@ __global__ void GPUFLAME_ExcessiveDamage(xmachine_memory_Fibroblast_list* agents
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
-	int dead = !ExcessiveDamage(&agent, fibroblast_damage_report_messages, partition_matrix, rand48);
+	int dead = !ExcessiveDamage(&agent, rand48);
 	
 
 	//continuous agent: set reallocation flag
@@ -2920,71 +2953,15 @@ __global__ void GPUFLAME_ExcessiveDamage(xmachine_memory_Fibroblast_list* agents
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 /**
  *
  */
-__global__ void GPUFLAME_ReplicativeSenescence(xmachine_memory_Fibroblast_list* agents, xmachine_message_doublings_list* doublings_messages, RNG_rand48* rand48){
-	
-	//continuous agent: index is agent position in 1D agent list
-	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
-  
-    
-    //No partitioned input requires threads to be launched beyond the agent count to ensure full block sizes
-    
-
-	//SoA to AoS - xmachine_memory_ReplicativeSenescence Coalesced memory read (arrays point to first item for agent index)
-	xmachine_memory_Fibroblast agent;
-    //No partitioned input may launch more threads than required - only load agent data within bounds. 
-    if (index < d_xmachine_memory_Fibroblast_count){
-    
-	agent.id = agents->id[index];
-	agent.x = agents->x[index];
-	agent.y = agents->y[index];
-	agent.z = agents->z[index];
-	agent.doublings = agents->doublings[index];
-	agent.damage = agents->damage[index];
-	agent.proliferate_bool = agents->proliferate_bool[index];
-	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
-	} else {
-	
-	agent.id = 0;
-	agent.x = 0;
-	agent.y = 0;
-	agent.z = 0;
-	agent.doublings = 0;
-	agent.damage = 0;
-	agent.proliferate_bool = 0;
-	agent.transition_to_early_sen = 0;
-	}
-
-	//FLAME function call
-	int dead = !ReplicativeSenescence(&agent, doublings_messages, rand48);
-	
-
-	
-    //No partitioned input may launch more threads than required - only write agent data within bounds. 
-    if (index < d_xmachine_memory_Fibroblast_count){
-    //continuous agent: set reallocation flag
-	agents->_scan_input[index]  = dead; 
-
-	//AoS to SoA - xmachine_memory_ReplicativeSenescence Coalesced memory write (ignore arrays)
-	agents->id[index] = agent.id;
-	agents->x[index] = agent.x;
-	agents->y[index] = agent.y;
-	agents->z[index] = agent.z;
-	agents->doublings[index] = agent.doublings;
-	agents->damage[index] = agent.damage;
-	agents->proliferate_bool[index] = agent.proliferate_bool;
-	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
-	}
-}
-
-/**
- *
- */
-__global__ void GPUFLAME_TransitionToEarlySen(xmachine_memory_Fibroblast_list* agents){
+__global__ void GPUFLAME_ReplicativeSenescence(xmachine_memory_Fibroblast_list* agents, RNG_rand48* rand48){
 	
 	//continuous agent: index is agent position in 1D agent list
 	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
@@ -2994,7 +2971,7 @@ __global__ void GPUFLAME_TransitionToEarlySen(xmachine_memory_Fibroblast_list* a
         return;
     
 
-	//SoA to AoS - xmachine_memory_TransitionToEarlySen Coalesced memory read (arrays point to first item for agent index)
+	//SoA to AoS - xmachine_memory_ReplicativeSenescence Coalesced memory read (arrays point to first item for agent index)
 	xmachine_memory_Fibroblast agent;
     
     // Thread bounds already checked, but the agent function will still execute. load default values?
@@ -3007,15 +2984,18 @@ __global__ void GPUFLAME_TransitionToEarlySen(xmachine_memory_Fibroblast_list* a
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
-	int dead = !TransitionToEarlySen(&agent);
+	int dead = !ReplicativeSenescence(&agent, rand48);
 	
 
 	//continuous agent: set reallocation flag
 	agents->_scan_input[index]  = dead; 
 
-	//AoS to SoA - xmachine_memory_TransitionToEarlySen Coalesced memory write (ignore arrays)
+	//AoS to SoA - xmachine_memory_ReplicativeSenescence Coalesced memory write (ignore arrays)
 	agents->id[index] = agent.id;
 	agents->x[index] = agent.x;
 	agents->y[index] = agent.y;
@@ -3024,25 +3004,29 @@ __global__ void GPUFLAME_TransitionToEarlySen(xmachine_memory_Fibroblast_list* a
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 /**
  *
  */
-__global__ void GPUFLAME_FullSenescence(xmachine_memory_Fibroblast_list* agents, xmachine_message_count_list* count_messages){
+__global__ void GPUFLAME_EarlySenCountTime(xmachine_memory_Fibroblast_list* agents){
 	
 	//continuous agent: index is agent position in 1D agent list
 	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
   
-    
-    //No partitioned input requires threads to be launched beyond the agent count to ensure full block sizes
+    //For agents not using non partitioned message input check the agent bounds
+    if (index >= d_xmachine_memory_Fibroblast_count)
+        return;
     
 
-	//SoA to AoS - xmachine_memory_FullSenescence Coalesced memory read (arrays point to first item for agent index)
+	//SoA to AoS - xmachine_memory_EarlySenCountTime Coalesced memory read (arrays point to first item for agent index)
 	xmachine_memory_Fibroblast agent;
-    //No partitioned input may launch more threads than required - only load agent data within bounds. 
-    if (index < d_xmachine_memory_Fibroblast_count){
     
+    // Thread bounds already checked, but the agent function will still execute. load default values?
+	
 	agent.id = agents->id[index];
 	agent.x = agents->x[index];
 	agent.y = agents->y[index];
@@ -3051,29 +3035,18 @@ __global__ void GPUFLAME_FullSenescence(xmachine_memory_Fibroblast_list* agents,
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
-	} else {
-	
-	agent.id = 0;
-	agent.x = 0;
-	agent.y = 0;
-	agent.z = 0;
-	agent.doublings = 0;
-	agent.damage = 0;
-	agent.proliferate_bool = 0;
-	agent.transition_to_early_sen = 0;
-	}
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
-	int dead = !FullSenescence(&agent, count_messages);
+	int dead = !EarlySenCountTime(&agent);
 	
 
-	
-    //No partitioned input may launch more threads than required - only write agent data within bounds. 
-    if (index < d_xmachine_memory_Fibroblast_count){
-    //continuous agent: set reallocation flag
+	//continuous agent: set reallocation flag
 	agents->_scan_input[index]  = dead; 
 
-	//AoS to SoA - xmachine_memory_FullSenescence Coalesced memory write (ignore arrays)
+	//AoS to SoA - xmachine_memory_EarlySenCountTime Coalesced memory write (ignore arrays)
 	agents->id[index] = agent.id;
 	agents->x[index] = agent.x;
 	agents->y[index] = agent.y;
@@ -3082,13 +3055,66 @@ __global__ void GPUFLAME_FullSenescence(xmachine_memory_Fibroblast_list* agents,
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
-	}
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 /**
  *
  */
-__global__ void GPUFLAME_ClearanceOfEarlySenescent(xmachine_memory_Fibroblast_list* agents){
+__global__ void GPUFLAME_TransitionToFullSenescence(xmachine_memory_Fibroblast_list* agents, RNG_rand48* rand48){
+	
+	//continuous agent: index is agent position in 1D agent list
+	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
+  
+    //For agents not using non partitioned message input check the agent bounds
+    if (index >= d_xmachine_memory_Fibroblast_count)
+        return;
+    
+
+	//SoA to AoS - xmachine_memory_TransitionToFullSenescence Coalesced memory read (arrays point to first item for agent index)
+	xmachine_memory_Fibroblast agent;
+    
+    // Thread bounds already checked, but the agent function will still execute. load default values?
+	
+	agent.id = agents->id[index];
+	agent.x = agents->x[index];
+	agent.y = agents->y[index];
+	agent.z = agents->z[index];
+	agent.doublings = agents->doublings[index];
+	agent.damage = agents->damage[index];
+	agent.proliferate_bool = agents->proliferate_bool[index];
+	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
+
+	//FLAME function call
+	int dead = !TransitionToFullSenescence(&agent, rand48);
+	
+
+	//continuous agent: set reallocation flag
+	agents->_scan_input[index]  = dead; 
+
+	//AoS to SoA - xmachine_memory_TransitionToFullSenescence Coalesced memory write (ignore arrays)
+	agents->id[index] = agent.id;
+	agents->x[index] = agent.x;
+	agents->y[index] = agent.y;
+	agents->z[index] = agent.z;
+	agents->doublings[index] = agent.doublings;
+	agents->damage[index] = agent.damage;
+	agents->proliferate_bool[index] = agent.proliferate_bool;
+	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
+}
+
+/**
+ *
+ */
+__global__ void GPUFLAME_ClearanceOfEarlySenescent(xmachine_memory_Fibroblast_list* agents, RNG_rand48* rand48){
 	
 	//continuous agent: index is agent position in 1D agent list
 	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
@@ -3111,9 +3137,12 @@ __global__ void GPUFLAME_ClearanceOfEarlySenescent(xmachine_memory_Fibroblast_li
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
-	int dead = !ClearanceOfEarlySenescent(&agent);
+	int dead = !ClearanceOfEarlySenescent(&agent, rand48);
 	
 
 	//continuous agent: set reallocation flag
@@ -3128,6 +3157,9 @@ __global__ void GPUFLAME_ClearanceOfEarlySenescent(xmachine_memory_Fibroblast_li
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 /**
@@ -3156,6 +3188,9 @@ __global__ void GPUFLAME_ClearanceOfSenescent(xmachine_memory_Fibroblast_list* a
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
 	int dead = !ClearanceOfSenescent(&agent);
@@ -3173,6 +3208,9 @@ __global__ void GPUFLAME_ClearanceOfSenescent(xmachine_memory_Fibroblast_list* a
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 /**
@@ -3201,6 +3239,9 @@ __global__ void GPUFLAME_DetectDamage(xmachine_memory_Fibroblast_list* agents, x
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
 	int dead = !DetectDamage(&agent, tissue_damage_report_messages, partition_matrix);
@@ -3218,6 +3259,9 @@ __global__ void GPUFLAME_DetectDamage(xmachine_memory_Fibroblast_list* agents, x
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 /**
@@ -3246,6 +3290,9 @@ __global__ void GPUFLAME_RepairDamage(xmachine_memory_Fibroblast_list* agents){
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
 	int dead = !RepairDamage(&agent);
@@ -3263,6 +3310,9 @@ __global__ void GPUFLAME_RepairDamage(xmachine_memory_Fibroblast_list* agents){
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 /**
@@ -3291,6 +3341,9 @@ __global__ void GPUFLAME_DamageRepaired(xmachine_memory_Fibroblast_list* agents)
 	agent.damage = agents->damage[index];
 	agent.proliferate_bool = agents->proliferate_bool[index];
 	agent.transition_to_early_sen = agents->transition_to_early_sen[index];
+	agent.transition_to_full_sen = agents->transition_to_full_sen[index];
+	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
+	agent.current_state = agents->current_state[index];
 
 	//FLAME function call
 	int dead = !DamageRepaired(&agent);
@@ -3308,6 +3361,9 @@ __global__ void GPUFLAME_DamageRepaired(xmachine_memory_Fibroblast_list* agents)
 	agents->damage[index] = agent.damage;
 	agents->proliferate_bool[index] = agent.proliferate_bool;
 	agents->transition_to_early_sen[index] = agent.transition_to_early_sen;
+	agents->transition_to_full_sen[index] = agent.transition_to_full_sen;
+	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
+	agents->current_state[index] = agent.current_state;
 }
 
 	

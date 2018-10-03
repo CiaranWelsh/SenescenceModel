@@ -122,6 +122,19 @@
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
                     <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
+                <gpu:function>
+                    <name>ReapirDamage</name>
+                    <description>Repair some of the damage if reparing fibroblast is near</description>
+                    <currentState>default</currentState>
+                    <nextState>default</nextState>
+                    <inputs>
+                        <gpu:input>
+                            <messageName>fibroblast_location_report</messageName>
+                        </gpu:input>
+                    </inputs>                         <!-- optional -->
+                    <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
+                    <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
+                </gpu:function>
             </functions>
             <states>
                 <gpu:state>
@@ -167,6 +180,27 @@
                 <gpu:variable>
                     <type>int</type>
                     <name>transition_to_early_sen</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>int</type>
+                    <name>transition_to_full_sen</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>int</type>
+                    <name>early_sen_time_counter</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>int</type>
+                    <!--0: quiescent-->
+                    <!--1: early senescent-->
+                    <!--2: senescent-->
+                    <!--4: proliferating-->
+                    <!--5: repairing-->
+                    <name>current_state</name>
+                </gpu:variable>
+                <gpu:variable>
+                    <type>int</type>
+                    <name>tissue_damage</name>
                 </gpu:variable>
             </memory>
             <functions>
@@ -237,8 +271,8 @@
                     <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
                 <gpu:function>
-                    <name>Quiescent2Proliferating</name>
-                    <description>A fibroblast undergoing cell division</description>
+                    <name>TransitionToProliferating</name>
+                    <description>Quiescent transitions to proliferating fibroblast</description>
                     <currentState>Quiescent</currentState>
                     <nextState>Proliferating</nextState>
                     <condition>
@@ -271,10 +305,10 @@
                     <name>BystanderEffect</name>
                     <description>Senescent cells influence non-senescent cells to become senescent</description>
                     <currentState>Quiescent</currentState>
-                    <nextState>Quiescent</nextState>
+                    <nextState>EarlySenescent</nextState>
                     <inputs>
                         <gpu:input>
-                            <messageName>senescent_location_report</messageName>
+                            <messageName>fibroblast_location_report</messageName>
                         </gpu:input>
                     </inputs>                           <!-- optional --><!-- optional -->
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
@@ -284,12 +318,7 @@
                     <name>ExcessiveDamage</name>
                     <description>Once a threshold is reached a quiescent cell turns to early senescent</description>
                     <currentState>Quiescent</currentState>
-                    <nextState>Quiescent</nextState>
-                    <!--<inputs>-->
-                        <!--<gpu:input>-->
-                            <!--<messageName>fibroblast_damage_report</messageName>-->
-                        <!--</gpu:input>-->
-                    <!--</inputs>                           &lt;!&ndash; optional &ndash;&gt;&lt;!&ndash; optional &ndash;&gt;-->
+                    <nextState>EarlySenescent</nextState>
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
                     <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
@@ -297,44 +326,25 @@
                     <name>ReplicativeSenescence</name>
                     <description>Cells have a replicative limit which turns them to early senescent</description>
                     <currentState>Quiescent</currentState>
-                    <nextState>Quiescent</nextState>
-                    <inputs>
-                        <gpu:input>
-                            <messageName>doublings</messageName>
-                        </gpu:input>
-                    </inputs>                           <!-- optional --><!-- optional -->
+                    <nextState>EarlySenescent</nextState>
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
                     <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
                 <gpu:function>
-                    <name>TransitionToEarlySen</name>
-                    <description>If the transition_to_early_sen variable is 1, execute</description>
-                    <currentState>Quiescent</currentState>
+                    <name>EarlySenCountTime</name>
+                    <description>Add 1 to early senescent counter</description>
+                    <currentState>EarlySenescent</currentState>
                     <nextState>EarlySenescent</nextState>
-                    <condition>
-                        <lhs>
-                            <agentVariable>transition_to_early_sen</agentVariable>
-                        </lhs>
-                        <operator>==</operator>
-                        <rhs>
-                            <value>1</value>
-                        </rhs>
-                    </condition>
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
                     <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
                 <gpu:function>
-                    <name>FullSenescence</name>
+                    <name>TransitionToFullSenescence</name>
                     <description>Early senescent cells turn to fully senescent cells</description>
                     <currentState>EarlySenescent</currentState>
                     <nextState>Senescent</nextState>
-                    <inputs>
-                        <gpu:input>
-                            <messageName>count</messageName>
-                        </gpu:input>
-                    </inputs>                           <!-- optional --><!-- optional -->
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
-                    <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
+                    <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
                 <gpu:function>
                     <name>ClearanceOfEarlySenescent</name>
@@ -342,7 +352,7 @@
                     <currentState>EarlySenescent</currentState>
                     <nextState>EarlySenescent</nextState>
                     <gpu:reallocate>true</gpu:reallocate>          <!-- optional -->
-                    <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
+                    <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
                 <gpu:function>
                     <name>ClearanceOfSenescent</name>
@@ -367,22 +377,40 @@
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
                     <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
-                <gpu:function>
-                    <name>RepairDamage</name>
-                    <description>Repair tissue damage</description>
-                    <currentState>Repair</currentState>
-                    <nextState>Repair</nextState>
-                    <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
-                    <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
-                </gpu:function>
-                <gpu:function>
-                    <name>DamageRepaired</name>
-                    <description>Repairative fibroblasts return to quiescent state</description>
-                    <currentState>Repair</currentState>
-                    <nextState>Quiescent</nextState>
-                    <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
-                    <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
-                </gpu:function>
+                <!--<gpu:function>-->
+                    <!--<name>AssessDamage</name>-->
+                    <!--<description>Read damage report and update a variable</description>-->
+                    <!--<currentState>Repair</currentState>-->
+                    <!--<nextState>Repair</nextState>-->
+                    <!--<inputs>-->
+                        <!--<gpu:input>-->
+                            <!--<messageName>tissue_damage_report</messageName>-->
+                        <!--</gpu:input>-->
+                    <!--</inputs>-->
+                    <!--<gpu:reallocate>false</gpu:reallocate>          &lt;!&ndash; optional &ndash;&gt;-->
+                    <!--<gpu:RNG>false</gpu:RNG>                        &lt;!&ndash; optional &ndash;&gt;-->
+                <!--</gpu:function>-->
+                <!--<gpu:function>-->
+                    <!--<name>RepairDamage</name>-->
+                    <!--<description>Repair tissue damage</description>-->
+                    <!--<currentState>Repair</currentState>-->
+                    <!--<nextState>Repair</nextState>-->
+                    <!--<inputs>-->
+                        <!--<gpu:input>-->
+                            <!--<messageName>tissue_damage_report</messageName>-->
+                        <!--</gpu:input>-->
+                    <!--</inputs>-->
+                    <!--<gpu:reallocate>false</gpu:reallocate>          &lt;!&ndash; optional &ndash;&gt;-->
+                    <!--<gpu:RNG>false</gpu:RNG>                        &lt;!&ndash; optional &ndash;&gt;-->
+                <!--</gpu:function>-->
+                <!--<gpu:function>-->
+                    <!--<name>DamageRepaired</name>-->
+                    <!--<description>Repairative fibroblasts return to quiescent state</description>-->
+                    <!--<currentState>Repair</currentState>-->
+                    <!--<nextState>Quiescent</nextState>-->
+                    <!--<gpu:reallocate>false</gpu:reallocate>          &lt;!&ndash; optional &ndash;&gt;-->
+                    <!--<gpu:RNG>false</gpu:RNG>                        &lt;!&ndash; optional &ndash;&gt;-->
+                <!--</gpu:function>-->
             </functions>
             <states>
                 <gpu:state>
@@ -505,7 +533,7 @@
             <gpu:bufferSize>4096</gpu:bufferSize>
         </gpu:message>
         <gpu:message>
-            <name>quiescent_location_report</name>
+            <name>fibroblast_location_report</name>
             <variables>
                 <gpu:variable>
                     <type>int</type>
@@ -523,36 +551,9 @@
                     <type>float</type>
                     <name>z</name>
                 </gpu:variable>
-            </variables>
-            <gpu:partitioningSpatial>
-                <gpu:radius>1</gpu:radius>
-                <gpu:xmin>0.0</gpu:xmin>
-                <gpu:xmax>10</gpu:xmax>
-                <gpu:ymin>0.0</gpu:ymin>
-                <gpu:ymax>10</gpu:ymax>
-                <gpu:zmin>0.0</gpu:zmin>
-                <gpu:zmax>10</gpu:zmax>
-            </gpu:partitioningSpatial>
-            <gpu:bufferSize>4096</gpu:bufferSize>
-        </gpu:message>
-        <gpu:message>
-            <name>senescent_location_report</name>
-            <variables>
                 <gpu:variable>
                     <type>int</type>
-                    <name>id</name>
-                </gpu:variable>
-                <gpu:variable>
-                    <type>float</type>
-                    <name>x</name>
-                </gpu:variable>
-                <gpu:variable>
-                    <type>float</type>
-                    <name>y</name>
-                </gpu:variable>
-                <gpu:variable>
-                    <type>float</type>
-                    <name>z</name>
+                    <name>current_state</name>
                 </gpu:variable>
             </variables>
             <gpu:partitioningSpatial>

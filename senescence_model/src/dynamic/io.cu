@@ -305,6 +305,26 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
 		fputs(data, file);
 		fputs("</transition_to_early_sen>\n", file);
         
+		fputs("<transition_to_full_sen>", file);
+        sprintf(data, "%d", h_Fibroblasts_Quiescent->transition_to_full_sen[i]);
+		fputs(data, file);
+		fputs("</transition_to_full_sen>\n", file);
+        
+		fputs("<early_sen_time_counter>", file);
+        sprintf(data, "%d", h_Fibroblasts_Quiescent->early_sen_time_counter[i]);
+		fputs(data, file);
+		fputs("</early_sen_time_counter>\n", file);
+        
+		fputs("<current_state>", file);
+        sprintf(data, "%d", h_Fibroblasts_Quiescent->current_state[i]);
+		fputs(data, file);
+		fputs("</current_state>\n", file);
+        
+		fputs("<tissue_damage>", file);
+        sprintf(data, "%d", h_Fibroblasts_Quiescent->tissue_damage[i]);
+		fputs(data, file);
+		fputs("</tissue_damage>\n", file);
+        
 		fputs("</xagent>\n", file);
 	}
 	//Write each Fibroblast agent to xml
@@ -351,6 +371,26 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
         sprintf(data, "%d", h_Fibroblasts_EarlySenescent->transition_to_early_sen[i]);
 		fputs(data, file);
 		fputs("</transition_to_early_sen>\n", file);
+        
+		fputs("<transition_to_full_sen>", file);
+        sprintf(data, "%d", h_Fibroblasts_EarlySenescent->transition_to_full_sen[i]);
+		fputs(data, file);
+		fputs("</transition_to_full_sen>\n", file);
+        
+		fputs("<early_sen_time_counter>", file);
+        sprintf(data, "%d", h_Fibroblasts_EarlySenescent->early_sen_time_counter[i]);
+		fputs(data, file);
+		fputs("</early_sen_time_counter>\n", file);
+        
+		fputs("<current_state>", file);
+        sprintf(data, "%d", h_Fibroblasts_EarlySenescent->current_state[i]);
+		fputs(data, file);
+		fputs("</current_state>\n", file);
+        
+		fputs("<tissue_damage>", file);
+        sprintf(data, "%d", h_Fibroblasts_EarlySenescent->tissue_damage[i]);
+		fputs(data, file);
+		fputs("</tissue_damage>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
@@ -399,6 +439,26 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
 		fputs(data, file);
 		fputs("</transition_to_early_sen>\n", file);
         
+		fputs("<transition_to_full_sen>", file);
+        sprintf(data, "%d", h_Fibroblasts_Senescent->transition_to_full_sen[i]);
+		fputs(data, file);
+		fputs("</transition_to_full_sen>\n", file);
+        
+		fputs("<early_sen_time_counter>", file);
+        sprintf(data, "%d", h_Fibroblasts_Senescent->early_sen_time_counter[i]);
+		fputs(data, file);
+		fputs("</early_sen_time_counter>\n", file);
+        
+		fputs("<current_state>", file);
+        sprintf(data, "%d", h_Fibroblasts_Senescent->current_state[i]);
+		fputs(data, file);
+		fputs("</current_state>\n", file);
+        
+		fputs("<tissue_damage>", file);
+        sprintf(data, "%d", h_Fibroblasts_Senescent->tissue_damage[i]);
+		fputs(data, file);
+		fputs("</tissue_damage>\n", file);
+        
 		fputs("</xagent>\n", file);
 	}
 	//Write each Fibroblast agent to xml
@@ -446,6 +506,26 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
 		fputs(data, file);
 		fputs("</transition_to_early_sen>\n", file);
         
+		fputs("<transition_to_full_sen>", file);
+        sprintf(data, "%d", h_Fibroblasts_Proliferating->transition_to_full_sen[i]);
+		fputs(data, file);
+		fputs("</transition_to_full_sen>\n", file);
+        
+		fputs("<early_sen_time_counter>", file);
+        sprintf(data, "%d", h_Fibroblasts_Proliferating->early_sen_time_counter[i]);
+		fputs(data, file);
+		fputs("</early_sen_time_counter>\n", file);
+        
+		fputs("<current_state>", file);
+        sprintf(data, "%d", h_Fibroblasts_Proliferating->current_state[i]);
+		fputs(data, file);
+		fputs("</current_state>\n", file);
+        
+		fputs("<tissue_damage>", file);
+        sprintf(data, "%d", h_Fibroblasts_Proliferating->tissue_damage[i]);
+		fputs(data, file);
+		fputs("</tissue_damage>\n", file);
+        
 		fputs("</xagent>\n", file);
 	}
 	//Write each Fibroblast agent to xml
@@ -492,6 +572,26 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
         sprintf(data, "%d", h_Fibroblasts_Repair->transition_to_early_sen[i]);
 		fputs(data, file);
 		fputs("</transition_to_early_sen>\n", file);
+        
+		fputs("<transition_to_full_sen>", file);
+        sprintf(data, "%d", h_Fibroblasts_Repair->transition_to_full_sen[i]);
+		fputs(data, file);
+		fputs("</transition_to_full_sen>\n", file);
+        
+		fputs("<early_sen_time_counter>", file);
+        sprintf(data, "%d", h_Fibroblasts_Repair->early_sen_time_counter[i]);
+		fputs(data, file);
+		fputs("</early_sen_time_counter>\n", file);
+        
+		fputs("<current_state>", file);
+        sprintf(data, "%d", h_Fibroblasts_Repair->current_state[i]);
+		fputs(data, file);
+		fputs("</current_state>\n", file);
+        
+		fputs("<tissue_damage>", file);
+        sprintf(data, "%d", h_Fibroblasts_Repair->tissue_damage[i]);
+		fputs(data, file);
+		fputs("</tissue_damage>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
@@ -568,6 +668,10 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
     int in_Fibroblast_damage;
     int in_Fibroblast_proliferate_bool;
     int in_Fibroblast_transition_to_early_sen;
+    int in_Fibroblast_transition_to_full_sen;
+    int in_Fibroblast_early_sen_time_counter;
+    int in_Fibroblast_current_state;
+    int in_Fibroblast_tissue_damage;
     
     /* tags for environment global variables */
     int in_env;
@@ -613,6 +717,10 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 	int Fibroblast_damage;
 	int Fibroblast_proliferate_bool;
 	int Fibroblast_transition_to_early_sen;
+	int Fibroblast_transition_to_full_sen;
+	int Fibroblast_early_sen_time_counter;
+	int Fibroblast_current_state;
+	int Fibroblast_tissue_damage;
 
     /* Variables for environment variables */
     float env_TISSUE_DAMAGE_PROB;
@@ -658,6 +766,10 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 	in_Fibroblast_damage = 0;
 	in_Fibroblast_proliferate_bool = 0;
 	in_Fibroblast_transition_to_early_sen = 0;
+	in_Fibroblast_transition_to_full_sen = 0;
+	in_Fibroblast_early_sen_time_counter = 0;
+	in_Fibroblast_current_state = 0;
+	in_Fibroblast_tissue_damage = 0;
     in_env_TISSUE_DAMAGE_PROB = 0;
     in_env_PROLIFERATION_PROB = 0;
     in_env_TISSUE_SIZE = 0;
@@ -693,6 +805,10 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 		h_Fibroblasts->damage[k] = 0;
 		h_Fibroblasts->proliferate_bool[k] = 0;
 		h_Fibroblasts->transition_to_early_sen[k] = 0;
+		h_Fibroblasts->transition_to_full_sen[k] = 0;
+		h_Fibroblasts->early_sen_time_counter[k] = 0;
+		h_Fibroblasts->current_state[k] = 0;
+		h_Fibroblasts->tissue_damage[k] = 0;
 	}
 	
 
@@ -710,6 +826,10 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
     Fibroblast_damage = 0;
     Fibroblast_proliferate_bool = 0;
     Fibroblast_transition_to_early_sen = 0;
+    Fibroblast_transition_to_full_sen = 0;
+    Fibroblast_early_sen_time_counter = 0;
+    Fibroblast_current_state = 0;
+    Fibroblast_tissue_damage = 0;
 
     /* Default variables for environment variables */
     env_TISSUE_DAMAGE_PROB = 0.1;
@@ -882,6 +1002,10 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 					h_Fibroblasts->damage[*h_xmachine_memory_Fibroblast_count] = Fibroblast_damage;
 					h_Fibroblasts->proliferate_bool[*h_xmachine_memory_Fibroblast_count] = Fibroblast_proliferate_bool;
 					h_Fibroblasts->transition_to_early_sen[*h_xmachine_memory_Fibroblast_count] = Fibroblast_transition_to_early_sen;
+					h_Fibroblasts->transition_to_full_sen[*h_xmachine_memory_Fibroblast_count] = Fibroblast_transition_to_full_sen;
+					h_Fibroblasts->early_sen_time_counter[*h_xmachine_memory_Fibroblast_count] = Fibroblast_early_sen_time_counter;
+					h_Fibroblasts->current_state[*h_xmachine_memory_Fibroblast_count] = Fibroblast_current_state;
+					h_Fibroblasts->tissue_damage[*h_xmachine_memory_Fibroblast_count] = Fibroblast_tissue_damage;
 					(*h_xmachine_memory_Fibroblast_count) ++;	
 				}
 				else
@@ -905,6 +1029,10 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
                 Fibroblast_damage = 0;
                 Fibroblast_proliferate_bool = 0;
                 Fibroblast_transition_to_early_sen = 0;
+                Fibroblast_transition_to_full_sen = 0;
+                Fibroblast_early_sen_time_counter = 0;
+                Fibroblast_current_state = 0;
+                Fibroblast_tissue_damage = 0;
                 
                 in_xagent = 0;
 			}
@@ -934,6 +1062,14 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 			if(strcmp(buffer, "/proliferate_bool") == 0) in_Fibroblast_proliferate_bool = 0;
 			if(strcmp(buffer, "transition_to_early_sen") == 0) in_Fibroblast_transition_to_early_sen = 1;
 			if(strcmp(buffer, "/transition_to_early_sen") == 0) in_Fibroblast_transition_to_early_sen = 0;
+			if(strcmp(buffer, "transition_to_full_sen") == 0) in_Fibroblast_transition_to_full_sen = 1;
+			if(strcmp(buffer, "/transition_to_full_sen") == 0) in_Fibroblast_transition_to_full_sen = 0;
+			if(strcmp(buffer, "early_sen_time_counter") == 0) in_Fibroblast_early_sen_time_counter = 1;
+			if(strcmp(buffer, "/early_sen_time_counter") == 0) in_Fibroblast_early_sen_time_counter = 0;
+			if(strcmp(buffer, "current_state") == 0) in_Fibroblast_current_state = 1;
+			if(strcmp(buffer, "/current_state") == 0) in_Fibroblast_current_state = 0;
+			if(strcmp(buffer, "tissue_damage") == 0) in_Fibroblast_tissue_damage = 1;
+			if(strcmp(buffer, "/tissue_damage") == 0) in_Fibroblast_tissue_damage = 0;
 			
             /* environment variables */
             if(strcmp(buffer, "TISSUE_DAMAGE_PROB") == 0) in_env_TISSUE_DAMAGE_PROB = 1;
@@ -1016,6 +1152,18 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
                 }
 				if(in_Fibroblast_transition_to_early_sen){
                     Fibroblast_transition_to_early_sen = (int) fpgu_strtol(buffer); 
+                }
+				if(in_Fibroblast_transition_to_full_sen){
+                    Fibroblast_transition_to_full_sen = (int) fpgu_strtol(buffer); 
+                }
+				if(in_Fibroblast_early_sen_time_counter){
+                    Fibroblast_early_sen_time_counter = (int) fpgu_strtol(buffer); 
+                }
+				if(in_Fibroblast_current_state){
+                    Fibroblast_current_state = (int) fpgu_strtol(buffer); 
+                }
+				if(in_Fibroblast_tissue_damage){
+                    Fibroblast_tissue_damage = (int) fpgu_strtol(buffer); 
                 }
 				
             }
