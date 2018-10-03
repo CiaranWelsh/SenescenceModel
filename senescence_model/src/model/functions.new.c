@@ -247,14 +247,10 @@ __FLAME_GPU_FUNC__ int Proliferation(xmachine_memory_Fibroblast* agent, xmachine
     float z = 0;
     float doublings = 0;
     int damage = 0;
-    int proliferate_bool = 0;
-    int transition_to_early_sen = 0;
-    int transition_to_full_sen = 0;
     int early_sen_time_counter = 0;
     int current_state = 0;
-    int tissue_damage = 0;
     
-    add_Fibroblast_agent(Fibroblast_agents, int id, float x, float y, float z, float doublings, int damage, int proliferate_bool, int transition_to_early_sen, int transition_to_full_sen, int early_sen_time_counter, int current_state, int tissue_damage);
+    add_Fibroblast_agent(Fibroblast_agents, int id, float x, float y, float z, float doublings, int damage, int early_sen_time_counter, int current_state);
     */
     
     return 0;
@@ -346,9 +342,9 @@ __FLAME_GPU_FUNC__ int ClearanceOfEarlySenescent(xmachine_memory_Fibroblast* age
  * ClearanceOfSenescent FLAMEGPU Agent Function
  * Automatically generated using functions.xslt
  * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- 
+ * @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
  */
-__FLAME_GPU_FUNC__ int ClearanceOfSenescent(xmachine_memory_Fibroblast* agent){
+__FLAME_GPU_FUNC__ int ClearanceOfSenescent(xmachine_memory_Fibroblast* agent, RNG_rand48* rand48){
     
     return 0;
 }

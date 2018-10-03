@@ -144,9 +144,6 @@ unsigned int h_Fibroblasts_Quiescent_variable_y_data_iteration;
 unsigned int h_Fibroblasts_Quiescent_variable_z_data_iteration;
 unsigned int h_Fibroblasts_Quiescent_variable_doublings_data_iteration;
 unsigned int h_Fibroblasts_Quiescent_variable_damage_data_iteration;
-unsigned int h_Fibroblasts_Quiescent_variable_proliferate_bool_data_iteration;
-unsigned int h_Fibroblasts_Quiescent_variable_transition_to_early_sen_data_iteration;
-unsigned int h_Fibroblasts_Quiescent_variable_transition_to_full_sen_data_iteration;
 unsigned int h_Fibroblasts_Quiescent_variable_early_sen_time_counter_data_iteration;
 unsigned int h_Fibroblasts_Quiescent_variable_current_state_data_iteration;
 unsigned int h_Fibroblasts_EarlySenescent_variable_id_data_iteration;
@@ -155,9 +152,6 @@ unsigned int h_Fibroblasts_EarlySenescent_variable_y_data_iteration;
 unsigned int h_Fibroblasts_EarlySenescent_variable_z_data_iteration;
 unsigned int h_Fibroblasts_EarlySenescent_variable_doublings_data_iteration;
 unsigned int h_Fibroblasts_EarlySenescent_variable_damage_data_iteration;
-unsigned int h_Fibroblasts_EarlySenescent_variable_proliferate_bool_data_iteration;
-unsigned int h_Fibroblasts_EarlySenescent_variable_transition_to_early_sen_data_iteration;
-unsigned int h_Fibroblasts_EarlySenescent_variable_transition_to_full_sen_data_iteration;
 unsigned int h_Fibroblasts_EarlySenescent_variable_early_sen_time_counter_data_iteration;
 unsigned int h_Fibroblasts_EarlySenescent_variable_current_state_data_iteration;
 unsigned int h_Fibroblasts_Senescent_variable_id_data_iteration;
@@ -166,9 +160,6 @@ unsigned int h_Fibroblasts_Senescent_variable_y_data_iteration;
 unsigned int h_Fibroblasts_Senescent_variable_z_data_iteration;
 unsigned int h_Fibroblasts_Senescent_variable_doublings_data_iteration;
 unsigned int h_Fibroblasts_Senescent_variable_damage_data_iteration;
-unsigned int h_Fibroblasts_Senescent_variable_proliferate_bool_data_iteration;
-unsigned int h_Fibroblasts_Senescent_variable_transition_to_early_sen_data_iteration;
-unsigned int h_Fibroblasts_Senescent_variable_transition_to_full_sen_data_iteration;
 unsigned int h_Fibroblasts_Senescent_variable_early_sen_time_counter_data_iteration;
 unsigned int h_Fibroblasts_Senescent_variable_current_state_data_iteration;
 unsigned int h_Fibroblasts_Proliferating_variable_id_data_iteration;
@@ -177,9 +168,6 @@ unsigned int h_Fibroblasts_Proliferating_variable_y_data_iteration;
 unsigned int h_Fibroblasts_Proliferating_variable_z_data_iteration;
 unsigned int h_Fibroblasts_Proliferating_variable_doublings_data_iteration;
 unsigned int h_Fibroblasts_Proliferating_variable_damage_data_iteration;
-unsigned int h_Fibroblasts_Proliferating_variable_proliferate_bool_data_iteration;
-unsigned int h_Fibroblasts_Proliferating_variable_transition_to_early_sen_data_iteration;
-unsigned int h_Fibroblasts_Proliferating_variable_transition_to_full_sen_data_iteration;
 unsigned int h_Fibroblasts_Proliferating_variable_early_sen_time_counter_data_iteration;
 unsigned int h_Fibroblasts_Proliferating_variable_current_state_data_iteration;
 unsigned int h_Fibroblasts_Repair_variable_id_data_iteration;
@@ -188,9 +176,6 @@ unsigned int h_Fibroblasts_Repair_variable_y_data_iteration;
 unsigned int h_Fibroblasts_Repair_variable_z_data_iteration;
 unsigned int h_Fibroblasts_Repair_variable_doublings_data_iteration;
 unsigned int h_Fibroblasts_Repair_variable_damage_data_iteration;
-unsigned int h_Fibroblasts_Repair_variable_proliferate_bool_data_iteration;
-unsigned int h_Fibroblasts_Repair_variable_transition_to_early_sen_data_iteration;
-unsigned int h_Fibroblasts_Repair_variable_transition_to_full_sen_data_iteration;
 unsigned int h_Fibroblasts_Repair_variable_early_sen_time_counter_data_iteration;
 unsigned int h_Fibroblasts_Repair_variable_current_state_data_iteration;
 
@@ -277,67 +262,37 @@ xmachine_message_count_list* d_counts_swap;    /**< Pointer to message swap list
 int h_message_count_count;         /**< message list counter*/
 int h_message_count_output_type;   /**< message output type (single or optional)*/
 
-/* quiescent_location_report Message variables */
-xmachine_message_quiescent_location_report_list* h_quiescent_location_reports;         /**< Pointer to message list on host*/
-xmachine_message_quiescent_location_report_list* d_quiescent_location_reports;         /**< Pointer to message list on device*/
-xmachine_message_quiescent_location_report_list* d_quiescent_location_reports_swap;    /**< Pointer to message swap list on device (used for holding optional messages)*/
+/* fibroblast_location_report Message variables */
+xmachine_message_fibroblast_location_report_list* h_fibroblast_location_reports;         /**< Pointer to message list on host*/
+xmachine_message_fibroblast_location_report_list* d_fibroblast_location_reports;         /**< Pointer to message list on device*/
+xmachine_message_fibroblast_location_report_list* d_fibroblast_location_reports_swap;    /**< Pointer to message swap list on device (used for holding optional messages)*/
 /* Non partitioned and spatial partitioned message variables  */
-int h_message_quiescent_location_report_count;         /**< message list counter*/
-int h_message_quiescent_location_report_output_type;   /**< message output type (single or optional)*/
+int h_message_fibroblast_location_report_count;         /**< message list counter*/
+int h_message_fibroblast_location_report_output_type;   /**< message output type (single or optional)*/
 /* Spatial Partitioning Variables*/
 #ifdef FAST_ATOMIC_SORTING
-	uint * d_xmachine_message_quiescent_location_report_local_bin_index;	  /**< index offset within the assigned bin */
-	uint * d_xmachine_message_quiescent_location_report_unsorted_index;		/**< unsorted index (hash) value for message */
+	uint * d_xmachine_message_fibroblast_location_report_local_bin_index;	  /**< index offset within the assigned bin */
+	uint * d_xmachine_message_fibroblast_location_report_unsorted_index;		/**< unsorted index (hash) value for message */
     // Values for CUB exclusive scan of spatially partitioned variables
-    void * d_temp_scan_storage_xmachine_message_quiescent_location_report;
-    size_t temp_scan_bytes_xmachine_message_quiescent_location_report;
+    void * d_temp_scan_storage_xmachine_message_fibroblast_location_report;
+    size_t temp_scan_bytes_xmachine_message_fibroblast_location_report;
 #else
-	uint * d_xmachine_message_quiescent_location_report_keys;	  /**< message sort identifier keys*/
-	uint * d_xmachine_message_quiescent_location_report_values;  /**< message sort identifier values */
+	uint * d_xmachine_message_fibroblast_location_report_keys;	  /**< message sort identifier keys*/
+	uint * d_xmachine_message_fibroblast_location_report_values;  /**< message sort identifier values */
 #endif
-xmachine_message_quiescent_location_report_PBM * d_quiescent_location_report_partition_matrix;  /**< Pointer to PCB matrix */
-glm::vec3 h_message_quiescent_location_report_min_bounds;           /**< min bounds (x,y,z) of partitioning environment */
-glm::vec3 h_message_quiescent_location_report_max_bounds;           /**< max bounds (x,y,z) of partitioning environment */
-glm::ivec3 h_message_quiescent_location_report_partitionDim;           /**< partition dimensions (x,y,z) of partitioning environment */
-float h_message_quiescent_location_report_radius;                 /**< partition radius (used to determin the size of the partitions) */
+xmachine_message_fibroblast_location_report_PBM * d_fibroblast_location_report_partition_matrix;  /**< Pointer to PCB matrix */
+glm::vec3 h_message_fibroblast_location_report_min_bounds;           /**< min bounds (x,y,z) of partitioning environment */
+glm::vec3 h_message_fibroblast_location_report_max_bounds;           /**< max bounds (x,y,z) of partitioning environment */
+glm::ivec3 h_message_fibroblast_location_report_partitionDim;           /**< partition dimensions (x,y,z) of partitioning environment */
+float h_message_fibroblast_location_report_radius;                 /**< partition radius (used to determin the size of the partitions) */
 /* Texture offset values for host */
-int h_tex_xmachine_message_quiescent_location_report_id_offset;
-int h_tex_xmachine_message_quiescent_location_report_x_offset;
-int h_tex_xmachine_message_quiescent_location_report_y_offset;
-int h_tex_xmachine_message_quiescent_location_report_z_offset;
-int h_tex_xmachine_message_quiescent_location_report_pbm_start_offset;
-int h_tex_xmachine_message_quiescent_location_report_pbm_end_or_count_offset;
-
-/* senescent_location_report Message variables */
-xmachine_message_senescent_location_report_list* h_senescent_location_reports;         /**< Pointer to message list on host*/
-xmachine_message_senescent_location_report_list* d_senescent_location_reports;         /**< Pointer to message list on device*/
-xmachine_message_senescent_location_report_list* d_senescent_location_reports_swap;    /**< Pointer to message swap list on device (used for holding optional messages)*/
-/* Non partitioned and spatial partitioned message variables  */
-int h_message_senescent_location_report_count;         /**< message list counter*/
-int h_message_senescent_location_report_output_type;   /**< message output type (single or optional)*/
-/* Spatial Partitioning Variables*/
-#ifdef FAST_ATOMIC_SORTING
-	uint * d_xmachine_message_senescent_location_report_local_bin_index;	  /**< index offset within the assigned bin */
-	uint * d_xmachine_message_senescent_location_report_unsorted_index;		/**< unsorted index (hash) value for message */
-    // Values for CUB exclusive scan of spatially partitioned variables
-    void * d_temp_scan_storage_xmachine_message_senescent_location_report;
-    size_t temp_scan_bytes_xmachine_message_senescent_location_report;
-#else
-	uint * d_xmachine_message_senescent_location_report_keys;	  /**< message sort identifier keys*/
-	uint * d_xmachine_message_senescent_location_report_values;  /**< message sort identifier values */
-#endif
-xmachine_message_senescent_location_report_PBM * d_senescent_location_report_partition_matrix;  /**< Pointer to PCB matrix */
-glm::vec3 h_message_senescent_location_report_min_bounds;           /**< min bounds (x,y,z) of partitioning environment */
-glm::vec3 h_message_senescent_location_report_max_bounds;           /**< max bounds (x,y,z) of partitioning environment */
-glm::ivec3 h_message_senescent_location_report_partitionDim;           /**< partition dimensions (x,y,z) of partitioning environment */
-float h_message_senescent_location_report_radius;                 /**< partition radius (used to determin the size of the partitions) */
-/* Texture offset values for host */
-int h_tex_xmachine_message_senescent_location_report_id_offset;
-int h_tex_xmachine_message_senescent_location_report_x_offset;
-int h_tex_xmachine_message_senescent_location_report_y_offset;
-int h_tex_xmachine_message_senescent_location_report_z_offset;
-int h_tex_xmachine_message_senescent_location_report_pbm_start_offset;
-int h_tex_xmachine_message_senescent_location_report_pbm_end_or_count_offset;
+int h_tex_xmachine_message_fibroblast_location_report_id_offset;
+int h_tex_xmachine_message_fibroblast_location_report_x_offset;
+int h_tex_xmachine_message_fibroblast_location_report_y_offset;
+int h_tex_xmachine_message_fibroblast_location_report_z_offset;
+int h_tex_xmachine_message_fibroblast_location_report_current_state_offset;
+int h_tex_xmachine_message_fibroblast_location_report_pbm_start_offset;
+int h_tex_xmachine_message_fibroblast_location_report_pbm_end_or_count_offset;
 
   
 /* CUDA Streams for function layers */
@@ -388,6 +343,11 @@ void TissueBlock_TissueTakesDamage(cudaStream_t &stream);
  * Agent function prototype for TissueSendDamageReport function of TissueBlock agent
  */
 void TissueBlock_TissueSendDamageReport(cudaStream_t &stream);
+
+/** TissueBlock_ReapirDamage
+ * Agent function prototype for ReapirDamage function of TissueBlock agent
+ */
+void TissueBlock_ReapirDamage(cudaStream_t &stream);
 
 /** Fibroblast_QuiescentMigration
  * Agent function prototype for QuiescentMigration function of Fibroblast agent
@@ -463,16 +423,6 @@ void Fibroblast_ClearanceOfSenescent(cudaStream_t &stream);
  * Agent function prototype for DetectDamage function of Fibroblast agent
  */
 void Fibroblast_DetectDamage(cudaStream_t &stream);
-
-/** Fibroblast_RepairDamage
- * Agent function prototype for RepairDamage function of Fibroblast agent
- */
-void Fibroblast_RepairDamage(cudaStream_t &stream);
-
-/** Fibroblast_DamageRepaired
- * Agent function prototype for DamageRepaired function of Fibroblast agent
- */
-void Fibroblast_DamageRepaired(cudaStream_t &stream);
 
   
 void setPaddingAndOffset()
@@ -578,9 +528,6 @@ void initialise(char * inputfile){
     h_Fibroblasts_Quiescent_variable_z_data_iteration = 0;
     h_Fibroblasts_Quiescent_variable_doublings_data_iteration = 0;
     h_Fibroblasts_Quiescent_variable_damage_data_iteration = 0;
-    h_Fibroblasts_Quiescent_variable_proliferate_bool_data_iteration = 0;
-    h_Fibroblasts_Quiescent_variable_transition_to_early_sen_data_iteration = 0;
-    h_Fibroblasts_Quiescent_variable_transition_to_full_sen_data_iteration = 0;
     h_Fibroblasts_Quiescent_variable_early_sen_time_counter_data_iteration = 0;
     h_Fibroblasts_Quiescent_variable_current_state_data_iteration = 0;
     h_Fibroblasts_EarlySenescent_variable_id_data_iteration = 0;
@@ -589,9 +536,6 @@ void initialise(char * inputfile){
     h_Fibroblasts_EarlySenescent_variable_z_data_iteration = 0;
     h_Fibroblasts_EarlySenescent_variable_doublings_data_iteration = 0;
     h_Fibroblasts_EarlySenescent_variable_damage_data_iteration = 0;
-    h_Fibroblasts_EarlySenescent_variable_proliferate_bool_data_iteration = 0;
-    h_Fibroblasts_EarlySenescent_variable_transition_to_early_sen_data_iteration = 0;
-    h_Fibroblasts_EarlySenescent_variable_transition_to_full_sen_data_iteration = 0;
     h_Fibroblasts_EarlySenescent_variable_early_sen_time_counter_data_iteration = 0;
     h_Fibroblasts_EarlySenescent_variable_current_state_data_iteration = 0;
     h_Fibroblasts_Senescent_variable_id_data_iteration = 0;
@@ -600,9 +544,6 @@ void initialise(char * inputfile){
     h_Fibroblasts_Senescent_variable_z_data_iteration = 0;
     h_Fibroblasts_Senescent_variable_doublings_data_iteration = 0;
     h_Fibroblasts_Senescent_variable_damage_data_iteration = 0;
-    h_Fibroblasts_Senescent_variable_proliferate_bool_data_iteration = 0;
-    h_Fibroblasts_Senescent_variable_transition_to_early_sen_data_iteration = 0;
-    h_Fibroblasts_Senescent_variable_transition_to_full_sen_data_iteration = 0;
     h_Fibroblasts_Senescent_variable_early_sen_time_counter_data_iteration = 0;
     h_Fibroblasts_Senescent_variable_current_state_data_iteration = 0;
     h_Fibroblasts_Proliferating_variable_id_data_iteration = 0;
@@ -611,9 +552,6 @@ void initialise(char * inputfile){
     h_Fibroblasts_Proliferating_variable_z_data_iteration = 0;
     h_Fibroblasts_Proliferating_variable_doublings_data_iteration = 0;
     h_Fibroblasts_Proliferating_variable_damage_data_iteration = 0;
-    h_Fibroblasts_Proliferating_variable_proliferate_bool_data_iteration = 0;
-    h_Fibroblasts_Proliferating_variable_transition_to_early_sen_data_iteration = 0;
-    h_Fibroblasts_Proliferating_variable_transition_to_full_sen_data_iteration = 0;
     h_Fibroblasts_Proliferating_variable_early_sen_time_counter_data_iteration = 0;
     h_Fibroblasts_Proliferating_variable_current_state_data_iteration = 0;
     h_Fibroblasts_Repair_variable_id_data_iteration = 0;
@@ -622,9 +560,6 @@ void initialise(char * inputfile){
     h_Fibroblasts_Repair_variable_z_data_iteration = 0;
     h_Fibroblasts_Repair_variable_doublings_data_iteration = 0;
     h_Fibroblasts_Repair_variable_damage_data_iteration = 0;
-    h_Fibroblasts_Repair_variable_proliferate_bool_data_iteration = 0;
-    h_Fibroblasts_Repair_variable_transition_to_early_sen_data_iteration = 0;
-    h_Fibroblasts_Repair_variable_transition_to_full_sen_data_iteration = 0;
     h_Fibroblasts_Repair_variable_early_sen_time_counter_data_iteration = 0;
     h_Fibroblasts_Repair_variable_current_state_data_iteration = 0;
     
@@ -652,10 +587,8 @@ void initialise(char * inputfile){
 	h_doublingss = (xmachine_message_doublings_list*)malloc(message_doublings_SoA_size);
 	int message_count_SoA_size = sizeof(xmachine_message_count_list);
 	h_counts = (xmachine_message_count_list*)malloc(message_count_SoA_size);
-	int message_quiescent_location_report_SoA_size = sizeof(xmachine_message_quiescent_location_report_list);
-	h_quiescent_location_reports = (xmachine_message_quiescent_location_report_list*)malloc(message_quiescent_location_report_SoA_size);
-	int message_senescent_location_report_SoA_size = sizeof(xmachine_message_senescent_location_report_list);
-	h_senescent_location_reports = (xmachine_message_senescent_location_report_list*)malloc(message_senescent_location_report_SoA_size);
+	int message_fibroblast_location_report_SoA_size = sizeof(xmachine_message_fibroblast_location_report_list);
+	h_fibroblast_location_reports = (xmachine_message_fibroblast_location_report_list*)malloc(message_fibroblast_location_report_SoA_size);
 
 	//Exit if agent or message buffer sizes are to small for function outputs
 
@@ -691,30 +624,17 @@ void initialise(char * inputfile){
 	gpuErrchk(cudaMemcpyToSymbol( d_message_tissue_damage_report_partitionDim, &h_message_tissue_damage_report_partitionDim, sizeof(glm::ivec3)));	
 	
 			
-	/* Set spatial partitioning quiescent_location_report message variables (min_bounds, max_bounds)*/
-	h_message_quiescent_location_report_radius = (float)1;
-	gpuErrchk(cudaMemcpyToSymbol( d_message_quiescent_location_report_radius, &h_message_quiescent_location_report_radius, sizeof(float)));	
-	    h_message_quiescent_location_report_min_bounds = glm::vec3((float)0.0, (float)0.0, (float)0.0);
-	gpuErrchk(cudaMemcpyToSymbol( d_message_quiescent_location_report_min_bounds, &h_message_quiescent_location_report_min_bounds, sizeof(glm::vec3)));	
-	h_message_quiescent_location_report_max_bounds = glm::vec3((float)10, (float)10, (float)10);
-	gpuErrchk(cudaMemcpyToSymbol( d_message_quiescent_location_report_max_bounds, &h_message_quiescent_location_report_max_bounds, sizeof(glm::vec3)));	
-	h_message_quiescent_location_report_partitionDim.x = (int)ceil((h_message_quiescent_location_report_max_bounds.x - h_message_quiescent_location_report_min_bounds.x)/h_message_quiescent_location_report_radius);
-	h_message_quiescent_location_report_partitionDim.y = (int)ceil((h_message_quiescent_location_report_max_bounds.y - h_message_quiescent_location_report_min_bounds.y)/h_message_quiescent_location_report_radius);
-	h_message_quiescent_location_report_partitionDim.z = (int)ceil((h_message_quiescent_location_report_max_bounds.z - h_message_quiescent_location_report_min_bounds.z)/h_message_quiescent_location_report_radius);
-	gpuErrchk(cudaMemcpyToSymbol( d_message_quiescent_location_report_partitionDim, &h_message_quiescent_location_report_partitionDim, sizeof(glm::ivec3)));	
-	
-			
-	/* Set spatial partitioning senescent_location_report message variables (min_bounds, max_bounds)*/
-	h_message_senescent_location_report_radius = (float)1;
-	gpuErrchk(cudaMemcpyToSymbol( d_message_senescent_location_report_radius, &h_message_senescent_location_report_radius, sizeof(float)));	
-	    h_message_senescent_location_report_min_bounds = glm::vec3((float)0.0, (float)0.0, (float)0.0);
-	gpuErrchk(cudaMemcpyToSymbol( d_message_senescent_location_report_min_bounds, &h_message_senescent_location_report_min_bounds, sizeof(glm::vec3)));	
-	h_message_senescent_location_report_max_bounds = glm::vec3((float)10, (float)10, (float)10);
-	gpuErrchk(cudaMemcpyToSymbol( d_message_senescent_location_report_max_bounds, &h_message_senescent_location_report_max_bounds, sizeof(glm::vec3)));	
-	h_message_senescent_location_report_partitionDim.x = (int)ceil((h_message_senescent_location_report_max_bounds.x - h_message_senescent_location_report_min_bounds.x)/h_message_senescent_location_report_radius);
-	h_message_senescent_location_report_partitionDim.y = (int)ceil((h_message_senescent_location_report_max_bounds.y - h_message_senescent_location_report_min_bounds.y)/h_message_senescent_location_report_radius);
-	h_message_senescent_location_report_partitionDim.z = (int)ceil((h_message_senescent_location_report_max_bounds.z - h_message_senescent_location_report_min_bounds.z)/h_message_senescent_location_report_radius);
-	gpuErrchk(cudaMemcpyToSymbol( d_message_senescent_location_report_partitionDim, &h_message_senescent_location_report_partitionDim, sizeof(glm::ivec3)));	
+	/* Set spatial partitioning fibroblast_location_report message variables (min_bounds, max_bounds)*/
+	h_message_fibroblast_location_report_radius = (float)1;
+	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_location_report_radius, &h_message_fibroblast_location_report_radius, sizeof(float)));	
+	    h_message_fibroblast_location_report_min_bounds = glm::vec3((float)0.0, (float)0.0, (float)0.0);
+	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_location_report_min_bounds, &h_message_fibroblast_location_report_min_bounds, sizeof(glm::vec3)));	
+	h_message_fibroblast_location_report_max_bounds = glm::vec3((float)10, (float)10, (float)10);
+	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_location_report_max_bounds, &h_message_fibroblast_location_report_max_bounds, sizeof(glm::vec3)));	
+	h_message_fibroblast_location_report_partitionDim.x = (int)ceil((h_message_fibroblast_location_report_max_bounds.x - h_message_fibroblast_location_report_min_bounds.x)/h_message_fibroblast_location_report_radius);
+	h_message_fibroblast_location_report_partitionDim.y = (int)ceil((h_message_fibroblast_location_report_max_bounds.y - h_message_fibroblast_location_report_min_bounds.y)/h_message_fibroblast_location_report_radius);
+	h_message_fibroblast_location_report_partitionDim.z = (int)ceil((h_message_fibroblast_location_report_max_bounds.z - h_message_fibroblast_location_report_min_bounds.z)/h_message_fibroblast_location_report_radius);
+	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_location_report_partitionDim, &h_message_fibroblast_location_report_partitionDim, sizeof(glm::ivec3)));	
 	
 
 	//read initial states
@@ -821,52 +741,28 @@ void initialise(char * inputfile){
 	gpuErrchk( cudaMalloc( (void**) &d_counts_swap, message_count_SoA_size));
 	gpuErrchk( cudaMemcpy( d_counts, h_counts, message_count_SoA_size, cudaMemcpyHostToDevice));
 	
-	/* quiescent_location_report Message memory allocation (GPU) */
-	gpuErrchk( cudaMalloc( (void**) &d_quiescent_location_reports, message_quiescent_location_report_SoA_size));
-	gpuErrchk( cudaMalloc( (void**) &d_quiescent_location_reports_swap, message_quiescent_location_report_SoA_size));
-	gpuErrchk( cudaMemcpy( d_quiescent_location_reports, h_quiescent_location_reports, message_quiescent_location_report_SoA_size, cudaMemcpyHostToDevice));
-	gpuErrchk( cudaMalloc( (void**) &d_quiescent_location_report_partition_matrix, sizeof(xmachine_message_quiescent_location_report_PBM)));
+	/* fibroblast_location_report Message memory allocation (GPU) */
+	gpuErrchk( cudaMalloc( (void**) &d_fibroblast_location_reports, message_fibroblast_location_report_SoA_size));
+	gpuErrchk( cudaMalloc( (void**) &d_fibroblast_location_reports_swap, message_fibroblast_location_report_SoA_size));
+	gpuErrchk( cudaMemcpy( d_fibroblast_location_reports, h_fibroblast_location_reports, message_fibroblast_location_report_SoA_size, cudaMemcpyHostToDevice));
+	gpuErrchk( cudaMalloc( (void**) &d_fibroblast_location_report_partition_matrix, sizeof(xmachine_message_fibroblast_location_report_PBM)));
 #ifdef FAST_ATOMIC_SORTING
-	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_quiescent_location_report_local_bin_index, xmachine_message_quiescent_location_report_MAX* sizeof(uint)));
-	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_quiescent_location_report_unsorted_index, xmachine_message_quiescent_location_report_MAX* sizeof(uint)));
+	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_fibroblast_location_report_local_bin_index, xmachine_message_fibroblast_location_report_MAX* sizeof(uint)));
+	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_fibroblast_location_report_unsorted_index, xmachine_message_fibroblast_location_report_MAX* sizeof(uint)));
     /* Calculate and allocate CUB temporary memory for exclusive scans */
-    d_temp_scan_storage_xmachine_message_quiescent_location_report = nullptr;
-    temp_scan_bytes_xmachine_message_quiescent_location_report = 0;
+    d_temp_scan_storage_xmachine_message_fibroblast_location_report = nullptr;
+    temp_scan_bytes_xmachine_message_fibroblast_location_report = 0;
     cub::DeviceScan::ExclusiveSum(
-        d_temp_scan_storage_xmachine_message_quiescent_location_report, 
-        temp_scan_bytes_xmachine_message_quiescent_location_report, 
+        d_temp_scan_storage_xmachine_message_fibroblast_location_report, 
+        temp_scan_bytes_xmachine_message_fibroblast_location_report, 
         (int*) nullptr, 
         (int*) nullptr, 
-        xmachine_message_quiescent_location_report_grid_size
+        xmachine_message_fibroblast_location_report_grid_size
     );
-    gpuErrchk(cudaMalloc(&d_temp_scan_storage_xmachine_message_quiescent_location_report, temp_scan_bytes_xmachine_message_quiescent_location_report));
+    gpuErrchk(cudaMalloc(&d_temp_scan_storage_xmachine_message_fibroblast_location_report, temp_scan_bytes_xmachine_message_fibroblast_location_report));
 #else
-	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_quiescent_location_report_keys, xmachine_message_quiescent_location_report_MAX* sizeof(uint)));
-	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_quiescent_location_report_values, xmachine_message_quiescent_location_report_MAX* sizeof(uint)));
-#endif
-	
-	/* senescent_location_report Message memory allocation (GPU) */
-	gpuErrchk( cudaMalloc( (void**) &d_senescent_location_reports, message_senescent_location_report_SoA_size));
-	gpuErrchk( cudaMalloc( (void**) &d_senescent_location_reports_swap, message_senescent_location_report_SoA_size));
-	gpuErrchk( cudaMemcpy( d_senescent_location_reports, h_senescent_location_reports, message_senescent_location_report_SoA_size, cudaMemcpyHostToDevice));
-	gpuErrchk( cudaMalloc( (void**) &d_senescent_location_report_partition_matrix, sizeof(xmachine_message_senescent_location_report_PBM)));
-#ifdef FAST_ATOMIC_SORTING
-	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_senescent_location_report_local_bin_index, xmachine_message_senescent_location_report_MAX* sizeof(uint)));
-	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_senescent_location_report_unsorted_index, xmachine_message_senescent_location_report_MAX* sizeof(uint)));
-    /* Calculate and allocate CUB temporary memory for exclusive scans */
-    d_temp_scan_storage_xmachine_message_senescent_location_report = nullptr;
-    temp_scan_bytes_xmachine_message_senescent_location_report = 0;
-    cub::DeviceScan::ExclusiveSum(
-        d_temp_scan_storage_xmachine_message_senescent_location_report, 
-        temp_scan_bytes_xmachine_message_senescent_location_report, 
-        (int*) nullptr, 
-        (int*) nullptr, 
-        xmachine_message_senescent_location_report_grid_size
-    );
-    gpuErrchk(cudaMalloc(&d_temp_scan_storage_xmachine_message_senescent_location_report, temp_scan_bytes_xmachine_message_senescent_location_report));
-#else
-	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_senescent_location_report_keys, xmachine_message_senescent_location_report_MAX* sizeof(uint)));
-	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_senescent_location_report_values, xmachine_message_senescent_location_report_MAX* sizeof(uint)));
+	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_fibroblast_location_report_keys, xmachine_message_fibroblast_location_report_MAX* sizeof(uint)));
+	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_fibroblast_location_report_values, xmachine_message_fibroblast_location_report_MAX* sizeof(uint)));
 #endif
 		
 
@@ -1235,36 +1131,20 @@ void cleanup(){
 	gpuErrchk(cudaFree(d_counts));
 	gpuErrchk(cudaFree(d_counts_swap));
 	
-	/* quiescent_location_report Message variables */
-	free( h_quiescent_location_reports);
-	gpuErrchk(cudaFree(d_quiescent_location_reports));
-	gpuErrchk(cudaFree(d_quiescent_location_reports_swap));
-	gpuErrchk(cudaFree(d_quiescent_location_report_partition_matrix));
+	/* fibroblast_location_report Message variables */
+	free( h_fibroblast_location_reports);
+	gpuErrchk(cudaFree(d_fibroblast_location_reports));
+	gpuErrchk(cudaFree(d_fibroblast_location_reports_swap));
+	gpuErrchk(cudaFree(d_fibroblast_location_report_partition_matrix));
 #ifdef FAST_ATOMIC_SORTING
-	gpuErrchk(cudaFree(d_xmachine_message_quiescent_location_report_local_bin_index));
-	gpuErrchk(cudaFree(d_xmachine_message_quiescent_location_report_unsorted_index));
-  gpuErrchk(cudaFree(d_temp_scan_storage_xmachine_message_quiescent_location_report));
-  d_temp_scan_storage_xmachine_message_quiescent_location_report = nullptr;
-  temp_scan_bytes_xmachine_message_quiescent_location_report = 0;
+	gpuErrchk(cudaFree(d_xmachine_message_fibroblast_location_report_local_bin_index));
+	gpuErrchk(cudaFree(d_xmachine_message_fibroblast_location_report_unsorted_index));
+  gpuErrchk(cudaFree(d_temp_scan_storage_xmachine_message_fibroblast_location_report));
+  d_temp_scan_storage_xmachine_message_fibroblast_location_report = nullptr;
+  temp_scan_bytes_xmachine_message_fibroblast_location_report = 0;
 #else
-	gpuErrchk(cudaFree(d_xmachine_message_quiescent_location_report_keys));
-	gpuErrchk(cudaFree(d_xmachine_message_quiescent_location_report_values));
-#endif
-	
-	/* senescent_location_report Message variables */
-	free( h_senescent_location_reports);
-	gpuErrchk(cudaFree(d_senescent_location_reports));
-	gpuErrchk(cudaFree(d_senescent_location_reports_swap));
-	gpuErrchk(cudaFree(d_senescent_location_report_partition_matrix));
-#ifdef FAST_ATOMIC_SORTING
-	gpuErrchk(cudaFree(d_xmachine_message_senescent_location_report_local_bin_index));
-	gpuErrchk(cudaFree(d_xmachine_message_senescent_location_report_unsorted_index));
-  gpuErrchk(cudaFree(d_temp_scan_storage_xmachine_message_senescent_location_report));
-  d_temp_scan_storage_xmachine_message_senescent_location_report = nullptr;
-  temp_scan_bytes_xmachine_message_senescent_location_report = 0;
-#else
-	gpuErrchk(cudaFree(d_xmachine_message_senescent_location_report_keys));
-	gpuErrchk(cudaFree(d_xmachine_message_senescent_location_report_values));
+	gpuErrchk(cudaFree(d_xmachine_message_fibroblast_location_report_keys));
+	gpuErrchk(cudaFree(d_xmachine_message_fibroblast_location_report_values));
 #endif
 	
 
@@ -1330,13 +1210,9 @@ PROFILE_SCOPED_RANGE("singleIteration");
 	//upload to device constant
 	gpuErrchk(cudaMemcpyToSymbol( d_message_count_count, &h_message_count_count, sizeof(int)));
 	
-	h_message_quiescent_location_report_count = 0;
+	h_message_fibroblast_location_report_count = 0;
 	//upload to device constant
-	gpuErrchk(cudaMemcpyToSymbol( d_message_quiescent_location_report_count, &h_message_quiescent_location_report_count, sizeof(int)));
-	
-	h_message_senescent_location_report_count = 0;
-	//upload to device constant
-	gpuErrchk(cudaMemcpyToSymbol( d_message_senescent_location_report_count, &h_message_senescent_location_report_count, sizeof(int)));
+	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_location_report_count, &h_message_fibroblast_location_report_count, sizeof(int)));
 	
 
 	/* Call agent functions in order iterating through the layer functions */
@@ -1373,6 +1249,23 @@ PROFILE_SCOPED_RANGE("singleIteration");
 	cudaDeviceSynchronize();
   
 	/* Layer 2*/
+	
+#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
+	cudaEventRecord(instrument_start);
+#endif
+	
+    PROFILE_PUSH_RANGE("TissueBlock_TissueSendDamageReport");
+	TissueBlock_TissueSendDamageReport(stream1);
+    PROFILE_POP_RANGE();
+#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
+	cudaEventRecord(instrument_stop);
+	cudaEventSynchronize(instrument_stop);
+	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
+	printf("Instrumentation: TissueBlock_TissueSendDamageReport = %f (ms)\n", instrument_milliseconds);
+#endif
+	cudaDeviceSynchronize();
+  
+	/* Layer 3*/
 	
 #if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
 	cudaEventRecord(instrument_start);
@@ -1417,7 +1310,24 @@ PROFILE_SCOPED_RANGE("singleIteration");
 #endif
 	cudaDeviceSynchronize();
   
-	/* Layer 3*/
+	/* Layer 4*/
+	
+#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
+	cudaEventRecord(instrument_start);
+#endif
+	
+    PROFILE_PUSH_RANGE("TissueBlock_TissueSendDamageReport");
+	TissueBlock_TissueSendDamageReport(stream1);
+    PROFILE_POP_RANGE();
+#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
+	cudaEventRecord(instrument_stop);
+	cudaEventSynchronize(instrument_stop);
+	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
+	printf("Instrumentation: TissueBlock_TissueSendDamageReport = %f (ms)\n", instrument_milliseconds);
+#endif
+	cudaDeviceSynchronize();
+  
+	/* Layer 5*/
 	
 #if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
 	cudaEventRecord(instrument_start);
@@ -1462,48 +1372,58 @@ PROFILE_SCOPED_RANGE("singleIteration");
 #endif
 	cudaDeviceSynchronize();
   
-	/* Layer 4*/
-	
-#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
-	cudaEventRecord(instrument_start);
-#endif
-	
-    PROFILE_PUSH_RANGE("Fibroblast_Proliferation");
-	Fibroblast_Proliferation(stream1);
-    PROFILE_POP_RANGE();
-#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
-	cudaEventRecord(instrument_stop);
-	cudaEventSynchronize(instrument_stop);
-	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
-	printf("Instrumentation: Fibroblast_Proliferation = %f (ms)\n", instrument_milliseconds);
-#endif
-	cudaDeviceSynchronize();
-  
-	/* Layer 5*/
-	
-#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
-	cudaEventRecord(instrument_start);
-#endif
-	
-    PROFILE_PUSH_RANGE("Fibroblast_Proliferation");
-	Fibroblast_Proliferation(stream1);
-    PROFILE_POP_RANGE();
-#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
-	cudaEventRecord(instrument_stop);
-	cudaEventSynchronize(instrument_stop);
-	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
-	printf("Instrumentation: Fibroblast_Proliferation = %f (ms)\n", instrument_milliseconds);
-#endif
-	cudaDeviceSynchronize();
-  
 	/* Layer 6*/
 	
 #if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
 	cudaEventRecord(instrument_start);
 #endif
+	
+    PROFILE_PUSH_RANGE("Fibroblast_TransitionToProliferating");
+	Fibroblast_TransitionToProliferating(stream1);
+    PROFILE_POP_RANGE();
+#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
+	cudaEventRecord(instrument_stop);
+	cudaEventSynchronize(instrument_stop);
+	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
+	printf("Instrumentation: Fibroblast_TransitionToProliferating = %f (ms)\n", instrument_milliseconds);
+#endif
 	cudaDeviceSynchronize();
   
 	/* Layer 7*/
+	
+#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
+	cudaEventRecord(instrument_start);
+#endif
+	
+    PROFILE_PUSH_RANGE("Fibroblast_EarlySenCountTime");
+	Fibroblast_EarlySenCountTime(stream1);
+    PROFILE_POP_RANGE();
+#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
+	cudaEventRecord(instrument_stop);
+	cudaEventSynchronize(instrument_stop);
+	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
+	printf("Instrumentation: Fibroblast_EarlySenCountTime = %f (ms)\n", instrument_milliseconds);
+#endif
+	cudaDeviceSynchronize();
+  
+	/* Layer 8*/
+	
+#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
+	cudaEventRecord(instrument_start);
+#endif
+	
+    PROFILE_PUSH_RANGE("Fibroblast_TransitionToFullSenescence");
+	Fibroblast_TransitionToFullSenescence(stream1);
+    PROFILE_POP_RANGE();
+#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
+	cudaEventRecord(instrument_stop);
+	cudaEventSynchronize(instrument_stop);
+	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
+	printf("Instrumentation: Fibroblast_TransitionToFullSenescence = %f (ms)\n", instrument_milliseconds);
+#endif
+	cudaDeviceSynchronize();
+  
+	/* Layer 9*/
 	
 #if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
 	cudaEventRecord(instrument_start);
@@ -1520,7 +1440,7 @@ PROFILE_SCOPED_RANGE("singleIteration");
 #endif
 	cudaDeviceSynchronize();
   
-	/* Layer 8*/
+	/* Layer 10*/
 	
 #if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
 	cudaEventRecord(instrument_start);
@@ -1537,7 +1457,7 @@ PROFILE_SCOPED_RANGE("singleIteration");
 #endif
 	cudaDeviceSynchronize();
   
-	/* Layer 9*/
+	/* Layer 11*/
 	
 #if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
 	cudaEventRecord(instrument_start);
@@ -1551,40 +1471,6 @@ PROFILE_SCOPED_RANGE("singleIteration");
 	cudaEventSynchronize(instrument_stop);
 	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
 	printf("Instrumentation: Fibroblast_DetectDamage = %f (ms)\n", instrument_milliseconds);
-#endif
-	cudaDeviceSynchronize();
-  
-	/* Layer 10*/
-	
-#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
-	cudaEventRecord(instrument_start);
-#endif
-	
-    PROFILE_PUSH_RANGE("Fibroblast_RepairDamage");
-	Fibroblast_RepairDamage(stream1);
-    PROFILE_POP_RANGE();
-#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
-	cudaEventRecord(instrument_stop);
-	cudaEventSynchronize(instrument_stop);
-	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
-	printf("Instrumentation: Fibroblast_RepairDamage = %f (ms)\n", instrument_milliseconds);
-#endif
-	cudaDeviceSynchronize();
-  
-	/* Layer 11*/
-	
-#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
-	cudaEventRecord(instrument_start);
-#endif
-	
-    PROFILE_PUSH_RANGE("Fibroblast_DamageRepaired");
-	Fibroblast_DamageRepaired(stream1);
-    PROFILE_POP_RANGE();
-#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
-	cudaEventRecord(instrument_stop);
-	cudaEventSynchronize(instrument_stop);
-	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
-	printf("Instrumentation: Fibroblast_DamageRepaired = %f (ms)\n", instrument_milliseconds);
 #endif
 	cudaDeviceSynchronize();
   
@@ -1630,17 +1516,21 @@ bool get_exit_early() {
 
 //host constant declaration
 float h_env_TISSUE_DAMAGE_PROB;
-float h_env_PROLIFERATION_PROB;
-float h_env_TISSUE_SIZE;
 float h_env_EARLY_SENESCENT_MIGRATION_SCALE;
 float h_env_SENESCENT_MIGRATION_SCALE;
 float h_env_QUIESCENT_MIGRATION_SCALE;
+float h_env_PROLIFERATION_PROB;
 float h_env_BYSTANDER_DISTANCE;
 float h_env_BYSTANDER_PROB;
-float h_env_EXCESSIVE_DAMAGE_AMOUNT;
+int h_env_EXCESSIVE_DAMAGE_AMOUNT;
 float h_env_EXCESSIVE_DAMAGE_PROB;
-float h_env_REPLICATIVE_SEN_AGE;
+int h_env_REPLICATIVE_SEN_AGE;
 float h_env_REPLICATIVE_SEN_PROB;
+int h_env_EARLY_SENESCENT_MATURATION_TIME;
+float h_env_TRANSITION_TO_FULL_SENESCENCE_PROB;
+float h_env_CLEARANCE_EARLY_SEN_PROB;
+float h_env_CLEARANCE_SEN_PROB;
+float h_env_REPAIR_RADIUS;
 
 
 //constant setter
@@ -1652,32 +1542,6 @@ void set_TISSUE_DAMAGE_PROB(float* h_TISSUE_DAMAGE_PROB){
 //constant getter
 const float* get_TISSUE_DAMAGE_PROB(){
     return &h_env_TISSUE_DAMAGE_PROB;
-}
-
-
-
-//constant setter
-void set_PROLIFERATION_PROB(float* h_PROLIFERATION_PROB){
-    gpuErrchk(cudaMemcpyToSymbol(PROLIFERATION_PROB, h_PROLIFERATION_PROB, sizeof(float)));
-    memcpy(&h_env_PROLIFERATION_PROB, h_PROLIFERATION_PROB,sizeof(float));
-}
-
-//constant getter
-const float* get_PROLIFERATION_PROB(){
-    return &h_env_PROLIFERATION_PROB;
-}
-
-
-
-//constant setter
-void set_TISSUE_SIZE(float* h_TISSUE_SIZE){
-    gpuErrchk(cudaMemcpyToSymbol(TISSUE_SIZE, h_TISSUE_SIZE, sizeof(float)));
-    memcpy(&h_env_TISSUE_SIZE, h_TISSUE_SIZE,sizeof(float));
-}
-
-//constant getter
-const float* get_TISSUE_SIZE(){
-    return &h_env_TISSUE_SIZE;
 }
 
 
@@ -1722,6 +1586,19 @@ const float* get_QUIESCENT_MIGRATION_SCALE(){
 
 
 //constant setter
+void set_PROLIFERATION_PROB(float* h_PROLIFERATION_PROB){
+    gpuErrchk(cudaMemcpyToSymbol(PROLIFERATION_PROB, h_PROLIFERATION_PROB, sizeof(float)));
+    memcpy(&h_env_PROLIFERATION_PROB, h_PROLIFERATION_PROB,sizeof(float));
+}
+
+//constant getter
+const float* get_PROLIFERATION_PROB(){
+    return &h_env_PROLIFERATION_PROB;
+}
+
+
+
+//constant setter
 void set_BYSTANDER_DISTANCE(float* h_BYSTANDER_DISTANCE){
     gpuErrchk(cudaMemcpyToSymbol(BYSTANDER_DISTANCE, h_BYSTANDER_DISTANCE, sizeof(float)));
     memcpy(&h_env_BYSTANDER_DISTANCE, h_BYSTANDER_DISTANCE,sizeof(float));
@@ -1748,13 +1625,13 @@ const float* get_BYSTANDER_PROB(){
 
 
 //constant setter
-void set_EXCESSIVE_DAMAGE_AMOUNT(float* h_EXCESSIVE_DAMAGE_AMOUNT){
-    gpuErrchk(cudaMemcpyToSymbol(EXCESSIVE_DAMAGE_AMOUNT, h_EXCESSIVE_DAMAGE_AMOUNT, sizeof(float)));
-    memcpy(&h_env_EXCESSIVE_DAMAGE_AMOUNT, h_EXCESSIVE_DAMAGE_AMOUNT,sizeof(float));
+void set_EXCESSIVE_DAMAGE_AMOUNT(int* h_EXCESSIVE_DAMAGE_AMOUNT){
+    gpuErrchk(cudaMemcpyToSymbol(EXCESSIVE_DAMAGE_AMOUNT, h_EXCESSIVE_DAMAGE_AMOUNT, sizeof(int)));
+    memcpy(&h_env_EXCESSIVE_DAMAGE_AMOUNT, h_EXCESSIVE_DAMAGE_AMOUNT,sizeof(int));
 }
 
 //constant getter
-const float* get_EXCESSIVE_DAMAGE_AMOUNT(){
+const int* get_EXCESSIVE_DAMAGE_AMOUNT(){
     return &h_env_EXCESSIVE_DAMAGE_AMOUNT;
 }
 
@@ -1774,13 +1651,13 @@ const float* get_EXCESSIVE_DAMAGE_PROB(){
 
 
 //constant setter
-void set_REPLICATIVE_SEN_AGE(float* h_REPLICATIVE_SEN_AGE){
-    gpuErrchk(cudaMemcpyToSymbol(REPLICATIVE_SEN_AGE, h_REPLICATIVE_SEN_AGE, sizeof(float)));
-    memcpy(&h_env_REPLICATIVE_SEN_AGE, h_REPLICATIVE_SEN_AGE,sizeof(float));
+void set_REPLICATIVE_SEN_AGE(int* h_REPLICATIVE_SEN_AGE){
+    gpuErrchk(cudaMemcpyToSymbol(REPLICATIVE_SEN_AGE, h_REPLICATIVE_SEN_AGE, sizeof(int)));
+    memcpy(&h_env_REPLICATIVE_SEN_AGE, h_REPLICATIVE_SEN_AGE,sizeof(int));
 }
 
 //constant getter
-const float* get_REPLICATIVE_SEN_AGE(){
+const int* get_REPLICATIVE_SEN_AGE(){
     return &h_env_REPLICATIVE_SEN_AGE;
 }
 
@@ -1795,6 +1672,71 @@ void set_REPLICATIVE_SEN_PROB(float* h_REPLICATIVE_SEN_PROB){
 //constant getter
 const float* get_REPLICATIVE_SEN_PROB(){
     return &h_env_REPLICATIVE_SEN_PROB;
+}
+
+
+
+//constant setter
+void set_EARLY_SENESCENT_MATURATION_TIME(int* h_EARLY_SENESCENT_MATURATION_TIME){
+    gpuErrchk(cudaMemcpyToSymbol(EARLY_SENESCENT_MATURATION_TIME, h_EARLY_SENESCENT_MATURATION_TIME, sizeof(int)));
+    memcpy(&h_env_EARLY_SENESCENT_MATURATION_TIME, h_EARLY_SENESCENT_MATURATION_TIME,sizeof(int));
+}
+
+//constant getter
+const int* get_EARLY_SENESCENT_MATURATION_TIME(){
+    return &h_env_EARLY_SENESCENT_MATURATION_TIME;
+}
+
+
+
+//constant setter
+void set_TRANSITION_TO_FULL_SENESCENCE_PROB(float* h_TRANSITION_TO_FULL_SENESCENCE_PROB){
+    gpuErrchk(cudaMemcpyToSymbol(TRANSITION_TO_FULL_SENESCENCE_PROB, h_TRANSITION_TO_FULL_SENESCENCE_PROB, sizeof(float)));
+    memcpy(&h_env_TRANSITION_TO_FULL_SENESCENCE_PROB, h_TRANSITION_TO_FULL_SENESCENCE_PROB,sizeof(float));
+}
+
+//constant getter
+const float* get_TRANSITION_TO_FULL_SENESCENCE_PROB(){
+    return &h_env_TRANSITION_TO_FULL_SENESCENCE_PROB;
+}
+
+
+
+//constant setter
+void set_CLEARANCE_EARLY_SEN_PROB(float* h_CLEARANCE_EARLY_SEN_PROB){
+    gpuErrchk(cudaMemcpyToSymbol(CLEARANCE_EARLY_SEN_PROB, h_CLEARANCE_EARLY_SEN_PROB, sizeof(float)));
+    memcpy(&h_env_CLEARANCE_EARLY_SEN_PROB, h_CLEARANCE_EARLY_SEN_PROB,sizeof(float));
+}
+
+//constant getter
+const float* get_CLEARANCE_EARLY_SEN_PROB(){
+    return &h_env_CLEARANCE_EARLY_SEN_PROB;
+}
+
+
+
+//constant setter
+void set_CLEARANCE_SEN_PROB(float* h_CLEARANCE_SEN_PROB){
+    gpuErrchk(cudaMemcpyToSymbol(CLEARANCE_SEN_PROB, h_CLEARANCE_SEN_PROB, sizeof(float)));
+    memcpy(&h_env_CLEARANCE_SEN_PROB, h_CLEARANCE_SEN_PROB,sizeof(float));
+}
+
+//constant getter
+const float* get_CLEARANCE_SEN_PROB(){
+    return &h_env_CLEARANCE_SEN_PROB;
+}
+
+
+
+//constant setter
+void set_REPAIR_RADIUS(float* h_REPAIR_RADIUS){
+    gpuErrchk(cudaMemcpyToSymbol(REPAIR_RADIUS, h_REPAIR_RADIUS, sizeof(float)));
+    memcpy(&h_env_REPAIR_RADIUS, h_REPAIR_RADIUS,sizeof(float));
+}
+
+//constant getter
+const float* get_REPAIR_RADIUS(){
+    return &h_env_REPAIR_RADIUS;
 }
 
 
@@ -2320,120 +2262,6 @@ __host__ int get_Fibroblast_Quiescent_variable_damage(unsigned int index){
     }
 }
 
-/** int get_Fibroblast_Quiescent_variable_proliferate_bool(unsigned int index)
- * Gets the value of the proliferate_bool variable of an Fibroblast agent in the Quiescent state on the host. 
- * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
- * This has a potentially significant performance impact if used improperly.
- * @param index the index of the agent within the list.
- * @return value of agent variable proliferate_bool
- */
-__host__ int get_Fibroblast_Quiescent_variable_proliferate_bool(unsigned int index){
-    unsigned int count = get_agent_Fibroblast_Quiescent_count();
-    unsigned int currentIteration = getIterationNumber();
-    
-    // If the index is within bounds - no need to check >= 0 due to unsigned.
-    if(count > 0 && index < count ){
-        // If necessary, copy agent data from the device to the host in the default stream
-        if(h_Fibroblasts_Quiescent_variable_proliferate_bool_data_iteration != currentIteration){
-            gpuErrchk(
-                cudaMemcpy(
-                    h_Fibroblasts_Quiescent->proliferate_bool,
-                    d_Fibroblasts_Quiescent->proliferate_bool,
-                    count * sizeof(int),
-                    cudaMemcpyDeviceToHost
-                )
-            );
-            // Update some global value indicating what data is currently present in that host array.
-            h_Fibroblasts_Quiescent_variable_proliferate_bool_data_iteration = currentIteration;
-        }
-
-        // Return the value of the index-th element of the relevant host array.
-        return h_Fibroblasts_Quiescent->proliferate_bool[index];
-
-    } else {
-        fprintf(stderr, "Warning: Attempting to access proliferate_bool for the %u th member of Fibroblast_Quiescent. count is %u at iteration %u\n", index, count, currentIteration);
-        // Otherwise we return a default value
-        return 0;
-
-    }
-}
-
-/** int get_Fibroblast_Quiescent_variable_transition_to_early_sen(unsigned int index)
- * Gets the value of the transition_to_early_sen variable of an Fibroblast agent in the Quiescent state on the host. 
- * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
- * This has a potentially significant performance impact if used improperly.
- * @param index the index of the agent within the list.
- * @return value of agent variable transition_to_early_sen
- */
-__host__ int get_Fibroblast_Quiescent_variable_transition_to_early_sen(unsigned int index){
-    unsigned int count = get_agent_Fibroblast_Quiescent_count();
-    unsigned int currentIteration = getIterationNumber();
-    
-    // If the index is within bounds - no need to check >= 0 due to unsigned.
-    if(count > 0 && index < count ){
-        // If necessary, copy agent data from the device to the host in the default stream
-        if(h_Fibroblasts_Quiescent_variable_transition_to_early_sen_data_iteration != currentIteration){
-            gpuErrchk(
-                cudaMemcpy(
-                    h_Fibroblasts_Quiescent->transition_to_early_sen,
-                    d_Fibroblasts_Quiescent->transition_to_early_sen,
-                    count * sizeof(int),
-                    cudaMemcpyDeviceToHost
-                )
-            );
-            // Update some global value indicating what data is currently present in that host array.
-            h_Fibroblasts_Quiescent_variable_transition_to_early_sen_data_iteration = currentIteration;
-        }
-
-        // Return the value of the index-th element of the relevant host array.
-        return h_Fibroblasts_Quiescent->transition_to_early_sen[index];
-
-    } else {
-        fprintf(stderr, "Warning: Attempting to access transition_to_early_sen for the %u th member of Fibroblast_Quiescent. count is %u at iteration %u\n", index, count, currentIteration);
-        // Otherwise we return a default value
-        return 0;
-
-    }
-}
-
-/** int get_Fibroblast_Quiescent_variable_transition_to_full_sen(unsigned int index)
- * Gets the value of the transition_to_full_sen variable of an Fibroblast agent in the Quiescent state on the host. 
- * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
- * This has a potentially significant performance impact if used improperly.
- * @param index the index of the agent within the list.
- * @return value of agent variable transition_to_full_sen
- */
-__host__ int get_Fibroblast_Quiescent_variable_transition_to_full_sen(unsigned int index){
-    unsigned int count = get_agent_Fibroblast_Quiescent_count();
-    unsigned int currentIteration = getIterationNumber();
-    
-    // If the index is within bounds - no need to check >= 0 due to unsigned.
-    if(count > 0 && index < count ){
-        // If necessary, copy agent data from the device to the host in the default stream
-        if(h_Fibroblasts_Quiescent_variable_transition_to_full_sen_data_iteration != currentIteration){
-            gpuErrchk(
-                cudaMemcpy(
-                    h_Fibroblasts_Quiescent->transition_to_full_sen,
-                    d_Fibroblasts_Quiescent->transition_to_full_sen,
-                    count * sizeof(int),
-                    cudaMemcpyDeviceToHost
-                )
-            );
-            // Update some global value indicating what data is currently present in that host array.
-            h_Fibroblasts_Quiescent_variable_transition_to_full_sen_data_iteration = currentIteration;
-        }
-
-        // Return the value of the index-th element of the relevant host array.
-        return h_Fibroblasts_Quiescent->transition_to_full_sen[index];
-
-    } else {
-        fprintf(stderr, "Warning: Attempting to access transition_to_full_sen for the %u th member of Fibroblast_Quiescent. count is %u at iteration %u\n", index, count, currentIteration);
-        // Otherwise we return a default value
-        return 0;
-
-    }
-}
-
 /** int get_Fibroblast_Quiescent_variable_early_sen_time_counter(unsigned int index)
  * Gets the value of the early_sen_time_counter variable of an Fibroblast agent in the Quiescent state on the host. 
  * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
@@ -2732,120 +2560,6 @@ __host__ int get_Fibroblast_EarlySenescent_variable_damage(unsigned int index){
 
     } else {
         fprintf(stderr, "Warning: Attempting to access damage for the %u th member of Fibroblast_EarlySenescent. count is %u at iteration %u\n", index, count, currentIteration);
-        // Otherwise we return a default value
-        return 0;
-
-    }
-}
-
-/** int get_Fibroblast_EarlySenescent_variable_proliferate_bool(unsigned int index)
- * Gets the value of the proliferate_bool variable of an Fibroblast agent in the EarlySenescent state on the host. 
- * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
- * This has a potentially significant performance impact if used improperly.
- * @param index the index of the agent within the list.
- * @return value of agent variable proliferate_bool
- */
-__host__ int get_Fibroblast_EarlySenescent_variable_proliferate_bool(unsigned int index){
-    unsigned int count = get_agent_Fibroblast_EarlySenescent_count();
-    unsigned int currentIteration = getIterationNumber();
-    
-    // If the index is within bounds - no need to check >= 0 due to unsigned.
-    if(count > 0 && index < count ){
-        // If necessary, copy agent data from the device to the host in the default stream
-        if(h_Fibroblasts_EarlySenescent_variable_proliferate_bool_data_iteration != currentIteration){
-            gpuErrchk(
-                cudaMemcpy(
-                    h_Fibroblasts_EarlySenescent->proliferate_bool,
-                    d_Fibroblasts_EarlySenescent->proliferate_bool,
-                    count * sizeof(int),
-                    cudaMemcpyDeviceToHost
-                )
-            );
-            // Update some global value indicating what data is currently present in that host array.
-            h_Fibroblasts_EarlySenescent_variable_proliferate_bool_data_iteration = currentIteration;
-        }
-
-        // Return the value of the index-th element of the relevant host array.
-        return h_Fibroblasts_EarlySenescent->proliferate_bool[index];
-
-    } else {
-        fprintf(stderr, "Warning: Attempting to access proliferate_bool for the %u th member of Fibroblast_EarlySenescent. count is %u at iteration %u\n", index, count, currentIteration);
-        // Otherwise we return a default value
-        return 0;
-
-    }
-}
-
-/** int get_Fibroblast_EarlySenescent_variable_transition_to_early_sen(unsigned int index)
- * Gets the value of the transition_to_early_sen variable of an Fibroblast agent in the EarlySenescent state on the host. 
- * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
- * This has a potentially significant performance impact if used improperly.
- * @param index the index of the agent within the list.
- * @return value of agent variable transition_to_early_sen
- */
-__host__ int get_Fibroblast_EarlySenescent_variable_transition_to_early_sen(unsigned int index){
-    unsigned int count = get_agent_Fibroblast_EarlySenescent_count();
-    unsigned int currentIteration = getIterationNumber();
-    
-    // If the index is within bounds - no need to check >= 0 due to unsigned.
-    if(count > 0 && index < count ){
-        // If necessary, copy agent data from the device to the host in the default stream
-        if(h_Fibroblasts_EarlySenescent_variable_transition_to_early_sen_data_iteration != currentIteration){
-            gpuErrchk(
-                cudaMemcpy(
-                    h_Fibroblasts_EarlySenescent->transition_to_early_sen,
-                    d_Fibroblasts_EarlySenescent->transition_to_early_sen,
-                    count * sizeof(int),
-                    cudaMemcpyDeviceToHost
-                )
-            );
-            // Update some global value indicating what data is currently present in that host array.
-            h_Fibroblasts_EarlySenescent_variable_transition_to_early_sen_data_iteration = currentIteration;
-        }
-
-        // Return the value of the index-th element of the relevant host array.
-        return h_Fibroblasts_EarlySenescent->transition_to_early_sen[index];
-
-    } else {
-        fprintf(stderr, "Warning: Attempting to access transition_to_early_sen for the %u th member of Fibroblast_EarlySenescent. count is %u at iteration %u\n", index, count, currentIteration);
-        // Otherwise we return a default value
-        return 0;
-
-    }
-}
-
-/** int get_Fibroblast_EarlySenescent_variable_transition_to_full_sen(unsigned int index)
- * Gets the value of the transition_to_full_sen variable of an Fibroblast agent in the EarlySenescent state on the host. 
- * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
- * This has a potentially significant performance impact if used improperly.
- * @param index the index of the agent within the list.
- * @return value of agent variable transition_to_full_sen
- */
-__host__ int get_Fibroblast_EarlySenescent_variable_transition_to_full_sen(unsigned int index){
-    unsigned int count = get_agent_Fibroblast_EarlySenescent_count();
-    unsigned int currentIteration = getIterationNumber();
-    
-    // If the index is within bounds - no need to check >= 0 due to unsigned.
-    if(count > 0 && index < count ){
-        // If necessary, copy agent data from the device to the host in the default stream
-        if(h_Fibroblasts_EarlySenescent_variable_transition_to_full_sen_data_iteration != currentIteration){
-            gpuErrchk(
-                cudaMemcpy(
-                    h_Fibroblasts_EarlySenescent->transition_to_full_sen,
-                    d_Fibroblasts_EarlySenescent->transition_to_full_sen,
-                    count * sizeof(int),
-                    cudaMemcpyDeviceToHost
-                )
-            );
-            // Update some global value indicating what data is currently present in that host array.
-            h_Fibroblasts_EarlySenescent_variable_transition_to_full_sen_data_iteration = currentIteration;
-        }
-
-        // Return the value of the index-th element of the relevant host array.
-        return h_Fibroblasts_EarlySenescent->transition_to_full_sen[index];
-
-    } else {
-        fprintf(stderr, "Warning: Attempting to access transition_to_full_sen for the %u th member of Fibroblast_EarlySenescent. count is %u at iteration %u\n", index, count, currentIteration);
         // Otherwise we return a default value
         return 0;
 
@@ -3156,120 +2870,6 @@ __host__ int get_Fibroblast_Senescent_variable_damage(unsigned int index){
     }
 }
 
-/** int get_Fibroblast_Senescent_variable_proliferate_bool(unsigned int index)
- * Gets the value of the proliferate_bool variable of an Fibroblast agent in the Senescent state on the host. 
- * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
- * This has a potentially significant performance impact if used improperly.
- * @param index the index of the agent within the list.
- * @return value of agent variable proliferate_bool
- */
-__host__ int get_Fibroblast_Senescent_variable_proliferate_bool(unsigned int index){
-    unsigned int count = get_agent_Fibroblast_Senescent_count();
-    unsigned int currentIteration = getIterationNumber();
-    
-    // If the index is within bounds - no need to check >= 0 due to unsigned.
-    if(count > 0 && index < count ){
-        // If necessary, copy agent data from the device to the host in the default stream
-        if(h_Fibroblasts_Senescent_variable_proliferate_bool_data_iteration != currentIteration){
-            gpuErrchk(
-                cudaMemcpy(
-                    h_Fibroblasts_Senescent->proliferate_bool,
-                    d_Fibroblasts_Senescent->proliferate_bool,
-                    count * sizeof(int),
-                    cudaMemcpyDeviceToHost
-                )
-            );
-            // Update some global value indicating what data is currently present in that host array.
-            h_Fibroblasts_Senescent_variable_proliferate_bool_data_iteration = currentIteration;
-        }
-
-        // Return the value of the index-th element of the relevant host array.
-        return h_Fibroblasts_Senescent->proliferate_bool[index];
-
-    } else {
-        fprintf(stderr, "Warning: Attempting to access proliferate_bool for the %u th member of Fibroblast_Senescent. count is %u at iteration %u\n", index, count, currentIteration);
-        // Otherwise we return a default value
-        return 0;
-
-    }
-}
-
-/** int get_Fibroblast_Senescent_variable_transition_to_early_sen(unsigned int index)
- * Gets the value of the transition_to_early_sen variable of an Fibroblast agent in the Senescent state on the host. 
- * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
- * This has a potentially significant performance impact if used improperly.
- * @param index the index of the agent within the list.
- * @return value of agent variable transition_to_early_sen
- */
-__host__ int get_Fibroblast_Senescent_variable_transition_to_early_sen(unsigned int index){
-    unsigned int count = get_agent_Fibroblast_Senescent_count();
-    unsigned int currentIteration = getIterationNumber();
-    
-    // If the index is within bounds - no need to check >= 0 due to unsigned.
-    if(count > 0 && index < count ){
-        // If necessary, copy agent data from the device to the host in the default stream
-        if(h_Fibroblasts_Senescent_variable_transition_to_early_sen_data_iteration != currentIteration){
-            gpuErrchk(
-                cudaMemcpy(
-                    h_Fibroblasts_Senescent->transition_to_early_sen,
-                    d_Fibroblasts_Senescent->transition_to_early_sen,
-                    count * sizeof(int),
-                    cudaMemcpyDeviceToHost
-                )
-            );
-            // Update some global value indicating what data is currently present in that host array.
-            h_Fibroblasts_Senescent_variable_transition_to_early_sen_data_iteration = currentIteration;
-        }
-
-        // Return the value of the index-th element of the relevant host array.
-        return h_Fibroblasts_Senescent->transition_to_early_sen[index];
-
-    } else {
-        fprintf(stderr, "Warning: Attempting to access transition_to_early_sen for the %u th member of Fibroblast_Senescent. count is %u at iteration %u\n", index, count, currentIteration);
-        // Otherwise we return a default value
-        return 0;
-
-    }
-}
-
-/** int get_Fibroblast_Senescent_variable_transition_to_full_sen(unsigned int index)
- * Gets the value of the transition_to_full_sen variable of an Fibroblast agent in the Senescent state on the host. 
- * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
- * This has a potentially significant performance impact if used improperly.
- * @param index the index of the agent within the list.
- * @return value of agent variable transition_to_full_sen
- */
-__host__ int get_Fibroblast_Senescent_variable_transition_to_full_sen(unsigned int index){
-    unsigned int count = get_agent_Fibroblast_Senescent_count();
-    unsigned int currentIteration = getIterationNumber();
-    
-    // If the index is within bounds - no need to check >= 0 due to unsigned.
-    if(count > 0 && index < count ){
-        // If necessary, copy agent data from the device to the host in the default stream
-        if(h_Fibroblasts_Senescent_variable_transition_to_full_sen_data_iteration != currentIteration){
-            gpuErrchk(
-                cudaMemcpy(
-                    h_Fibroblasts_Senescent->transition_to_full_sen,
-                    d_Fibroblasts_Senescent->transition_to_full_sen,
-                    count * sizeof(int),
-                    cudaMemcpyDeviceToHost
-                )
-            );
-            // Update some global value indicating what data is currently present in that host array.
-            h_Fibroblasts_Senescent_variable_transition_to_full_sen_data_iteration = currentIteration;
-        }
-
-        // Return the value of the index-th element of the relevant host array.
-        return h_Fibroblasts_Senescent->transition_to_full_sen[index];
-
-    } else {
-        fprintf(stderr, "Warning: Attempting to access transition_to_full_sen for the %u th member of Fibroblast_Senescent. count is %u at iteration %u\n", index, count, currentIteration);
-        // Otherwise we return a default value
-        return 0;
-
-    }
-}
-
 /** int get_Fibroblast_Senescent_variable_early_sen_time_counter(unsigned int index)
  * Gets the value of the early_sen_time_counter variable of an Fibroblast agent in the Senescent state on the host. 
  * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
@@ -3568,120 +3168,6 @@ __host__ int get_Fibroblast_Proliferating_variable_damage(unsigned int index){
 
     } else {
         fprintf(stderr, "Warning: Attempting to access damage for the %u th member of Fibroblast_Proliferating. count is %u at iteration %u\n", index, count, currentIteration);
-        // Otherwise we return a default value
-        return 0;
-
-    }
-}
-
-/** int get_Fibroblast_Proliferating_variable_proliferate_bool(unsigned int index)
- * Gets the value of the proliferate_bool variable of an Fibroblast agent in the Proliferating state on the host. 
- * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
- * This has a potentially significant performance impact if used improperly.
- * @param index the index of the agent within the list.
- * @return value of agent variable proliferate_bool
- */
-__host__ int get_Fibroblast_Proliferating_variable_proliferate_bool(unsigned int index){
-    unsigned int count = get_agent_Fibroblast_Proliferating_count();
-    unsigned int currentIteration = getIterationNumber();
-    
-    // If the index is within bounds - no need to check >= 0 due to unsigned.
-    if(count > 0 && index < count ){
-        // If necessary, copy agent data from the device to the host in the default stream
-        if(h_Fibroblasts_Proliferating_variable_proliferate_bool_data_iteration != currentIteration){
-            gpuErrchk(
-                cudaMemcpy(
-                    h_Fibroblasts_Proliferating->proliferate_bool,
-                    d_Fibroblasts_Proliferating->proliferate_bool,
-                    count * sizeof(int),
-                    cudaMemcpyDeviceToHost
-                )
-            );
-            // Update some global value indicating what data is currently present in that host array.
-            h_Fibroblasts_Proliferating_variable_proliferate_bool_data_iteration = currentIteration;
-        }
-
-        // Return the value of the index-th element of the relevant host array.
-        return h_Fibroblasts_Proliferating->proliferate_bool[index];
-
-    } else {
-        fprintf(stderr, "Warning: Attempting to access proliferate_bool for the %u th member of Fibroblast_Proliferating. count is %u at iteration %u\n", index, count, currentIteration);
-        // Otherwise we return a default value
-        return 0;
-
-    }
-}
-
-/** int get_Fibroblast_Proliferating_variable_transition_to_early_sen(unsigned int index)
- * Gets the value of the transition_to_early_sen variable of an Fibroblast agent in the Proliferating state on the host. 
- * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
- * This has a potentially significant performance impact if used improperly.
- * @param index the index of the agent within the list.
- * @return value of agent variable transition_to_early_sen
- */
-__host__ int get_Fibroblast_Proliferating_variable_transition_to_early_sen(unsigned int index){
-    unsigned int count = get_agent_Fibroblast_Proliferating_count();
-    unsigned int currentIteration = getIterationNumber();
-    
-    // If the index is within bounds - no need to check >= 0 due to unsigned.
-    if(count > 0 && index < count ){
-        // If necessary, copy agent data from the device to the host in the default stream
-        if(h_Fibroblasts_Proliferating_variable_transition_to_early_sen_data_iteration != currentIteration){
-            gpuErrchk(
-                cudaMemcpy(
-                    h_Fibroblasts_Proliferating->transition_to_early_sen,
-                    d_Fibroblasts_Proliferating->transition_to_early_sen,
-                    count * sizeof(int),
-                    cudaMemcpyDeviceToHost
-                )
-            );
-            // Update some global value indicating what data is currently present in that host array.
-            h_Fibroblasts_Proliferating_variable_transition_to_early_sen_data_iteration = currentIteration;
-        }
-
-        // Return the value of the index-th element of the relevant host array.
-        return h_Fibroblasts_Proliferating->transition_to_early_sen[index];
-
-    } else {
-        fprintf(stderr, "Warning: Attempting to access transition_to_early_sen for the %u th member of Fibroblast_Proliferating. count is %u at iteration %u\n", index, count, currentIteration);
-        // Otherwise we return a default value
-        return 0;
-
-    }
-}
-
-/** int get_Fibroblast_Proliferating_variable_transition_to_full_sen(unsigned int index)
- * Gets the value of the transition_to_full_sen variable of an Fibroblast agent in the Proliferating state on the host. 
- * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
- * This has a potentially significant performance impact if used improperly.
- * @param index the index of the agent within the list.
- * @return value of agent variable transition_to_full_sen
- */
-__host__ int get_Fibroblast_Proliferating_variable_transition_to_full_sen(unsigned int index){
-    unsigned int count = get_agent_Fibroblast_Proliferating_count();
-    unsigned int currentIteration = getIterationNumber();
-    
-    // If the index is within bounds - no need to check >= 0 due to unsigned.
-    if(count > 0 && index < count ){
-        // If necessary, copy agent data from the device to the host in the default stream
-        if(h_Fibroblasts_Proliferating_variable_transition_to_full_sen_data_iteration != currentIteration){
-            gpuErrchk(
-                cudaMemcpy(
-                    h_Fibroblasts_Proliferating->transition_to_full_sen,
-                    d_Fibroblasts_Proliferating->transition_to_full_sen,
-                    count * sizeof(int),
-                    cudaMemcpyDeviceToHost
-                )
-            );
-            // Update some global value indicating what data is currently present in that host array.
-            h_Fibroblasts_Proliferating_variable_transition_to_full_sen_data_iteration = currentIteration;
-        }
-
-        // Return the value of the index-th element of the relevant host array.
-        return h_Fibroblasts_Proliferating->transition_to_full_sen[index];
-
-    } else {
-        fprintf(stderr, "Warning: Attempting to access transition_to_full_sen for the %u th member of Fibroblast_Proliferating. count is %u at iteration %u\n", index, count, currentIteration);
         // Otherwise we return a default value
         return 0;
 
@@ -3992,120 +3478,6 @@ __host__ int get_Fibroblast_Repair_variable_damage(unsigned int index){
     }
 }
 
-/** int get_Fibroblast_Repair_variable_proliferate_bool(unsigned int index)
- * Gets the value of the proliferate_bool variable of an Fibroblast agent in the Repair state on the host. 
- * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
- * This has a potentially significant performance impact if used improperly.
- * @param index the index of the agent within the list.
- * @return value of agent variable proliferate_bool
- */
-__host__ int get_Fibroblast_Repair_variable_proliferate_bool(unsigned int index){
-    unsigned int count = get_agent_Fibroblast_Repair_count();
-    unsigned int currentIteration = getIterationNumber();
-    
-    // If the index is within bounds - no need to check >= 0 due to unsigned.
-    if(count > 0 && index < count ){
-        // If necessary, copy agent data from the device to the host in the default stream
-        if(h_Fibroblasts_Repair_variable_proliferate_bool_data_iteration != currentIteration){
-            gpuErrchk(
-                cudaMemcpy(
-                    h_Fibroblasts_Repair->proliferate_bool,
-                    d_Fibroblasts_Repair->proliferate_bool,
-                    count * sizeof(int),
-                    cudaMemcpyDeviceToHost
-                )
-            );
-            // Update some global value indicating what data is currently present in that host array.
-            h_Fibroblasts_Repair_variable_proliferate_bool_data_iteration = currentIteration;
-        }
-
-        // Return the value of the index-th element of the relevant host array.
-        return h_Fibroblasts_Repair->proliferate_bool[index];
-
-    } else {
-        fprintf(stderr, "Warning: Attempting to access proliferate_bool for the %u th member of Fibroblast_Repair. count is %u at iteration %u\n", index, count, currentIteration);
-        // Otherwise we return a default value
-        return 0;
-
-    }
-}
-
-/** int get_Fibroblast_Repair_variable_transition_to_early_sen(unsigned int index)
- * Gets the value of the transition_to_early_sen variable of an Fibroblast agent in the Repair state on the host. 
- * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
- * This has a potentially significant performance impact if used improperly.
- * @param index the index of the agent within the list.
- * @return value of agent variable transition_to_early_sen
- */
-__host__ int get_Fibroblast_Repair_variable_transition_to_early_sen(unsigned int index){
-    unsigned int count = get_agent_Fibroblast_Repair_count();
-    unsigned int currentIteration = getIterationNumber();
-    
-    // If the index is within bounds - no need to check >= 0 due to unsigned.
-    if(count > 0 && index < count ){
-        // If necessary, copy agent data from the device to the host in the default stream
-        if(h_Fibroblasts_Repair_variable_transition_to_early_sen_data_iteration != currentIteration){
-            gpuErrchk(
-                cudaMemcpy(
-                    h_Fibroblasts_Repair->transition_to_early_sen,
-                    d_Fibroblasts_Repair->transition_to_early_sen,
-                    count * sizeof(int),
-                    cudaMemcpyDeviceToHost
-                )
-            );
-            // Update some global value indicating what data is currently present in that host array.
-            h_Fibroblasts_Repair_variable_transition_to_early_sen_data_iteration = currentIteration;
-        }
-
-        // Return the value of the index-th element of the relevant host array.
-        return h_Fibroblasts_Repair->transition_to_early_sen[index];
-
-    } else {
-        fprintf(stderr, "Warning: Attempting to access transition_to_early_sen for the %u th member of Fibroblast_Repair. count is %u at iteration %u\n", index, count, currentIteration);
-        // Otherwise we return a default value
-        return 0;
-
-    }
-}
-
-/** int get_Fibroblast_Repair_variable_transition_to_full_sen(unsigned int index)
- * Gets the value of the transition_to_full_sen variable of an Fibroblast agent in the Repair state on the host. 
- * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
- * This has a potentially significant performance impact if used improperly.
- * @param index the index of the agent within the list.
- * @return value of agent variable transition_to_full_sen
- */
-__host__ int get_Fibroblast_Repair_variable_transition_to_full_sen(unsigned int index){
-    unsigned int count = get_agent_Fibroblast_Repair_count();
-    unsigned int currentIteration = getIterationNumber();
-    
-    // If the index is within bounds - no need to check >= 0 due to unsigned.
-    if(count > 0 && index < count ){
-        // If necessary, copy agent data from the device to the host in the default stream
-        if(h_Fibroblasts_Repair_variable_transition_to_full_sen_data_iteration != currentIteration){
-            gpuErrchk(
-                cudaMemcpy(
-                    h_Fibroblasts_Repair->transition_to_full_sen,
-                    d_Fibroblasts_Repair->transition_to_full_sen,
-                    count * sizeof(int),
-                    cudaMemcpyDeviceToHost
-                )
-            );
-            // Update some global value indicating what data is currently present in that host array.
-            h_Fibroblasts_Repair_variable_transition_to_full_sen_data_iteration = currentIteration;
-        }
-
-        // Return the value of the index-th element of the relevant host array.
-        return h_Fibroblasts_Repair->transition_to_full_sen[index];
-
-    } else {
-        fprintf(stderr, "Warning: Attempting to access transition_to_full_sen for the %u th member of Fibroblast_Repair. count is %u at iteration %u\n", index, count, currentIteration);
-        // Otherwise we return a default value
-        return 0;
-
-    }
-}
-
 /** int get_Fibroblast_Repair_variable_early_sen_time_counter(unsigned int index)
  * Gets the value of the early_sen_time_counter variable of an Fibroblast agent in the Repair state on the host. 
  * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
@@ -4254,12 +3626,6 @@ void copy_single_xmachine_memory_Fibroblast_hostToDevice(xmachine_memory_Fibrobl
  
 		gpuErrchk(cudaMemcpy(d_dst->damage, &h_agent->damage, sizeof(int), cudaMemcpyHostToDevice));
  
-		gpuErrchk(cudaMemcpy(d_dst->proliferate_bool, &h_agent->proliferate_bool, sizeof(int), cudaMemcpyHostToDevice));
- 
-		gpuErrchk(cudaMemcpy(d_dst->transition_to_early_sen, &h_agent->transition_to_early_sen, sizeof(int), cudaMemcpyHostToDevice));
- 
-		gpuErrchk(cudaMemcpy(d_dst->transition_to_full_sen, &h_agent->transition_to_full_sen, sizeof(int), cudaMemcpyHostToDevice));
- 
 		gpuErrchk(cudaMemcpy(d_dst->early_sen_time_counter, &h_agent->early_sen_time_counter, sizeof(int), cudaMemcpyHostToDevice));
  
 		gpuErrchk(cudaMemcpy(d_dst->current_state, &h_agent->current_state, sizeof(int), cudaMemcpyHostToDevice));
@@ -4290,12 +3656,6 @@ void copy_partial_xmachine_memory_Fibroblast_hostToDevice(xmachine_memory_Fibrob
 		gpuErrchk(cudaMemcpy(d_dst->doublings, h_src->doublings, count * sizeof(float), cudaMemcpyHostToDevice));
  
 		gpuErrchk(cudaMemcpy(d_dst->damage, h_src->damage, count * sizeof(int), cudaMemcpyHostToDevice));
- 
-		gpuErrchk(cudaMemcpy(d_dst->proliferate_bool, h_src->proliferate_bool, count * sizeof(int), cudaMemcpyHostToDevice));
- 
-		gpuErrchk(cudaMemcpy(d_dst->transition_to_early_sen, h_src->transition_to_early_sen, count * sizeof(int), cudaMemcpyHostToDevice));
- 
-		gpuErrchk(cudaMemcpy(d_dst->transition_to_full_sen, h_src->transition_to_full_sen, count * sizeof(int), cudaMemcpyHostToDevice));
  
 		gpuErrchk(cudaMemcpy(d_dst->early_sen_time_counter, h_src->early_sen_time_counter, count * sizeof(int), cudaMemcpyHostToDevice));
  
@@ -4464,12 +3824,6 @@ void h_unpack_agents_Fibroblast_AoS_to_SoA(xmachine_memory_Fibroblast_list * dst
 			 
 			dst->damage[i] = src[i]->damage;
 			 
-			dst->proliferate_bool[i] = src[i]->proliferate_bool;
-			 
-			dst->transition_to_early_sen[i] = src[i]->transition_to_early_sen;
-			 
-			dst->transition_to_full_sen[i] = src[i]->transition_to_full_sen;
-			 
 			dst->early_sen_time_counter[i] = src[i]->early_sen_time_counter;
 			 
 			dst->current_state[i] = src[i]->current_state;
@@ -4510,9 +3864,6 @@ void h_add_agent_Fibroblast_Quiescent(xmachine_memory_Fibroblast* agent){
     h_Fibroblasts_Quiescent_variable_z_data_iteration = 0;
     h_Fibroblasts_Quiescent_variable_doublings_data_iteration = 0;
     h_Fibroblasts_Quiescent_variable_damage_data_iteration = 0;
-    h_Fibroblasts_Quiescent_variable_proliferate_bool_data_iteration = 0;
-    h_Fibroblasts_Quiescent_variable_transition_to_early_sen_data_iteration = 0;
-    h_Fibroblasts_Quiescent_variable_transition_to_full_sen_data_iteration = 0;
     h_Fibroblasts_Quiescent_variable_early_sen_time_counter_data_iteration = 0;
     h_Fibroblasts_Quiescent_variable_current_state_data_iteration = 0;
     
@@ -4552,9 +3903,6 @@ void h_add_agents_Fibroblast_Quiescent(xmachine_memory_Fibroblast** agents, unsi
         h_Fibroblasts_Quiescent_variable_z_data_iteration = 0;
         h_Fibroblasts_Quiescent_variable_doublings_data_iteration = 0;
         h_Fibroblasts_Quiescent_variable_damage_data_iteration = 0;
-        h_Fibroblasts_Quiescent_variable_proliferate_bool_data_iteration = 0;
-        h_Fibroblasts_Quiescent_variable_transition_to_early_sen_data_iteration = 0;
-        h_Fibroblasts_Quiescent_variable_transition_to_full_sen_data_iteration = 0;
         h_Fibroblasts_Quiescent_variable_early_sen_time_counter_data_iteration = 0;
         h_Fibroblasts_Quiescent_variable_current_state_data_iteration = 0;
         
@@ -4594,9 +3942,6 @@ void h_add_agent_Fibroblast_EarlySenescent(xmachine_memory_Fibroblast* agent){
     h_Fibroblasts_EarlySenescent_variable_z_data_iteration = 0;
     h_Fibroblasts_EarlySenescent_variable_doublings_data_iteration = 0;
     h_Fibroblasts_EarlySenescent_variable_damage_data_iteration = 0;
-    h_Fibroblasts_EarlySenescent_variable_proliferate_bool_data_iteration = 0;
-    h_Fibroblasts_EarlySenescent_variable_transition_to_early_sen_data_iteration = 0;
-    h_Fibroblasts_EarlySenescent_variable_transition_to_full_sen_data_iteration = 0;
     h_Fibroblasts_EarlySenescent_variable_early_sen_time_counter_data_iteration = 0;
     h_Fibroblasts_EarlySenescent_variable_current_state_data_iteration = 0;
     
@@ -4636,9 +3981,6 @@ void h_add_agents_Fibroblast_EarlySenescent(xmachine_memory_Fibroblast** agents,
         h_Fibroblasts_EarlySenescent_variable_z_data_iteration = 0;
         h_Fibroblasts_EarlySenescent_variable_doublings_data_iteration = 0;
         h_Fibroblasts_EarlySenescent_variable_damage_data_iteration = 0;
-        h_Fibroblasts_EarlySenescent_variable_proliferate_bool_data_iteration = 0;
-        h_Fibroblasts_EarlySenescent_variable_transition_to_early_sen_data_iteration = 0;
-        h_Fibroblasts_EarlySenescent_variable_transition_to_full_sen_data_iteration = 0;
         h_Fibroblasts_EarlySenescent_variable_early_sen_time_counter_data_iteration = 0;
         h_Fibroblasts_EarlySenescent_variable_current_state_data_iteration = 0;
         
@@ -4678,9 +4020,6 @@ void h_add_agent_Fibroblast_Senescent(xmachine_memory_Fibroblast* agent){
     h_Fibroblasts_Senescent_variable_z_data_iteration = 0;
     h_Fibroblasts_Senescent_variable_doublings_data_iteration = 0;
     h_Fibroblasts_Senescent_variable_damage_data_iteration = 0;
-    h_Fibroblasts_Senescent_variable_proliferate_bool_data_iteration = 0;
-    h_Fibroblasts_Senescent_variable_transition_to_early_sen_data_iteration = 0;
-    h_Fibroblasts_Senescent_variable_transition_to_full_sen_data_iteration = 0;
     h_Fibroblasts_Senescent_variable_early_sen_time_counter_data_iteration = 0;
     h_Fibroblasts_Senescent_variable_current_state_data_iteration = 0;
     
@@ -4720,9 +4059,6 @@ void h_add_agents_Fibroblast_Senescent(xmachine_memory_Fibroblast** agents, unsi
         h_Fibroblasts_Senescent_variable_z_data_iteration = 0;
         h_Fibroblasts_Senescent_variable_doublings_data_iteration = 0;
         h_Fibroblasts_Senescent_variable_damage_data_iteration = 0;
-        h_Fibroblasts_Senescent_variable_proliferate_bool_data_iteration = 0;
-        h_Fibroblasts_Senescent_variable_transition_to_early_sen_data_iteration = 0;
-        h_Fibroblasts_Senescent_variable_transition_to_full_sen_data_iteration = 0;
         h_Fibroblasts_Senescent_variable_early_sen_time_counter_data_iteration = 0;
         h_Fibroblasts_Senescent_variable_current_state_data_iteration = 0;
         
@@ -4762,9 +4098,6 @@ void h_add_agent_Fibroblast_Proliferating(xmachine_memory_Fibroblast* agent){
     h_Fibroblasts_Proliferating_variable_z_data_iteration = 0;
     h_Fibroblasts_Proliferating_variable_doublings_data_iteration = 0;
     h_Fibroblasts_Proliferating_variable_damage_data_iteration = 0;
-    h_Fibroblasts_Proliferating_variable_proliferate_bool_data_iteration = 0;
-    h_Fibroblasts_Proliferating_variable_transition_to_early_sen_data_iteration = 0;
-    h_Fibroblasts_Proliferating_variable_transition_to_full_sen_data_iteration = 0;
     h_Fibroblasts_Proliferating_variable_early_sen_time_counter_data_iteration = 0;
     h_Fibroblasts_Proliferating_variable_current_state_data_iteration = 0;
     
@@ -4804,9 +4137,6 @@ void h_add_agents_Fibroblast_Proliferating(xmachine_memory_Fibroblast** agents, 
         h_Fibroblasts_Proliferating_variable_z_data_iteration = 0;
         h_Fibroblasts_Proliferating_variable_doublings_data_iteration = 0;
         h_Fibroblasts_Proliferating_variable_damage_data_iteration = 0;
-        h_Fibroblasts_Proliferating_variable_proliferate_bool_data_iteration = 0;
-        h_Fibroblasts_Proliferating_variable_transition_to_early_sen_data_iteration = 0;
-        h_Fibroblasts_Proliferating_variable_transition_to_full_sen_data_iteration = 0;
         h_Fibroblasts_Proliferating_variable_early_sen_time_counter_data_iteration = 0;
         h_Fibroblasts_Proliferating_variable_current_state_data_iteration = 0;
         
@@ -4846,9 +4176,6 @@ void h_add_agent_Fibroblast_Repair(xmachine_memory_Fibroblast* agent){
     h_Fibroblasts_Repair_variable_z_data_iteration = 0;
     h_Fibroblasts_Repair_variable_doublings_data_iteration = 0;
     h_Fibroblasts_Repair_variable_damage_data_iteration = 0;
-    h_Fibroblasts_Repair_variable_proliferate_bool_data_iteration = 0;
-    h_Fibroblasts_Repair_variable_transition_to_early_sen_data_iteration = 0;
-    h_Fibroblasts_Repair_variable_transition_to_full_sen_data_iteration = 0;
     h_Fibroblasts_Repair_variable_early_sen_time_counter_data_iteration = 0;
     h_Fibroblasts_Repair_variable_current_state_data_iteration = 0;
     
@@ -4888,9 +4215,6 @@ void h_add_agents_Fibroblast_Repair(xmachine_memory_Fibroblast** agents, unsigne
         h_Fibroblasts_Repair_variable_z_data_iteration = 0;
         h_Fibroblasts_Repair_variable_doublings_data_iteration = 0;
         h_Fibroblasts_Repair_variable_damage_data_iteration = 0;
-        h_Fibroblasts_Repair_variable_proliferate_bool_data_iteration = 0;
-        h_Fibroblasts_Repair_variable_transition_to_early_sen_data_iteration = 0;
-        h_Fibroblasts_Repair_variable_transition_to_full_sen_data_iteration = 0;
         h_Fibroblasts_Repair_variable_early_sen_time_counter_data_iteration = 0;
         h_Fibroblasts_Repair_variable_current_state_data_iteration = 0;
         
@@ -5104,69 +4428,6 @@ int max_Fibroblast_Quiescent_damage_variable(){
     size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Quiescent_count) - thrust_ptr;
     return *(thrust_ptr + result_offset);
 }
-int reduce_Fibroblast_Quiescent_proliferate_bool_variable(){
-    //reduce in default stream
-    return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_Quiescent->proliferate_bool),  thrust::device_pointer_cast(d_Fibroblasts_Quiescent->proliferate_bool) + h_xmachine_memory_Fibroblast_Quiescent_count);
-}
-
-int count_Fibroblast_Quiescent_proliferate_bool_variable(int count_value){
-    //count in default stream
-    return (int)thrust::count(thrust::device_pointer_cast(d_Fibroblasts_Quiescent->proliferate_bool),  thrust::device_pointer_cast(d_Fibroblasts_Quiescent->proliferate_bool) + h_xmachine_memory_Fibroblast_Quiescent_count, count_value);
-}
-int min_Fibroblast_Quiescent_proliferate_bool_variable(){
-    //min in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Quiescent->proliferate_bool);
-    size_t result_offset = thrust::min_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Quiescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int max_Fibroblast_Quiescent_proliferate_bool_variable(){
-    //max in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Quiescent->proliferate_bool);
-    size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Quiescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int reduce_Fibroblast_Quiescent_transition_to_early_sen_variable(){
-    //reduce in default stream
-    return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_Quiescent->transition_to_early_sen),  thrust::device_pointer_cast(d_Fibroblasts_Quiescent->transition_to_early_sen) + h_xmachine_memory_Fibroblast_Quiescent_count);
-}
-
-int count_Fibroblast_Quiescent_transition_to_early_sen_variable(int count_value){
-    //count in default stream
-    return (int)thrust::count(thrust::device_pointer_cast(d_Fibroblasts_Quiescent->transition_to_early_sen),  thrust::device_pointer_cast(d_Fibroblasts_Quiescent->transition_to_early_sen) + h_xmachine_memory_Fibroblast_Quiescent_count, count_value);
-}
-int min_Fibroblast_Quiescent_transition_to_early_sen_variable(){
-    //min in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Quiescent->transition_to_early_sen);
-    size_t result_offset = thrust::min_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Quiescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int max_Fibroblast_Quiescent_transition_to_early_sen_variable(){
-    //max in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Quiescent->transition_to_early_sen);
-    size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Quiescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int reduce_Fibroblast_Quiescent_transition_to_full_sen_variable(){
-    //reduce in default stream
-    return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_Quiescent->transition_to_full_sen),  thrust::device_pointer_cast(d_Fibroblasts_Quiescent->transition_to_full_sen) + h_xmachine_memory_Fibroblast_Quiescent_count);
-}
-
-int count_Fibroblast_Quiescent_transition_to_full_sen_variable(int count_value){
-    //count in default stream
-    return (int)thrust::count(thrust::device_pointer_cast(d_Fibroblasts_Quiescent->transition_to_full_sen),  thrust::device_pointer_cast(d_Fibroblasts_Quiescent->transition_to_full_sen) + h_xmachine_memory_Fibroblast_Quiescent_count, count_value);
-}
-int min_Fibroblast_Quiescent_transition_to_full_sen_variable(){
-    //min in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Quiescent->transition_to_full_sen);
-    size_t result_offset = thrust::min_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Quiescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int max_Fibroblast_Quiescent_transition_to_full_sen_variable(){
-    //max in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Quiescent->transition_to_full_sen);
-    size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Quiescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
 int reduce_Fibroblast_Quiescent_early_sen_time_counter_variable(){
     //reduce in default stream
     return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_Quiescent->early_sen_time_counter),  thrust::device_pointer_cast(d_Fibroblasts_Quiescent->early_sen_time_counter) + h_xmachine_memory_Fibroblast_Quiescent_count);
@@ -5316,69 +4577,6 @@ int min_Fibroblast_EarlySenescent_damage_variable(){
 int max_Fibroblast_EarlySenescent_damage_variable(){
     //max in default stream
     thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->damage);
-    size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_EarlySenescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int reduce_Fibroblast_EarlySenescent_proliferate_bool_variable(){
-    //reduce in default stream
-    return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->proliferate_bool),  thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->proliferate_bool) + h_xmachine_memory_Fibroblast_EarlySenescent_count);
-}
-
-int count_Fibroblast_EarlySenescent_proliferate_bool_variable(int count_value){
-    //count in default stream
-    return (int)thrust::count(thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->proliferate_bool),  thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->proliferate_bool) + h_xmachine_memory_Fibroblast_EarlySenescent_count, count_value);
-}
-int min_Fibroblast_EarlySenescent_proliferate_bool_variable(){
-    //min in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->proliferate_bool);
-    size_t result_offset = thrust::min_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_EarlySenescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int max_Fibroblast_EarlySenescent_proliferate_bool_variable(){
-    //max in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->proliferate_bool);
-    size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_EarlySenescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int reduce_Fibroblast_EarlySenescent_transition_to_early_sen_variable(){
-    //reduce in default stream
-    return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->transition_to_early_sen),  thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->transition_to_early_sen) + h_xmachine_memory_Fibroblast_EarlySenescent_count);
-}
-
-int count_Fibroblast_EarlySenescent_transition_to_early_sen_variable(int count_value){
-    //count in default stream
-    return (int)thrust::count(thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->transition_to_early_sen),  thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->transition_to_early_sen) + h_xmachine_memory_Fibroblast_EarlySenescent_count, count_value);
-}
-int min_Fibroblast_EarlySenescent_transition_to_early_sen_variable(){
-    //min in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->transition_to_early_sen);
-    size_t result_offset = thrust::min_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_EarlySenescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int max_Fibroblast_EarlySenescent_transition_to_early_sen_variable(){
-    //max in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->transition_to_early_sen);
-    size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_EarlySenescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int reduce_Fibroblast_EarlySenescent_transition_to_full_sen_variable(){
-    //reduce in default stream
-    return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->transition_to_full_sen),  thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->transition_to_full_sen) + h_xmachine_memory_Fibroblast_EarlySenescent_count);
-}
-
-int count_Fibroblast_EarlySenescent_transition_to_full_sen_variable(int count_value){
-    //count in default stream
-    return (int)thrust::count(thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->transition_to_full_sen),  thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->transition_to_full_sen) + h_xmachine_memory_Fibroblast_EarlySenescent_count, count_value);
-}
-int min_Fibroblast_EarlySenescent_transition_to_full_sen_variable(){
-    //min in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->transition_to_full_sen);
-    size_t result_offset = thrust::min_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_EarlySenescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int max_Fibroblast_EarlySenescent_transition_to_full_sen_variable(){
-    //max in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_EarlySenescent->transition_to_full_sen);
     size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_EarlySenescent_count) - thrust_ptr;
     return *(thrust_ptr + result_offset);
 }
@@ -5534,69 +4732,6 @@ int max_Fibroblast_Senescent_damage_variable(){
     size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Senescent_count) - thrust_ptr;
     return *(thrust_ptr + result_offset);
 }
-int reduce_Fibroblast_Senescent_proliferate_bool_variable(){
-    //reduce in default stream
-    return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_Senescent->proliferate_bool),  thrust::device_pointer_cast(d_Fibroblasts_Senescent->proliferate_bool) + h_xmachine_memory_Fibroblast_Senescent_count);
-}
-
-int count_Fibroblast_Senescent_proliferate_bool_variable(int count_value){
-    //count in default stream
-    return (int)thrust::count(thrust::device_pointer_cast(d_Fibroblasts_Senescent->proliferate_bool),  thrust::device_pointer_cast(d_Fibroblasts_Senescent->proliferate_bool) + h_xmachine_memory_Fibroblast_Senescent_count, count_value);
-}
-int min_Fibroblast_Senescent_proliferate_bool_variable(){
-    //min in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Senescent->proliferate_bool);
-    size_t result_offset = thrust::min_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Senescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int max_Fibroblast_Senescent_proliferate_bool_variable(){
-    //max in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Senescent->proliferate_bool);
-    size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Senescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int reduce_Fibroblast_Senescent_transition_to_early_sen_variable(){
-    //reduce in default stream
-    return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_Senescent->transition_to_early_sen),  thrust::device_pointer_cast(d_Fibroblasts_Senescent->transition_to_early_sen) + h_xmachine_memory_Fibroblast_Senescent_count);
-}
-
-int count_Fibroblast_Senescent_transition_to_early_sen_variable(int count_value){
-    //count in default stream
-    return (int)thrust::count(thrust::device_pointer_cast(d_Fibroblasts_Senescent->transition_to_early_sen),  thrust::device_pointer_cast(d_Fibroblasts_Senescent->transition_to_early_sen) + h_xmachine_memory_Fibroblast_Senescent_count, count_value);
-}
-int min_Fibroblast_Senescent_transition_to_early_sen_variable(){
-    //min in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Senescent->transition_to_early_sen);
-    size_t result_offset = thrust::min_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Senescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int max_Fibroblast_Senescent_transition_to_early_sen_variable(){
-    //max in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Senescent->transition_to_early_sen);
-    size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Senescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int reduce_Fibroblast_Senescent_transition_to_full_sen_variable(){
-    //reduce in default stream
-    return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_Senescent->transition_to_full_sen),  thrust::device_pointer_cast(d_Fibroblasts_Senescent->transition_to_full_sen) + h_xmachine_memory_Fibroblast_Senescent_count);
-}
-
-int count_Fibroblast_Senescent_transition_to_full_sen_variable(int count_value){
-    //count in default stream
-    return (int)thrust::count(thrust::device_pointer_cast(d_Fibroblasts_Senescent->transition_to_full_sen),  thrust::device_pointer_cast(d_Fibroblasts_Senescent->transition_to_full_sen) + h_xmachine_memory_Fibroblast_Senescent_count, count_value);
-}
-int min_Fibroblast_Senescent_transition_to_full_sen_variable(){
-    //min in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Senescent->transition_to_full_sen);
-    size_t result_offset = thrust::min_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Senescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int max_Fibroblast_Senescent_transition_to_full_sen_variable(){
-    //max in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Senescent->transition_to_full_sen);
-    size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Senescent_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
 int reduce_Fibroblast_Senescent_early_sen_time_counter_variable(){
     //reduce in default stream
     return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_Senescent->early_sen_time_counter),  thrust::device_pointer_cast(d_Fibroblasts_Senescent->early_sen_time_counter) + h_xmachine_memory_Fibroblast_Senescent_count);
@@ -5749,69 +4884,6 @@ int max_Fibroblast_Proliferating_damage_variable(){
     size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Proliferating_count) - thrust_ptr;
     return *(thrust_ptr + result_offset);
 }
-int reduce_Fibroblast_Proliferating_proliferate_bool_variable(){
-    //reduce in default stream
-    return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_Proliferating->proliferate_bool),  thrust::device_pointer_cast(d_Fibroblasts_Proliferating->proliferate_bool) + h_xmachine_memory_Fibroblast_Proliferating_count);
-}
-
-int count_Fibroblast_Proliferating_proliferate_bool_variable(int count_value){
-    //count in default stream
-    return (int)thrust::count(thrust::device_pointer_cast(d_Fibroblasts_Proliferating->proliferate_bool),  thrust::device_pointer_cast(d_Fibroblasts_Proliferating->proliferate_bool) + h_xmachine_memory_Fibroblast_Proliferating_count, count_value);
-}
-int min_Fibroblast_Proliferating_proliferate_bool_variable(){
-    //min in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Proliferating->proliferate_bool);
-    size_t result_offset = thrust::min_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Proliferating_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int max_Fibroblast_Proliferating_proliferate_bool_variable(){
-    //max in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Proliferating->proliferate_bool);
-    size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Proliferating_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int reduce_Fibroblast_Proliferating_transition_to_early_sen_variable(){
-    //reduce in default stream
-    return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_Proliferating->transition_to_early_sen),  thrust::device_pointer_cast(d_Fibroblasts_Proliferating->transition_to_early_sen) + h_xmachine_memory_Fibroblast_Proliferating_count);
-}
-
-int count_Fibroblast_Proliferating_transition_to_early_sen_variable(int count_value){
-    //count in default stream
-    return (int)thrust::count(thrust::device_pointer_cast(d_Fibroblasts_Proliferating->transition_to_early_sen),  thrust::device_pointer_cast(d_Fibroblasts_Proliferating->transition_to_early_sen) + h_xmachine_memory_Fibroblast_Proliferating_count, count_value);
-}
-int min_Fibroblast_Proliferating_transition_to_early_sen_variable(){
-    //min in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Proliferating->transition_to_early_sen);
-    size_t result_offset = thrust::min_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Proliferating_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int max_Fibroblast_Proliferating_transition_to_early_sen_variable(){
-    //max in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Proliferating->transition_to_early_sen);
-    size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Proliferating_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int reduce_Fibroblast_Proliferating_transition_to_full_sen_variable(){
-    //reduce in default stream
-    return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_Proliferating->transition_to_full_sen),  thrust::device_pointer_cast(d_Fibroblasts_Proliferating->transition_to_full_sen) + h_xmachine_memory_Fibroblast_Proliferating_count);
-}
-
-int count_Fibroblast_Proliferating_transition_to_full_sen_variable(int count_value){
-    //count in default stream
-    return (int)thrust::count(thrust::device_pointer_cast(d_Fibroblasts_Proliferating->transition_to_full_sen),  thrust::device_pointer_cast(d_Fibroblasts_Proliferating->transition_to_full_sen) + h_xmachine_memory_Fibroblast_Proliferating_count, count_value);
-}
-int min_Fibroblast_Proliferating_transition_to_full_sen_variable(){
-    //min in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Proliferating->transition_to_full_sen);
-    size_t result_offset = thrust::min_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Proliferating_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int max_Fibroblast_Proliferating_transition_to_full_sen_variable(){
-    //max in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Proliferating->transition_to_full_sen);
-    size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Proliferating_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
 int reduce_Fibroblast_Proliferating_early_sen_time_counter_variable(){
     //reduce in default stream
     return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_Proliferating->early_sen_time_counter),  thrust::device_pointer_cast(d_Fibroblasts_Proliferating->early_sen_time_counter) + h_xmachine_memory_Fibroblast_Proliferating_count);
@@ -5961,69 +5033,6 @@ int min_Fibroblast_Repair_damage_variable(){
 int max_Fibroblast_Repair_damage_variable(){
     //max in default stream
     thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Repair->damage);
-    size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Repair_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int reduce_Fibroblast_Repair_proliferate_bool_variable(){
-    //reduce in default stream
-    return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_Repair->proliferate_bool),  thrust::device_pointer_cast(d_Fibroblasts_Repair->proliferate_bool) + h_xmachine_memory_Fibroblast_Repair_count);
-}
-
-int count_Fibroblast_Repair_proliferate_bool_variable(int count_value){
-    //count in default stream
-    return (int)thrust::count(thrust::device_pointer_cast(d_Fibroblasts_Repair->proliferate_bool),  thrust::device_pointer_cast(d_Fibroblasts_Repair->proliferate_bool) + h_xmachine_memory_Fibroblast_Repair_count, count_value);
-}
-int min_Fibroblast_Repair_proliferate_bool_variable(){
-    //min in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Repair->proliferate_bool);
-    size_t result_offset = thrust::min_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Repair_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int max_Fibroblast_Repair_proliferate_bool_variable(){
-    //max in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Repair->proliferate_bool);
-    size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Repair_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int reduce_Fibroblast_Repair_transition_to_early_sen_variable(){
-    //reduce in default stream
-    return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_Repair->transition_to_early_sen),  thrust::device_pointer_cast(d_Fibroblasts_Repair->transition_to_early_sen) + h_xmachine_memory_Fibroblast_Repair_count);
-}
-
-int count_Fibroblast_Repair_transition_to_early_sen_variable(int count_value){
-    //count in default stream
-    return (int)thrust::count(thrust::device_pointer_cast(d_Fibroblasts_Repair->transition_to_early_sen),  thrust::device_pointer_cast(d_Fibroblasts_Repair->transition_to_early_sen) + h_xmachine_memory_Fibroblast_Repair_count, count_value);
-}
-int min_Fibroblast_Repair_transition_to_early_sen_variable(){
-    //min in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Repair->transition_to_early_sen);
-    size_t result_offset = thrust::min_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Repair_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int max_Fibroblast_Repair_transition_to_early_sen_variable(){
-    //max in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Repair->transition_to_early_sen);
-    size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Repair_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int reduce_Fibroblast_Repair_transition_to_full_sen_variable(){
-    //reduce in default stream
-    return thrust::reduce(thrust::device_pointer_cast(d_Fibroblasts_Repair->transition_to_full_sen),  thrust::device_pointer_cast(d_Fibroblasts_Repair->transition_to_full_sen) + h_xmachine_memory_Fibroblast_Repair_count);
-}
-
-int count_Fibroblast_Repair_transition_to_full_sen_variable(int count_value){
-    //count in default stream
-    return (int)thrust::count(thrust::device_pointer_cast(d_Fibroblasts_Repair->transition_to_full_sen),  thrust::device_pointer_cast(d_Fibroblasts_Repair->transition_to_full_sen) + h_xmachine_memory_Fibroblast_Repair_count, count_value);
-}
-int min_Fibroblast_Repair_transition_to_full_sen_variable(){
-    //min in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Repair->transition_to_full_sen);
-    size_t result_offset = thrust::min_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Repair_count) - thrust_ptr;
-    return *(thrust_ptr + result_offset);
-}
-int max_Fibroblast_Repair_transition_to_full_sen_variable(){
-    //max in default stream
-    thrust::device_ptr<int> thrust_ptr = thrust::device_pointer_cast(d_Fibroblasts_Repair->transition_to_full_sen);
     size_t result_offset = thrust::max_element(thrust_ptr, thrust_ptr + h_xmachine_memory_Fibroblast_Repair_count) - thrust_ptr;
     return *(thrust_ptr + result_offset);
 }
@@ -6323,6 +5332,154 @@ void TissueBlock_TissueSendDamageReport(cudaStream_t &stream){
 	//check the working agents wont exceed the buffer size in the new state list
 	if (h_xmachine_memory_TissueBlock_default_count+h_xmachine_memory_TissueBlock_count > xmachine_memory_TissueBlock_MAX){
 		printf("Error: Buffer size of TissueSendDamageReport agents in state default will be exceeded moving working agents to next state in function TissueSendDamageReport\n");
+      exit(EXIT_FAILURE);
+      }
+      
+  //pointer swap the updated data
+  TissueBlocks_default_temp = d_TissueBlocks;
+  d_TissueBlocks = d_TissueBlocks_default;
+  d_TissueBlocks_default = TissueBlocks_default_temp;
+        
+	//update new state agent size
+	h_xmachine_memory_TissueBlock_default_count += h_xmachine_memory_TissueBlock_count;
+	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_TissueBlock_default_count, &h_xmachine_memory_TissueBlock_default_count, sizeof(int)));	
+	
+	
+}
+
+
+
+	
+/* Shared memory size calculator for agent function */
+int TissueBlock_ReapirDamage_sm_size(int blockSize){
+	int sm_size;
+	sm_size = SM_START;
+  //Continuous agent and message input is spatially partitioned
+	sm_size += (blockSize * sizeof(xmachine_message_fibroblast_location_report));
+	
+	//all continuous agent types require single 32bit word per thread offset (to avoid sm bank conflicts)
+	sm_size += (blockSize * PADDING);
+	
+	return sm_size;
+}
+
+/** TissueBlock_ReapirDamage
+ * Agent function prototype for ReapirDamage function of TissueBlock agent
+ */
+void TissueBlock_ReapirDamage(cudaStream_t &stream){
+
+    int sm_size;
+    int blockSize;
+    int minGridSize;
+    int gridSize;
+    int state_list_size;
+	dim3 g; //grid for agent func
+	dim3 b; //block for agent func
+
+	
+	//CHECK THE CURRENT STATE LIST COUNT IS NOT EQUAL TO 0
+	
+	if (h_xmachine_memory_TissueBlock_default_count == 0)
+	{
+		return;
+	}
+	
+	
+	//SET SM size to 0 and save state list size for occupancy calculations
+	sm_size = SM_START;
+	state_list_size = h_xmachine_memory_TissueBlock_default_count;
+
+	
+
+	//******************************** AGENT FUNCTION CONDITION *********************
+	//THERE IS NOT A FUNCTION CONDITION
+	//currentState maps to working list
+	xmachine_memory_TissueBlock_list* TissueBlocks_default_temp = d_TissueBlocks;
+	d_TissueBlocks = d_TissueBlocks_default;
+	d_TissueBlocks_default = TissueBlocks_default_temp;
+	//set working count to current state count
+	h_xmachine_memory_TissueBlock_count = h_xmachine_memory_TissueBlock_default_count;
+	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_TissueBlock_count, &h_xmachine_memory_TissueBlock_count, sizeof(int)));	
+	//set current state count to 0
+	h_xmachine_memory_TissueBlock_default_count = 0;
+	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_TissueBlock_default_count, &h_xmachine_memory_TissueBlock_default_count, sizeof(int)));	
+	
+ 
+
+	//******************************** AGENT FUNCTION *******************************
+
+	
+	
+	//calculate the grid block size for main agent function
+	cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, GPUFLAME_ReapirDamage, TissueBlock_ReapirDamage_sm_size, state_list_size);
+	gridSize = (state_list_size + blockSize - 1) / blockSize;
+	b.x = blockSize;
+	g.x = gridSize;
+	
+	sm_size = TissueBlock_ReapirDamage_sm_size(blockSize);
+	
+	
+	
+	//BIND APPROPRIATE MESSAGE INPUT VARIABLES TO TEXTURES (to make use of the texture cache)
+	//any agent with discrete or partitioned message input uses texture caching
+	size_t tex_xmachine_message_fibroblast_location_report_id_byte_offset;    
+	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_location_report_id_byte_offset, tex_xmachine_message_fibroblast_location_report_id, d_fibroblast_location_reports->id, sizeof(int)*xmachine_message_fibroblast_location_report_MAX));
+	h_tex_xmachine_message_fibroblast_location_report_id_offset = (int)tex_xmachine_message_fibroblast_location_report_id_byte_offset / sizeof(int);
+	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_location_report_id_offset, &h_tex_xmachine_message_fibroblast_location_report_id_offset, sizeof(int)));
+	size_t tex_xmachine_message_fibroblast_location_report_x_byte_offset;    
+	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_location_report_x_byte_offset, tex_xmachine_message_fibroblast_location_report_x, d_fibroblast_location_reports->x, sizeof(float)*xmachine_message_fibroblast_location_report_MAX));
+	h_tex_xmachine_message_fibroblast_location_report_x_offset = (int)tex_xmachine_message_fibroblast_location_report_x_byte_offset / sizeof(float);
+	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_location_report_x_offset, &h_tex_xmachine_message_fibroblast_location_report_x_offset, sizeof(int)));
+	size_t tex_xmachine_message_fibroblast_location_report_y_byte_offset;    
+	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_location_report_y_byte_offset, tex_xmachine_message_fibroblast_location_report_y, d_fibroblast_location_reports->y, sizeof(float)*xmachine_message_fibroblast_location_report_MAX));
+	h_tex_xmachine_message_fibroblast_location_report_y_offset = (int)tex_xmachine_message_fibroblast_location_report_y_byte_offset / sizeof(float);
+	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_location_report_y_offset, &h_tex_xmachine_message_fibroblast_location_report_y_offset, sizeof(int)));
+	size_t tex_xmachine_message_fibroblast_location_report_z_byte_offset;    
+	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_location_report_z_byte_offset, tex_xmachine_message_fibroblast_location_report_z, d_fibroblast_location_reports->z, sizeof(float)*xmachine_message_fibroblast_location_report_MAX));
+	h_tex_xmachine_message_fibroblast_location_report_z_offset = (int)tex_xmachine_message_fibroblast_location_report_z_byte_offset / sizeof(float);
+	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_location_report_z_offset, &h_tex_xmachine_message_fibroblast_location_report_z_offset, sizeof(int)));
+	size_t tex_xmachine_message_fibroblast_location_report_current_state_byte_offset;    
+	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_location_report_current_state_byte_offset, tex_xmachine_message_fibroblast_location_report_current_state, d_fibroblast_location_reports->current_state, sizeof(int)*xmachine_message_fibroblast_location_report_MAX));
+	h_tex_xmachine_message_fibroblast_location_report_current_state_offset = (int)tex_xmachine_message_fibroblast_location_report_current_state_byte_offset / sizeof(int);
+	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_location_report_current_state_offset, &h_tex_xmachine_message_fibroblast_location_report_current_state_offset, sizeof(int)));
+	//bind pbm start and end indices to textures
+	size_t tex_xmachine_message_fibroblast_location_report_pbm_start_byte_offset;
+	size_t tex_xmachine_message_fibroblast_location_report_pbm_end_or_count_byte_offset;
+	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_location_report_pbm_start_byte_offset, tex_xmachine_message_fibroblast_location_report_pbm_start, d_fibroblast_location_report_partition_matrix->start, sizeof(int)*xmachine_message_fibroblast_location_report_grid_size));
+	h_tex_xmachine_message_fibroblast_location_report_pbm_start_offset = (int)tex_xmachine_message_fibroblast_location_report_pbm_start_byte_offset / sizeof(int);
+	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_location_report_pbm_start_offset, &h_tex_xmachine_message_fibroblast_location_report_pbm_start_offset, sizeof(int)));
+	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_location_report_pbm_end_or_count_byte_offset, tex_xmachine_message_fibroblast_location_report_pbm_end_or_count, d_fibroblast_location_report_partition_matrix->end_or_count, sizeof(int)*xmachine_message_fibroblast_location_report_grid_size));
+  h_tex_xmachine_message_fibroblast_location_report_pbm_end_or_count_offset = (int)tex_xmachine_message_fibroblast_location_report_pbm_end_or_count_byte_offset / sizeof(int);
+	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_location_report_pbm_end_or_count_offset, &h_tex_xmachine_message_fibroblast_location_report_pbm_end_or_count_offset, sizeof(int)));
+
+	
+	
+	//MAIN XMACHINE FUNCTION CALL (ReapirDamage)
+	//Reallocate   : false
+	//Input        : fibroblast_location_report
+	//Output       : 
+	//Agent Output : 
+	GPUFLAME_ReapirDamage<<<g, b, sm_size, stream>>>(d_TissueBlocks, d_fibroblast_location_reports, d_fibroblast_location_report_partition_matrix);
+	gpuErrchkLaunch();
+	
+	
+	//UNBIND MESSAGE INPUT VARIABLE TEXTURES
+	//any agent with discrete or partitioned message input uses texture caching
+	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_location_report_id));
+	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_location_report_x));
+	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_location_report_y));
+	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_location_report_z));
+	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_location_report_current_state));
+	//unbind pbm indices
+    gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_location_report_pbm_start));
+    gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_location_report_pbm_end_or_count));
+    
+	
+	//************************ MOVE AGENTS TO NEXT STATE ****************************
+    
+	//check the working agents wont exceed the buffer size in the new state list
+	if (h_xmachine_memory_TissueBlock_default_count+h_xmachine_memory_TissueBlock_count > xmachine_memory_TissueBlock_MAX){
+		printf("Error: Buffer size of ReapirDamage agents in state default will be exceeded moving working agents to next state in function ReapirDamage\n");
       exit(EXIT_FAILURE);
       }
       
@@ -7136,95 +6293,17 @@ void Fibroblast_TransitionToProliferating(cudaStream_t &stream){
 	
 
 	//******************************** AGENT FUNCTION CONDITION *********************
-	//CONTINUOUS AGENT FUNCTION AND THERE IS A FUNCTION CONDITION
-  	
-	//COPY CURRENT STATE COUNT TO WORKING COUNT (host and device)
+	//THERE IS NOT A FUNCTION CONDITION
+	//currentState maps to working list
+	xmachine_memory_Fibroblast_list* Fibroblasts_Quiescent_temp = d_Fibroblasts;
+	d_Fibroblasts = d_Fibroblasts_Quiescent;
+	d_Fibroblasts_Quiescent = Fibroblasts_Quiescent_temp;
+	//set working count to current state count
 	h_xmachine_memory_Fibroblast_count = h_xmachine_memory_Fibroblast_Quiescent_count;
 	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_count, &h_xmachine_memory_Fibroblast_count, sizeof(int)));	
-	
-	//RESET SCAN INPUTS
-	//reset scan input for currentState
-	cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, reset_Fibroblast_scan_input, no_sm, state_list_size); 
-	gridSize = (state_list_size + blockSize - 1) / blockSize;
-	reset_Fibroblast_scan_input<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts_Quiescent);
-	gpuErrchkLaunch();
-	//reset scan input for working lists
-	reset_Fibroblast_scan_input<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts);
-	gpuErrchkLaunch();
-
-	//APPLY FUNCTION FILTER
-	cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, TransitionToProliferating_function_filter, no_sm, state_list_size); 
-	gridSize = (state_list_size + blockSize - 1) / blockSize;
-	TransitionToProliferating_function_filter<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts_Quiescent, d_Fibroblasts);
-	gpuErrchkLaunch();
-
-	//GRID AND BLOCK SIZE FOR COMPACT
-	cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, scatter_Fibroblast_Agents, no_sm, state_list_size); 
-	gridSize = (state_list_size + blockSize - 1) / blockSize;
-	
-	//COMPACT CURRENT STATE LIST
-    cub::DeviceScan::ExclusiveSum(
-        d_temp_scan_storage_Fibroblast, 
-        temp_scan_storage_bytes_Fibroblast, 
-        d_Fibroblasts_Quiescent->_scan_input,
-        d_Fibroblasts_Quiescent->_position,
-        h_xmachine_memory_Fibroblast_count, 
-        stream
-    );
-
-	//reset agent count
-	gpuErrchk( cudaMemcpy( &scan_last_sum, &d_Fibroblasts_Quiescent->_position[h_xmachine_memory_Fibroblast_count-1], sizeof(int), cudaMemcpyDeviceToHost));
-	gpuErrchk( cudaMemcpy( &scan_last_included, &d_Fibroblasts_Quiescent->_scan_input[h_xmachine_memory_Fibroblast_count-1], sizeof(int), cudaMemcpyDeviceToHost));
-	if (scan_last_included == 1)
-		h_xmachine_memory_Fibroblast_Quiescent_count = scan_last_sum+1;
-	else		
-		h_xmachine_memory_Fibroblast_Quiescent_count = scan_last_sum;
-	//Scatter into swap
-	scatter_Fibroblast_Agents<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts_swap, d_Fibroblasts_Quiescent, 0, h_xmachine_memory_Fibroblast_count);
-	gpuErrchkLaunch();
-	//use a temp pointer change working swap list with current state list
-	xmachine_memory_Fibroblast_list* Fibroblasts_Quiescent_temp = d_Fibroblasts_Quiescent;
-	d_Fibroblasts_Quiescent = d_Fibroblasts_swap;
-	d_Fibroblasts_swap = Fibroblasts_Quiescent_temp;
-	//update the device count
+	//set current state count to 0
+	h_xmachine_memory_Fibroblast_Quiescent_count = 0;
 	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_Quiescent_count, &h_xmachine_memory_Fibroblast_Quiescent_count, sizeof(int)));	
-		
-	//COMPACT WORKING STATE LIST
-    cub::DeviceScan::ExclusiveSum(
-        d_temp_scan_storage_Fibroblast, 
-        temp_scan_storage_bytes_Fibroblast, 
-        d_Fibroblasts->_scan_input,
-        d_Fibroblasts->_position,
-        h_xmachine_memory_Fibroblast_count, 
-        stream
-    );
-
-	//reset agent count
-	gpuErrchk( cudaMemcpy( &scan_last_sum, &d_Fibroblasts->_position[h_xmachine_memory_Fibroblast_count-1], sizeof(int), cudaMemcpyDeviceToHost));
-	gpuErrchk( cudaMemcpy( &scan_last_included, &d_Fibroblasts->_scan_input[h_xmachine_memory_Fibroblast_count-1], sizeof(int), cudaMemcpyDeviceToHost));
-	//Scatter into swap
-	scatter_Fibroblast_Agents<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts_swap, d_Fibroblasts, 0, h_xmachine_memory_Fibroblast_count);
-	gpuErrchkLaunch();
-	//update working agent count after the scatter
-	if (scan_last_included == 1)
-		h_xmachine_memory_Fibroblast_count = scan_last_sum+1;
-	else		
-		h_xmachine_memory_Fibroblast_count = scan_last_sum;
-    //use a temp pointer change working swap list with current state list
-	xmachine_memory_Fibroblast_list* Fibroblasts_temp = d_Fibroblasts;
-	d_Fibroblasts = d_Fibroblasts_swap;
-	d_Fibroblasts_swap = Fibroblasts_temp;
-	//update the device count
-	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_count, &h_xmachine_memory_Fibroblast_count, sizeof(int)));	
-	
-	//CHECK WORKING LIST COUNT IS NOT EQUAL TO 0
-	if (h_xmachine_memory_Fibroblast_count == 0)
-	{
-		return;
-	}
-	
-	//Update the state list size for occupancy calculations
-	state_list_size = h_xmachine_memory_Fibroblast_count;
 	
  
 
@@ -7459,7 +6538,7 @@ int Fibroblast_BystanderEffect_sm_size(int blockSize){
 	int sm_size;
 	sm_size = SM_START;
   //Continuous agent and message input is spatially partitioned
-	sm_size += (blockSize * sizeof(xmachine_message_senescent_location_report));
+	sm_size += (blockSize * sizeof(xmachine_message_fibroblast_location_report));
 	
 	//all continuous agent types require single 32bit word per thread offset (to avoid sm bank conflicts)
 	sm_size += (blockSize * PADDING);
@@ -7526,52 +6605,57 @@ void Fibroblast_BystanderEffect(cudaStream_t &stream){
 	
 	//BIND APPROPRIATE MESSAGE INPUT VARIABLES TO TEXTURES (to make use of the texture cache)
 	//any agent with discrete or partitioned message input uses texture caching
-	size_t tex_xmachine_message_senescent_location_report_id_byte_offset;    
-	gpuErrchk( cudaBindTexture(&tex_xmachine_message_senescent_location_report_id_byte_offset, tex_xmachine_message_senescent_location_report_id, d_senescent_location_reports->id, sizeof(int)*xmachine_message_senescent_location_report_MAX));
-	h_tex_xmachine_message_senescent_location_report_id_offset = (int)tex_xmachine_message_senescent_location_report_id_byte_offset / sizeof(int);
-	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_senescent_location_report_id_offset, &h_tex_xmachine_message_senescent_location_report_id_offset, sizeof(int)));
-	size_t tex_xmachine_message_senescent_location_report_x_byte_offset;    
-	gpuErrchk( cudaBindTexture(&tex_xmachine_message_senescent_location_report_x_byte_offset, tex_xmachine_message_senescent_location_report_x, d_senescent_location_reports->x, sizeof(float)*xmachine_message_senescent_location_report_MAX));
-	h_tex_xmachine_message_senescent_location_report_x_offset = (int)tex_xmachine_message_senescent_location_report_x_byte_offset / sizeof(float);
-	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_senescent_location_report_x_offset, &h_tex_xmachine_message_senescent_location_report_x_offset, sizeof(int)));
-	size_t tex_xmachine_message_senescent_location_report_y_byte_offset;    
-	gpuErrchk( cudaBindTexture(&tex_xmachine_message_senescent_location_report_y_byte_offset, tex_xmachine_message_senescent_location_report_y, d_senescent_location_reports->y, sizeof(float)*xmachine_message_senescent_location_report_MAX));
-	h_tex_xmachine_message_senescent_location_report_y_offset = (int)tex_xmachine_message_senescent_location_report_y_byte_offset / sizeof(float);
-	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_senescent_location_report_y_offset, &h_tex_xmachine_message_senescent_location_report_y_offset, sizeof(int)));
-	size_t tex_xmachine_message_senescent_location_report_z_byte_offset;    
-	gpuErrchk( cudaBindTexture(&tex_xmachine_message_senescent_location_report_z_byte_offset, tex_xmachine_message_senescent_location_report_z, d_senescent_location_reports->z, sizeof(float)*xmachine_message_senescent_location_report_MAX));
-	h_tex_xmachine_message_senescent_location_report_z_offset = (int)tex_xmachine_message_senescent_location_report_z_byte_offset / sizeof(float);
-	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_senescent_location_report_z_offset, &h_tex_xmachine_message_senescent_location_report_z_offset, sizeof(int)));
+	size_t tex_xmachine_message_fibroblast_location_report_id_byte_offset;    
+	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_location_report_id_byte_offset, tex_xmachine_message_fibroblast_location_report_id, d_fibroblast_location_reports->id, sizeof(int)*xmachine_message_fibroblast_location_report_MAX));
+	h_tex_xmachine_message_fibroblast_location_report_id_offset = (int)tex_xmachine_message_fibroblast_location_report_id_byte_offset / sizeof(int);
+	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_location_report_id_offset, &h_tex_xmachine_message_fibroblast_location_report_id_offset, sizeof(int)));
+	size_t tex_xmachine_message_fibroblast_location_report_x_byte_offset;    
+	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_location_report_x_byte_offset, tex_xmachine_message_fibroblast_location_report_x, d_fibroblast_location_reports->x, sizeof(float)*xmachine_message_fibroblast_location_report_MAX));
+	h_tex_xmachine_message_fibroblast_location_report_x_offset = (int)tex_xmachine_message_fibroblast_location_report_x_byte_offset / sizeof(float);
+	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_location_report_x_offset, &h_tex_xmachine_message_fibroblast_location_report_x_offset, sizeof(int)));
+	size_t tex_xmachine_message_fibroblast_location_report_y_byte_offset;    
+	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_location_report_y_byte_offset, tex_xmachine_message_fibroblast_location_report_y, d_fibroblast_location_reports->y, sizeof(float)*xmachine_message_fibroblast_location_report_MAX));
+	h_tex_xmachine_message_fibroblast_location_report_y_offset = (int)tex_xmachine_message_fibroblast_location_report_y_byte_offset / sizeof(float);
+	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_location_report_y_offset, &h_tex_xmachine_message_fibroblast_location_report_y_offset, sizeof(int)));
+	size_t tex_xmachine_message_fibroblast_location_report_z_byte_offset;    
+	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_location_report_z_byte_offset, tex_xmachine_message_fibroblast_location_report_z, d_fibroblast_location_reports->z, sizeof(float)*xmachine_message_fibroblast_location_report_MAX));
+	h_tex_xmachine_message_fibroblast_location_report_z_offset = (int)tex_xmachine_message_fibroblast_location_report_z_byte_offset / sizeof(float);
+	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_location_report_z_offset, &h_tex_xmachine_message_fibroblast_location_report_z_offset, sizeof(int)));
+	size_t tex_xmachine_message_fibroblast_location_report_current_state_byte_offset;    
+	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_location_report_current_state_byte_offset, tex_xmachine_message_fibroblast_location_report_current_state, d_fibroblast_location_reports->current_state, sizeof(int)*xmachine_message_fibroblast_location_report_MAX));
+	h_tex_xmachine_message_fibroblast_location_report_current_state_offset = (int)tex_xmachine_message_fibroblast_location_report_current_state_byte_offset / sizeof(int);
+	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_location_report_current_state_offset, &h_tex_xmachine_message_fibroblast_location_report_current_state_offset, sizeof(int)));
 	//bind pbm start and end indices to textures
-	size_t tex_xmachine_message_senescent_location_report_pbm_start_byte_offset;
-	size_t tex_xmachine_message_senescent_location_report_pbm_end_or_count_byte_offset;
-	gpuErrchk( cudaBindTexture(&tex_xmachine_message_senescent_location_report_pbm_start_byte_offset, tex_xmachine_message_senescent_location_report_pbm_start, d_senescent_location_report_partition_matrix->start, sizeof(int)*xmachine_message_senescent_location_report_grid_size));
-	h_tex_xmachine_message_senescent_location_report_pbm_start_offset = (int)tex_xmachine_message_senescent_location_report_pbm_start_byte_offset / sizeof(int);
-	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_senescent_location_report_pbm_start_offset, &h_tex_xmachine_message_senescent_location_report_pbm_start_offset, sizeof(int)));
-	gpuErrchk( cudaBindTexture(&tex_xmachine_message_senescent_location_report_pbm_end_or_count_byte_offset, tex_xmachine_message_senescent_location_report_pbm_end_or_count, d_senescent_location_report_partition_matrix->end_or_count, sizeof(int)*xmachine_message_senescent_location_report_grid_size));
-  h_tex_xmachine_message_senescent_location_report_pbm_end_or_count_offset = (int)tex_xmachine_message_senescent_location_report_pbm_end_or_count_byte_offset / sizeof(int);
-	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_senescent_location_report_pbm_end_or_count_offset, &h_tex_xmachine_message_senescent_location_report_pbm_end_or_count_offset, sizeof(int)));
+	size_t tex_xmachine_message_fibroblast_location_report_pbm_start_byte_offset;
+	size_t tex_xmachine_message_fibroblast_location_report_pbm_end_or_count_byte_offset;
+	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_location_report_pbm_start_byte_offset, tex_xmachine_message_fibroblast_location_report_pbm_start, d_fibroblast_location_report_partition_matrix->start, sizeof(int)*xmachine_message_fibroblast_location_report_grid_size));
+	h_tex_xmachine_message_fibroblast_location_report_pbm_start_offset = (int)tex_xmachine_message_fibroblast_location_report_pbm_start_byte_offset / sizeof(int);
+	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_location_report_pbm_start_offset, &h_tex_xmachine_message_fibroblast_location_report_pbm_start_offset, sizeof(int)));
+	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_location_report_pbm_end_or_count_byte_offset, tex_xmachine_message_fibroblast_location_report_pbm_end_or_count, d_fibroblast_location_report_partition_matrix->end_or_count, sizeof(int)*xmachine_message_fibroblast_location_report_grid_size));
+  h_tex_xmachine_message_fibroblast_location_report_pbm_end_or_count_offset = (int)tex_xmachine_message_fibroblast_location_report_pbm_end_or_count_byte_offset / sizeof(int);
+	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_location_report_pbm_end_or_count_offset, &h_tex_xmachine_message_fibroblast_location_report_pbm_end_or_count_offset, sizeof(int)));
 
 	
 	
 	//MAIN XMACHINE FUNCTION CALL (BystanderEffect)
 	//Reallocate   : false
-	//Input        : senescent_location_report
+	//Input        : fibroblast_location_report
 	//Output       : 
 	//Agent Output : 
-	GPUFLAME_BystanderEffect<<<g, b, sm_size, stream>>>(d_Fibroblasts, d_senescent_location_reports, d_senescent_location_report_partition_matrix, d_rand48);
+	GPUFLAME_BystanderEffect<<<g, b, sm_size, stream>>>(d_Fibroblasts, d_fibroblast_location_reports, d_fibroblast_location_report_partition_matrix, d_rand48);
 	gpuErrchkLaunch();
 	
 	
 	//UNBIND MESSAGE INPUT VARIABLE TEXTURES
 	//any agent with discrete or partitioned message input uses texture caching
-	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_senescent_location_report_id));
-	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_senescent_location_report_x));
-	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_senescent_location_report_y));
-	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_senescent_location_report_z));
+	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_location_report_id));
+	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_location_report_x));
+	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_location_report_y));
+	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_location_report_z));
+	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_location_report_current_state));
 	//unbind pbm indices
-    gpuErrchk( cudaUnbindTexture(tex_xmachine_message_senescent_location_report_pbm_start));
-    gpuErrchk( cudaUnbindTexture(tex_xmachine_message_senescent_location_report_pbm_end_or_count));
+    gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_location_report_pbm_start));
+    gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_location_report_pbm_end_or_count));
     
 	
 	//************************ MOVE AGENTS TO NEXT STATE ****************************
@@ -8209,7 +7293,7 @@ void Fibroblast_ClearanceOfSenescent(cudaStream_t &stream){
 	//Input        : 
 	//Output       : 
 	//Agent Output : 
-	GPUFLAME_ClearanceOfSenescent<<<g, b, sm_size, stream>>>(d_Fibroblasts);
+	GPUFLAME_ClearanceOfSenescent<<<g, b, sm_size, stream>>>(d_Fibroblasts, d_rand48);
 	gpuErrchkLaunch();
 	
 	
@@ -8246,20 +7330,20 @@ void Fibroblast_ClearanceOfSenescent(cudaStream_t &stream){
 	//************************ MOVE AGENTS TO NEXT STATE ****************************
     
 	//check the working agents wont exceed the buffer size in the new state list
-	if (h_xmachine_memory_Fibroblast_EarlySenescent_count+h_xmachine_memory_Fibroblast_count > xmachine_memory_Fibroblast_MAX){
-		printf("Error: Buffer size of ClearanceOfSenescent agents in state EarlySenescent will be exceeded moving working agents to next state in function ClearanceOfSenescent\n");
+	if (h_xmachine_memory_Fibroblast_Senescent_count+h_xmachine_memory_Fibroblast_count > xmachine_memory_Fibroblast_MAX){
+		printf("Error: Buffer size of ClearanceOfSenescent agents in state Senescent will be exceeded moving working agents to next state in function ClearanceOfSenescent\n");
       exit(EXIT_FAILURE);
       }
       
   //append agents to next state list
   cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, append_Fibroblast_Agents, no_sm, state_list_size);
   gridSize = (state_list_size + blockSize - 1) / blockSize;
-  append_Fibroblast_Agents<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts_EarlySenescent, d_Fibroblasts, h_xmachine_memory_Fibroblast_EarlySenescent_count, h_xmachine_memory_Fibroblast_count);
+  append_Fibroblast_Agents<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts_Senescent, d_Fibroblasts, h_xmachine_memory_Fibroblast_Senescent_count, h_xmachine_memory_Fibroblast_count);
   gpuErrchkLaunch();
         
 	//update new state agent size
-	h_xmachine_memory_Fibroblast_EarlySenescent_count += h_xmachine_memory_Fibroblast_count;
-	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_EarlySenescent_count, &h_xmachine_memory_Fibroblast_EarlySenescent_count, sizeof(int)));	
+	h_xmachine_memory_Fibroblast_Senescent_count += h_xmachine_memory_Fibroblast_count;
+	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_Senescent_count, &h_xmachine_memory_Fibroblast_Senescent_count, sizeof(int)));	
 	
 	
 }
@@ -8409,205 +7493,6 @@ void Fibroblast_DetectDamage(cudaStream_t &stream){
 	//update new state agent size
 	h_xmachine_memory_Fibroblast_Repair_count += h_xmachine_memory_Fibroblast_count;
 	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_Repair_count, &h_xmachine_memory_Fibroblast_Repair_count, sizeof(int)));	
-	
-	
-}
-
-
-
-	
-/* Shared memory size calculator for agent function */
-int Fibroblast_RepairDamage_sm_size(int blockSize){
-	int sm_size;
-	sm_size = SM_START;
-  
-	return sm_size;
-}
-
-/** Fibroblast_RepairDamage
- * Agent function prototype for RepairDamage function of Fibroblast agent
- */
-void Fibroblast_RepairDamage(cudaStream_t &stream){
-
-    int sm_size;
-    int blockSize;
-    int minGridSize;
-    int gridSize;
-    int state_list_size;
-	dim3 g; //grid for agent func
-	dim3 b; //block for agent func
-
-	
-	//CHECK THE CURRENT STATE LIST COUNT IS NOT EQUAL TO 0
-	
-	if (h_xmachine_memory_Fibroblast_Repair_count == 0)
-	{
-		return;
-	}
-	
-	
-	//SET SM size to 0 and save state list size for occupancy calculations
-	sm_size = SM_START;
-	state_list_size = h_xmachine_memory_Fibroblast_Repair_count;
-
-	
-
-	//******************************** AGENT FUNCTION CONDITION *********************
-	//THERE IS NOT A FUNCTION CONDITION
-	//currentState maps to working list
-	xmachine_memory_Fibroblast_list* Fibroblasts_Repair_temp = d_Fibroblasts;
-	d_Fibroblasts = d_Fibroblasts_Repair;
-	d_Fibroblasts_Repair = Fibroblasts_Repair_temp;
-	//set working count to current state count
-	h_xmachine_memory_Fibroblast_count = h_xmachine_memory_Fibroblast_Repair_count;
-	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_count, &h_xmachine_memory_Fibroblast_count, sizeof(int)));	
-	//set current state count to 0
-	h_xmachine_memory_Fibroblast_Repair_count = 0;
-	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_Repair_count, &h_xmachine_memory_Fibroblast_Repair_count, sizeof(int)));	
-	
- 
-
-	//******************************** AGENT FUNCTION *******************************
-
-	
-	
-	//calculate the grid block size for main agent function
-	cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, GPUFLAME_RepairDamage, Fibroblast_RepairDamage_sm_size, state_list_size);
-	gridSize = (state_list_size + blockSize - 1) / blockSize;
-	b.x = blockSize;
-	g.x = gridSize;
-	
-	sm_size = Fibroblast_RepairDamage_sm_size(blockSize);
-	
-	
-	
-	
-	//MAIN XMACHINE FUNCTION CALL (RepairDamage)
-	//Reallocate   : false
-	//Input        : 
-	//Output       : 
-	//Agent Output : 
-	GPUFLAME_RepairDamage<<<g, b, sm_size, stream>>>(d_Fibroblasts);
-	gpuErrchkLaunch();
-	
-	
-	
-	//************************ MOVE AGENTS TO NEXT STATE ****************************
-    
-	//check the working agents wont exceed the buffer size in the new state list
-	if (h_xmachine_memory_Fibroblast_Repair_count+h_xmachine_memory_Fibroblast_count > xmachine_memory_Fibroblast_MAX){
-		printf("Error: Buffer size of RepairDamage agents in state Repair will be exceeded moving working agents to next state in function RepairDamage\n");
-      exit(EXIT_FAILURE);
-      }
-      
-  //pointer swap the updated data
-  Fibroblasts_Repair_temp = d_Fibroblasts;
-  d_Fibroblasts = d_Fibroblasts_Repair;
-  d_Fibroblasts_Repair = Fibroblasts_Repair_temp;
-        
-	//update new state agent size
-	h_xmachine_memory_Fibroblast_Repair_count += h_xmachine_memory_Fibroblast_count;
-	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_Repair_count, &h_xmachine_memory_Fibroblast_Repair_count, sizeof(int)));	
-	
-	
-}
-
-
-
-	
-/* Shared memory size calculator for agent function */
-int Fibroblast_DamageRepaired_sm_size(int blockSize){
-	int sm_size;
-	sm_size = SM_START;
-  
-	return sm_size;
-}
-
-/** Fibroblast_DamageRepaired
- * Agent function prototype for DamageRepaired function of Fibroblast agent
- */
-void Fibroblast_DamageRepaired(cudaStream_t &stream){
-
-    int sm_size;
-    int blockSize;
-    int minGridSize;
-    int gridSize;
-    int state_list_size;
-	dim3 g; //grid for agent func
-	dim3 b; //block for agent func
-
-	
-	//CHECK THE CURRENT STATE LIST COUNT IS NOT EQUAL TO 0
-	
-	if (h_xmachine_memory_Fibroblast_Repair_count == 0)
-	{
-		return;
-	}
-	
-	
-	//SET SM size to 0 and save state list size for occupancy calculations
-	sm_size = SM_START;
-	state_list_size = h_xmachine_memory_Fibroblast_Repair_count;
-
-	
-
-	//******************************** AGENT FUNCTION CONDITION *********************
-	//THERE IS NOT A FUNCTION CONDITION
-	//currentState maps to working list
-	xmachine_memory_Fibroblast_list* Fibroblasts_Repair_temp = d_Fibroblasts;
-	d_Fibroblasts = d_Fibroblasts_Repair;
-	d_Fibroblasts_Repair = Fibroblasts_Repair_temp;
-	//set working count to current state count
-	h_xmachine_memory_Fibroblast_count = h_xmachine_memory_Fibroblast_Repair_count;
-	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_count, &h_xmachine_memory_Fibroblast_count, sizeof(int)));	
-	//set current state count to 0
-	h_xmachine_memory_Fibroblast_Repair_count = 0;
-	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_Repair_count, &h_xmachine_memory_Fibroblast_Repair_count, sizeof(int)));	
-	
- 
-
-	//******************************** AGENT FUNCTION *******************************
-
-	
-	
-	//calculate the grid block size for main agent function
-	cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, GPUFLAME_DamageRepaired, Fibroblast_DamageRepaired_sm_size, state_list_size);
-	gridSize = (state_list_size + blockSize - 1) / blockSize;
-	b.x = blockSize;
-	g.x = gridSize;
-	
-	sm_size = Fibroblast_DamageRepaired_sm_size(blockSize);
-	
-	
-	
-	
-	//MAIN XMACHINE FUNCTION CALL (DamageRepaired)
-	//Reallocate   : false
-	//Input        : 
-	//Output       : 
-	//Agent Output : 
-	GPUFLAME_DamageRepaired<<<g, b, sm_size, stream>>>(d_Fibroblasts);
-	gpuErrchkLaunch();
-	
-	
-	
-	//************************ MOVE AGENTS TO NEXT STATE ****************************
-    
-	//check the working agents wont exceed the buffer size in the new state list
-	if (h_xmachine_memory_Fibroblast_Quiescent_count+h_xmachine_memory_Fibroblast_count > xmachine_memory_Fibroblast_MAX){
-		printf("Error: Buffer size of DamageRepaired agents in state Quiescent will be exceeded moving working agents to next state in function DamageRepaired\n");
-      exit(EXIT_FAILURE);
-      }
-      
-  //append agents to next state list
-  cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, append_Fibroblast_Agents, no_sm, state_list_size);
-  gridSize = (state_list_size + blockSize - 1) / blockSize;
-  append_Fibroblast_Agents<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts_Quiescent, d_Fibroblasts, h_xmachine_memory_Fibroblast_Quiescent_count, h_xmachine_memory_Fibroblast_count);
-  gpuErrchkLaunch();
-        
-	//update new state agent size
-	h_xmachine_memory_Fibroblast_Quiescent_count += h_xmachine_memory_Fibroblast_count;
-	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_Quiescent_count, &h_xmachine_memory_Fibroblast_Quiescent_count, sizeof(int)));	
 	
 	
 }

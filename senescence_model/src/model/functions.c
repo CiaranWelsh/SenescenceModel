@@ -73,7 +73,7 @@ __FLAME_GPU_INIT_FUNC__ void setConstants() {
     float BYSTANDER_DISTANCE = 0.1f;
     float BYSTANDER_PROB = 0.1f;
 
-    float EXCESSIVE_DAMAGE_AMOUNT = 100.0f;
+    int EXCESSIVE_DAMAGE_AMOUNT = 100;
     float EXCESSIVE_DAMAGE_PROB = 0.1f;
 
     int REPLICATIVE_SEN_AGE = 2500;
@@ -152,7 +152,8 @@ __FLAME_GPU_FUNC__ int TissueSendDamageReport(
     float z = agent->z;
     int damage = agent->damage;
 
-    add_tissue_damage_report_message(tissue_damage_report_messages, id, x, y, z, damage);
+    add_tissue_damage_report_message(
+            tissue_damage_report_messages, id, x, y, z, damage);
 
     return 0;
 }
@@ -171,15 +172,19 @@ __FLAME_GPU_FUNC__ int ReapirDamage(xmachine_memory_TissueBlock* agent, xmachine
         return 0;
     }
 
-
     glm::vec3 tissue_location = glm::vec3(agent->x,agent->y, agent->z);
 
-    xmachine_message_fibroblast_location_report* current_message = get_first_fibroblast_location_report_message(fibroblast_location_report_messages, partition_matrix, agent_x, agent_y, agent_z);
+    xmachine_message_fibroblast_location_report* current_message = get_first_fibroblast_location_report_message(
+            fibroblast_location_report_messages, partition_matrix,
+            agent->x, agent->y, agent->z);
     while (current_message)
     {
         /// if fibroblast in repairative state continue
         if (current_message->current_state == 5){
-            glm3::vec3 fibroblast_location = glm3::vec3(current_message->x, current_message->y, current_message->z);
+            glm::vec3 fibroblast_location = glm::vec3(
+                    current_message->x,
+                    current_message->y,
+                    current_message->z);
             float separation = magnitude_of_vec(tissue_location - fibroblast_location);
             /// if repairative fibroblast within REPAIR_RADIUS distance, subtract a point of damage
             if (separation < REPAIR_RADIUS){
@@ -460,19 +465,22 @@ __FLAME_GPU_FUNC__ int Proliferation(
         xmachine_memory_Fibroblast_list *Fibroblast_agents) {
 
     // When spawning new agent from existing, how do you ensure unique IDs?
-    int id = agent->id;
+    int id=agent->id;
     float x = agent->x;
     float y = agent->y;
     float z = agent->z;
-    int transition_to_early_sen = agent->transition_to_early_sen;
     float doublings = 0;
     int damage = 0;
-    int proliferate_bool = 0;
+    int early_sen_time_counter = 0;
+    int current_state = 0;
 
     add_Fibroblast_agent(
             Fibroblast_agents,
-            id, x, y, z, doublings, damage, proliferate_bool,
-            transition_to_early_sen);
+            id, x, y, z,
+            doublings,
+            damage,
+            early_sen_time_counter,
+            current_state);
 
     agent->current_state = 0;
     agent->doublings += 1;
@@ -484,7 +492,7 @@ __FLAME_GPU_FUNC__ int Proliferation(
  * BystanderEffect FLAMEGPU Agent Function
  * Automatically generated using functions.xslt
  * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- * @param senescent_location_report_messages  senescent_location_report_messages Pointer to input message list of type xmachine_message__list. Must be passed as an argument to the get_first_senescent_location_report_message and get_next_senescent_location_report_message functions.* @param partition_matrix Pointer to the partition matrix of type xmachine_message_senescent_location_report_PBM. Used within the get_first__message and get_next__message functions for spatially partitioned message access.
+ * @param fibroblast_location_report_messages  fibroblast_location_report_messages Pointer to input message list of type xmachine_message__list. Must be passed as an argument to the get_first_fibroblast_location_report_message and get_next_fibroblast_location_report_message functions.* @param partition_matrix Pointer to the partition matrix of type xmachine_message_fibroblast_location_report_PBM. Used within the get_first__message and get_next__message functions for spatially partitioned message access.
 
      0: quiescent
     1: early senescent
@@ -494,10 +502,9 @@ __FLAME_GPU_FUNC__ int Proliferation(
  */
 __FLAME_GPU_FUNC__ int BystanderEffect(
         xmachine_memory_Fibroblast *agent,
-        xmachine_message_senescent_location_report_list *senescent_location_report_messages,
-        xmachine_message_senescent_location_report_PBM *partition_matrix,
+        xmachine_message_fibroblast_location_report_list *fibroblast_location_report_messages,
+        xmachine_message_fibroblast_location_report_PBM *partition_matrix,
         RNG_rand48* rand48) {
-
 
     // Position within space
     float agent_x = agent->x;
@@ -507,28 +514,33 @@ __FLAME_GPU_FUNC__ int BystanderEffect(
     glm::vec3 fibroblast_loc = glm::vec3(agent_x, agent_y, agent_z);
 
     //Template for input message iteration
-    xmachine_message_senescent_location_report *current_message = get_first_senescent_location_report_message(
-            senescent_location_report_messages, partition_matrix, agent_x, agent_y, agent_z);
-    while (current_message) {
-        glm::vec3 senescent_fib_loc = glm::vec3(
-                current_message->x,
-                current_message->y,
-                current_message->z);
+    xmachine_message_fibroblast_location_report *current_message = get_first_fibroblast_location_report_message(
+            fibroblast_location_report_messages,
+            partition_matrix,
+            agent_x, agent_y, agent_z);
 
-//        glm::vec3 distance = subtract_b_from_a(fibroblast_loc, senescent_fib_loc);
-        float separation = length(senescent_fib_loc - fibroblast_loc);
-        if (separation > BYSTANDER_DISTANCE){
-            float random_number = rnd<CONTINUOUS>(rand48);
-            if (random_number < BYSTANDER_PROB){
-                agent->current_state = 1;
+    while (current_message) {
+        if (current_message->current_state == 2) {
+
+            glm::vec3 senescent_fib_loc = glm::vec3(
+                    current_message->x,
+                    current_message->y,
+                    current_message->z);
+
+            //        glm::vec3 distance = subtract_b_from_a(fibroblast_loc, senescent_fib_loc);
+            float separation = length(senescent_fib_loc - fibroblast_loc);
+            if (separation > BYSTANDER_DISTANCE) {
+                float random_number = rnd<CONTINUOUS>(rand48);
+                if (random_number < BYSTANDER_PROB) {
+                    agent->current_state = 1;
+                }
             }
         }
-        current_message = get_next_senescent_location_report_message(current_message,
-                                                                         senescent_location_report_messages,
-                                                                         partition_matrix);
+        current_message = get_next_fibroblast_location_report_message(
+                current_message,
+                fibroblast_location_report_messages,
+                partition_matrix);
     }
-
-
     return 0;
 }
 
@@ -632,13 +644,16 @@ __FLAME_GPU_FUNC__ int ClearanceOfEarlySenescent(xmachine_memory_Fibroblast* age
     return 0;
 }
 
+
+
 /**
  * ClearanceOfSenescent FLAMEGPU Agent Function
  * Automatically generated using functions.xslt
  * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- 
+ * @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
  */
-__FLAME_GPU_FUNC__ int ClearanceOfSenescent(xmachine_memory_Fibroblast *agent, RNG_rand48* rand48) {
+__FLAME_GPU_FUNC__ int ClearanceOfSenescent(xmachine_memory_Fibroblast* agent, RNG_rand48* rand48){
+
     if (agent->current_state == 1){
         if (rnd<CONTINUOUS>(rand48) < CLEARANCE_SEN_PROB){
             return 1; /// non 0 exit status marks agent for removal
@@ -647,19 +662,6 @@ __FLAME_GPU_FUNC__ int ClearanceOfSenescent(xmachine_memory_Fibroblast *agent, R
     return 0;
 }
 
-/**
- * DetectDamage FLAMEGPU Agent Function
- * Automatically generated using functions.xslt
- * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- * @param tissue_damage_report_messages  tissue_damage_report_messages Pointer to input message list of type xmachine_message__list. Must be passed as an argument to the get_first_tissue_damage_report_message and get_next_tissue_damage_report_message functions.* @param partition_matrix Pointer to the partition matrix of type xmachine_message_tissue_damage_report_PBM. Used within the get_first__message and get_next__message functions for spatially partitioned message access.
-
-   If damage is within REPAIR_RADIUS, enter repairation state
-        0: quiescent
-    1: early senescent
-    2: senescent
-    4: proliferating
-    5: repairing
- */
 /**
  * DetectDamage FLAMEGPU Agent Function
  * Automatically generated using functions.xslt
@@ -677,15 +679,16 @@ __FLAME_GPU_FUNC__ int DetectDamage(
 //    float agent_y = 0.0;
 //    float agent_z = 0.0;
     glm::vec3 fibroblast_position = glm::vec3(
-            agent->x, agent->y, agent_z
+            agent->x, agent->y, agent->z
             );
 
     //Template for input message iteration
-    xmachine_message_tissue_damage_report* current_message = get_first_tissue_damage_report_message(tissue_damage_report_messages, partition_matrix, agent_x, agent_y, agent_z);
+    xmachine_message_tissue_damage_report* current_message = get_first_tissue_damage_report_message(
+            tissue_damage_report_messages, partition_matrix, agent->x, agent->y, agent->z);
     while (current_message)
     {
         //INSERT MESSAGE PROCESSING CODE HERE
-        glm::vec3 damaged_tissue_position = glm3::vec3(
+        glm::vec3 damaged_tissue_position = glm::vec3(
                 current_message->x,current_message->y, current_message->z
                 );
         float separation = magnitude_of_vec(fibroblast_position - damaged_tissue_position);
@@ -694,7 +697,10 @@ __FLAME_GPU_FUNC__ int DetectDamage(
             agent->current_state = 5;
         }
 
-        current_message = get_next_tissue_damage_report_message(current_message, tissue_damage_report_messages, partition_matrix);
+        current_message = get_next_tissue_damage_report_message(
+                current_message,
+                tissue_damage_report_messages,
+                partition_matrix);
     }
 
 

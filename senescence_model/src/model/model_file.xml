@@ -7,62 +7,66 @@
             <gpu:variable>
                 <type>float</type>
                 <name>TISSUE_DAMAGE_PROB</name>
-                <defaultValue>0.1</defaultValue>
-            </gpu:variable>
-            <gpu:variable>
-                <type>float</type>
-                <name>PROLIFERATION_PROB</name>
-                <defaultValue>0.1</defaultValue>
-            </gpu:variable>
-            <gpu:variable>
-                <type>float</type>
-                <name>TISSUE_SIZE</name>
-                <defaultValue>0.1</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>EARLY_SENESCENT_MIGRATION_SCALE</name>
-                <defaultValue>0.001</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>SENESCENT_MIGRATION_SCALE</name>
-                <defaultValue>0.001</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>QUIESCENT_MIGRATION_SCALE</name>
-                <defaultValue>0.1</defaultValue>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
+                <name>PROLIFERATION_PROB</name>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>BYSTANDER_DISTANCE</name>
-                <defaultValue>0.1</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>BYSTANDER_PROB</name>
-                <defaultValue>0.1</defaultValue>
             </gpu:variable>
             <gpu:variable>
-                <type>float</type>
+                <type>int</type>
                 <name>EXCESSIVE_DAMAGE_AMOUNT</name>
-                <defaultValue>100</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>EXCESSIVE_DAMAGE_PROB</name>
-                <defaultValue>0.1</defaultValue>
             </gpu:variable>
             <gpu:variable>
-                <type>float</type>
+                <type>int</type>
                 <name>REPLICATIVE_SEN_AGE</name>
-                <defaultValue>2500</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>REPLICATIVE_SEN_PROB</name>
-                <defaultValue>0.1</defaultValue>
+            </gpu:variable>
+            <gpu:variable>
+                <type>int</type>
+                <name>EARLY_SENESCENT_MATURATION_TIME</name>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
+                <name>TRANSITION_TO_FULL_SENESCENCE_PROB</name>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
+                <name>CLEARANCE_EARLY_SEN_PROB</name>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
+                <name>CLEARANCE_SEN_PROB</name>
+            </gpu:variable>
+            <gpu:variable>
+                <type>float</type>
+                <name>REPAIR_RADIUS</name>
             </gpu:variable>
         </gpu:constants>
         <gpu:functionFiles>
@@ -175,18 +179,6 @@
                 </gpu:variable>
                 <gpu:variable>
                     <type>int</type>
-                    <name>proliferate_bool</name>
-                </gpu:variable>
-                <gpu:variable>
-                    <type>int</type>
-                    <name>transition_to_early_sen</name>
-                </gpu:variable>
-                <gpu:variable>
-                    <type>int</type>
-                    <name>transition_to_full_sen</name>
-                </gpu:variable>
-                <gpu:variable>
-                    <type>int</type>
                     <name>early_sen_time_counter</name>
                 </gpu:variable>
                 <gpu:variable>
@@ -197,10 +189,6 @@
                     <!--4: proliferating-->
                     <!--5: repairing-->
                     <name>current_state</name>
-                </gpu:variable>
-                <gpu:variable>
-                    <type>int</type>
-                    <name>tissue_damage</name>
                 </gpu:variable>
             </memory>
             <functions>
@@ -275,15 +263,6 @@
                     <description>Quiescent transitions to proliferating fibroblast</description>
                     <currentState>Quiescent</currentState>
                     <nextState>Proliferating</nextState>
-                    <condition>
-                        <lhs>
-                            <agentVariable>proliferate_bool</agentVariable>
-                        </lhs>
-                        <operator>==</operator>
-                        <rhs>
-                            <value>1</value>
-                        </rhs>
-                    </condition>
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
                     <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
@@ -358,9 +337,9 @@
                     <name>ClearanceOfSenescent</name>
                     <description>Removal of senescent cells from population</description>
                     <currentState>Senescent</currentState>
-                    <nextState>EarlySenescent</nextState>
+                    <nextState>Senescent</nextState>
                     <gpu:reallocate>true</gpu:reallocate>          <!-- optional -->
-                    <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
+                    <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
                 <gpu:function>
                     <name>DetectDamage</name>
@@ -377,40 +356,6 @@
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
                     <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
-                <!--<gpu:function>-->
-                    <!--<name>AssessDamage</name>-->
-                    <!--<description>Read damage report and update a variable</description>-->
-                    <!--<currentState>Repair</currentState>-->
-                    <!--<nextState>Repair</nextState>-->
-                    <!--<inputs>-->
-                        <!--<gpu:input>-->
-                            <!--<messageName>tissue_damage_report</messageName>-->
-                        <!--</gpu:input>-->
-                    <!--</inputs>-->
-                    <!--<gpu:reallocate>false</gpu:reallocate>          &lt;!&ndash; optional &ndash;&gt;-->
-                    <!--<gpu:RNG>false</gpu:RNG>                        &lt;!&ndash; optional &ndash;&gt;-->
-                <!--</gpu:function>-->
-                <!--<gpu:function>-->
-                    <!--<name>RepairDamage</name>-->
-                    <!--<description>Repair tissue damage</description>-->
-                    <!--<currentState>Repair</currentState>-->
-                    <!--<nextState>Repair</nextState>-->
-                    <!--<inputs>-->
-                        <!--<gpu:input>-->
-                            <!--<messageName>tissue_damage_report</messageName>-->
-                        <!--</gpu:input>-->
-                    <!--</inputs>-->
-                    <!--<gpu:reallocate>false</gpu:reallocate>          &lt;!&ndash; optional &ndash;&gt;-->
-                    <!--<gpu:RNG>false</gpu:RNG>                        &lt;!&ndash; optional &ndash;&gt;-->
-                <!--</gpu:function>-->
-                <!--<gpu:function>-->
-                    <!--<name>DamageRepaired</name>-->
-                    <!--<description>Repairative fibroblasts return to quiescent state</description>-->
-                    <!--<currentState>Repair</currentState>-->
-                    <!--<nextState>Quiescent</nextState>-->
-                    <!--<gpu:reallocate>false</gpu:reallocate>          &lt;!&ndash; optional &ndash;&gt;-->
-                    <!--<gpu:RNG>false</gpu:RNG>                        &lt;!&ndash; optional &ndash;&gt;-->
-                <!--</gpu:function>-->
             </functions>
             <states>
                 <gpu:state>
@@ -579,6 +524,11 @@
         </layer>
         <layer>
             <gpu:layerFunction>
+                <name>TissueSendDamageReport</name>
+            </gpu:layerFunction>
+        </layer>
+        <layer>
+            <gpu:layerFunction>
                 <name>QuiescentMigration</name>
             </gpu:layerFunction>
             <gpu:layerFunction>
@@ -586,6 +536,11 @@
             </gpu:layerFunction>
             <gpu:layerFunction>
                 <name>SenescentMigration</name>
+            </gpu:layerFunction>
+        </layer>
+        <layer>
+            <gpu:layerFunction>
+                <name>TissueSendDamageReport</name>
             </gpu:layerFunction>
         </layer>
         <layer>
@@ -601,17 +556,17 @@
         </layer>
         <layer>
             <gpu:layerFunction>
-                <name>Proliferation</name>
+                <name>TransitionToProliferating</name>
             </gpu:layerFunction>
         </layer>
         <layer>
             <gpu:layerFunction>
-                <name>Proliferation</name>
+                <name>EarlySenCountTime</name>
             </gpu:layerFunction>
         </layer>
         <layer>
             <gpu:layerFunction>
-                <name>FullSenescence</name>
+                <name>TransitionToFullSenescence</name>
             </gpu:layerFunction>
         </layer>
         <layer>
@@ -627,16 +582,6 @@
         <layer>
             <gpu:layerFunction>
                 <name>DetectDamage</name>
-            </gpu:layerFunction>
-        </layer>
-        <layer>
-            <gpu:layerFunction>
-                <name>RepairDamage</name>
-            </gpu:layerFunction>
-        </layer>
-        <layer>
-            <gpu:layerFunction>
-                <name>DamageRepaired</name>
             </gpu:layerFunction>
         </layer>
     </layers>
