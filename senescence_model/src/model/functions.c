@@ -127,7 +127,7 @@ __FLAME_GPU_FUNC__ int TissueTakesDamage(
         RNG_rand48 *rand48) {
 
     float random_number = rnd<CONTINUOUS>(rand48);
-    if (random_number >= TISSUE_DAMAGE_PROB)
+    if (random_number < TISSUE_DAMAGE_PROB)
         if (agent->damage != 0)
             agent->damage = agent->damage - 1;
 
@@ -398,7 +398,7 @@ __FLAME_GPU_FUNC__ int QuiescentTakesDamage(
 
 
     float random_number = rnd<CONTINUOUS>(rand48);
-    if (random_number >= TISSUE_DAMAGE_PROB)
+    if (random_number < TISSUE_DAMAGE_PROB)
         if (agent->damage != 0)
             agent->damage = agent->damage - 1;
 

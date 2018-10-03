@@ -37,9 +37,6 @@
 GLuint sphereVerts;
 GLuint sphereNormals;
 
-GLuint cubeVerts;
-GLuint cubeNormals;
-
 //Simulation output buffers/textures
 
 cudaGraphicsResource_t TissueBlock_default_cgr;
@@ -80,53 +77,10 @@ bool paused = true;
 bool paused = false;
 #endif
 
-// cube vertix positions
-static const GLfloat cube_vertic_positions[] = {
-        -1.0f,-1.0f,-1.0f, // triangle 1 : begin
-        -1.0f,-1.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f, // triangle 1 : end
-        1.0f, 1.0f,-1.0f, // triangle 2 : begin
-        -1.0f,-1.0f,-1.0f,
-        -1.0f, 1.0f,-1.0f, // triangle 2 : end
-        1.0f,-1.0f, 1.0f,
-        -1.0f,-1.0f,-1.0f,
-        1.0f,-1.0f,-1.0f,
-        1.0f, 1.0f,-1.0f,
-        1.0f,-1.0f,-1.0f,
-        -1.0f,-1.0f,-1.0f,
-        -1.0f,-1.0f,-1.0f,
-        -1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f,-1.0f,
-        1.0f,-1.0f, 1.0f,
-        -1.0f,-1.0f, 1.0f,
-        -1.0f,-1.0f,-1.0f,
-        -1.0f, 1.0f, 1.0f,
-        -1.0f,-1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-        1.0f,-1.0f,-1.0f,
-        1.0f, 1.0f,-1.0f,
-        1.0f,-1.0f,-1.0f,
-        1.0f, 1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f,-1.0f,
-        -1.0f, 1.0f,-1.0f,
-        1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f,-1.0f,
-        -1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f
-};
-
 // vertex Shader
-GLuint tissueVertexShader;
-GLuint tissueFragmentShader;
-GLuint fibroblastVertexShader;
-GLuint fibroblastFragmentShader;
-GLuint tissueShaderProgram;
-GLuint fibroblastShaderProgram;
+GLuint vertexShader;
+GLuint fragmentShader;
+GLuint shaderProgram;
 GLuint vs_displacementMap;
 GLuint vs_mapIndex;
 
@@ -145,14 +99,12 @@ int delay_count = 0;
 
 // prototypes
 int initGL();
-void initFragmentShader();
-void initTissueShader();
+void initFibroblastShader();
 void createVBO( GLuint* vbo, GLuint size);
 void deleteVBO( GLuint* vbo);
 void createTBO( cudaGraphicsResource_t* cudaResource, GLuint* tbo, GLuint* tex, GLuint size);
 void deleteTBO( cudaGraphicsResource_t* cudaResource, GLuint* tbo);
-void setSphereVertexBufferData();
-void setCubeVertexBufferData();
+void setVertexBufferData();
 void reshape(int width, int height);
 void display();
 void close();
@@ -196,7 +148,7 @@ const char fibroblastVertexShaderSource[] =
     "{																			\n"
 	"	vec4 position = gl_Vertex;											    \n"
 	"	vec4 lookup = texelFetchBuffer(displacementMap, (int)mapIndex);		    \n"
-    "	if (lookup.w > 7.5)	                								    \n"
+    "	if (lookup.w > 7.5)	                								\n"
 	"		colour = vec4(0.518, 0.353, 0.02, 0.0);						    	\n"
     "	else if (lookup.w > 6.5)	               								\n"
 	"		colour = vec4(1.0, 1.0, 1.0, 0.0);								    \n"
@@ -226,28 +178,28 @@ const char fibroblastVertexShaderSource[] =
 };
 
 const char tissueVertexShaderSource[] =
-        {
-                "#extension GL_EXT_gpu_shader4 : enable										\n"
-                "uniform samplerBuffer displacementMap;										\n"
-                "attribute in float mapIndex;												\n"
-                "varying vec3 normal, lightDir;												\n"
-                "varying vec4 colour;														\n"
-                "void main()																\n"
-                "{																			\n"
-                "	vec4 position = gl_Vertex;											    \n"
-                "	vec4 lookup = texelFetchBuffer(displacementMap, (int)mapIndex);	        \n"
-                "   colour = vec4(vec4.w, 0, 0)                                             \n"
-                "																    		\n"
-                "	lookup.w = 1.0;												    		\n"
-                "	position += lookup;											    		\n"
-                "   gl_Position = gl_ModelViewProjectionMatrix * position;		    		\n"
-                "																			\n"
-                "	vec3 mvVertex = vec3(gl_ModelViewMatrix * position);			    	\n"
-                "	lightDir = vec3(gl_LightSource[0].position.xyz - mvVertex);				\n"
-                "	normal = gl_NormalMatrix * gl_Normal;									\n"
-                "}																			\n"
-        };
-
+{
+    "#extension GL_EXT_gpu_shader4 : enable										\n"
+    "uniform samplerBuffer displacementMap;										\n"
+    "attribute in float mapIndex;												\n"
+    "varying vec3 normal, lightDir;												\n"
+    "varying vec4 colour;														\n"
+    "void main()																\n"
+    "{																			\n"
+    "	vec4 position = gl_Vertex;											    \n"
+    "	vec4 lookup = texelFetchBuffer(displacementMap, (int)mapIndex);		    \n"
+    "   float val = float(lookup.w) / 100.0f                                    \n"
+    "	colour = vec4(val, 0.0, 0.0, 0.0);                              			\n"
+    "																    		\n"
+    "	lookup.w = 1.0;												    		\n"
+    "	position += lookup;											    		\n"
+    "   gl_Position = gl_ModelViewProjectionMatrix * position;		    		\n"
+    "																			\n"
+    "	vec3 mvVertex = vec3(gl_ModelViewMatrix * position);			    	\n"
+    "	lightDir = vec3(gl_LightSource[0].position.xyz - mvVertex);				\n"
+    "	normal = gl_NormalMatrix * gl_Normal;									\n"
+    "}																			\n"
+};
 
 const char fragmentShaderSource[] = 
 {  
@@ -274,10 +226,7 @@ const char fragmentShaderSource[] =
 
 //GPU Kernels
 
-__global__ void output_TissueBlock_agent_to_VBO(
-        xmachine_memory_TissueBlock_list* agents,
-        glm::vec4* vbo,
-        glm::vec3 centralise){
+__global__ void output_TissueBlock_agent_to_VBO(xmachine_memory_TissueBlock_list* agents, glm::vec4* vbo, glm::vec3 centralise){
 
 	//global thread index
 	int index = __mul24(blockIdx.x,blockDim.x) + threadIdx.x;
@@ -289,7 +238,7 @@ __global__ void output_TissueBlock_agent_to_VBO(
     vbo[index].x = agents->x[index] - centralise.x;
     vbo[index].y = agents->y[index] - centralise.y;
     vbo[index].z = agents->z[index] - centralise.z;
-    vbo[index].w = agents->damage;
+    vbo[index].w = agents->damage[index];
 }
 
 __global__ void output_Fibroblast_agent_to_VBO(xmachine_memory_Fibroblast_list* agents, glm::vec4* vbo, glm::vec3 centralise){
@@ -312,7 +261,7 @@ void initVisualisation()
 {
 	// Create GL context
 	int   argc   = 1;
-        char glutString[] = "GLUT application"; 
+	char glutString[] = "GLUT application";
 	char *argv[] = {glutString, NULL};
 	//char *argv[] = {"GLUT application", NULL};
 	glutInit( &argc, argv);
@@ -325,7 +274,6 @@ void initVisualisation()
 			return;
 	}
 	initFibroblastShader();
-	initTissueShader();
 
 	// register callbacks
 	glutReshapeFunc( reshape);
@@ -343,13 +291,7 @@ void initVisualisation()
 	// create VBO's
 	createVBO( &sphereVerts, SPHERE_SLICES* (SPHERE_STACKS+1) * sizeof(glm::vec3));
 	createVBO( &sphereNormals, SPHERE_SLICES* (SPHERE_STACKS+1) * sizeof (glm::vec3));
-
-	createVBO( &cubevERTS, CUBE_SLICES* (CUBE_STACKS+1) * sizeof (glm::vec3));
-	createVBO( &cubeNormals, CUBE_SLICES* (CUBE_STACKS+1) * sizeof (glm::vec3));
-
-
-	setSphereVertexBufferData();
-	setCubeVertexBufferData();
+	setVertexBufferData();
 
 	// create TBO
 	createTBO(&TissueBlock_default_cgr, &TissueBlock_default_tbo, &TissueBlock_default_displacementTex, xmachine_memory_TissueBlock_MAX * sizeof( glm::vec4));
@@ -366,8 +308,7 @@ void initVisualisation()
 	
 
 	//set shader uniforms
-	glUseProgram(tissueShaderProgram);
-	glUseProgram(fibroblastShaderProgram);
+	glUseProgram(shaderProgram);
 
 	//create a events for timer
 	cudaEventCreate(&start);
@@ -571,13 +512,19 @@ int initGL()
 ////////////////////////////////////////////////////////////////////////////////
 void initFibroblastShader()
 {
-	const char* v = fibroblastVertexShaderSource;
-	const char* v = fibroblastFragmentShaderSource;
+	const char* vf = fibroblastVertexShaderSource;
+	const char* vt = tissueVertexShaderSource;
+	const char* f = fragmentShaderSource;
 
-	//vertex shader
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &v, 0);
-	glCompileShader(vertexShader);
+	/// fibroblast vertex shader
+	GLuint fibroblastVertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(fibroblastVertexShader, 1, &vf, 0);
+	glCompileShader(fibroblastVertexShader);
+
+	/// tissue vertex shader
+    GLuint tissueVertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(tissueVertexShader, 1, &vt, 0);
+	glCompileShader(tissueVertexShader);
 
 	//fragment shader
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -586,18 +533,28 @@ void initFibroblastShader()
 
 	//program
 	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
+    glAttachShader(shaderProgram, tissueVertexShader);
+    glAttachShader(shaderProgram, fibroblastVertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
 
-	// check for errors
+	/// check for errors
 	GLint status;
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &status);
+	glGetShaderiv(fibroblastVertexShader, GL_COMPILE_STATUS, &status);
 	if (status == GL_FALSE){
 		printf("ERROR: Shader Compilation Error\n");
 		char data[262144];
 		int len;
-		glGetShaderInfoLog(vertexShader, 262144, &len, data); 
+		glGetShaderInfoLog(fibroblastVertexShader, 262144, &len, data);
+		printf("%s", data);
+	}
+
+	glGetShaderiv(tissueVertexShader, GL_COMPILE_STATUS, &status);
+	if (status == GL_FALSE){
+		printf("ERROR: Shader Compilation Error\n");
+		char data[262144];
+		int len;
+		glGetShaderInfoLog(fibroblastVertexShader, 262144, &len, data);
 		printf("%s", data);
 	}
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &status);
@@ -616,54 +573,6 @@ void initFibroblastShader()
 	// get shader variables
 	vs_displacementMap = glGetUniformLocation(shaderProgram, "displacementMap");
 	vs_mapIndex = glGetAttribLocation(shaderProgram, "mapIndex"); 
-}
-void initTissueShader()
-{
-	const char* v = tissueVertexShaderSource;
-	const char* v = tissueFragmentShaderSource;
-
-	//vertex shader
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &v, 0);
-	glCompileShader(vertexShader);
-
-	//fragment shader
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &f, 0);
-	glCompileShader(fragmentShader);
-
-	//program
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	// check for errors
-	GLint status;
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &status);
-	if (status == GL_FALSE){
-		printf("ERROR: Shader Compilation Error\n");
-		char data[262144];
-		int len;
-		glGetShaderInfoLog(vertexShader, 262144, &len, data);
-		printf("%s", data);
-	}
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &status);
-	if (status == GL_FALSE){
-		printf("ERROR: Shader Compilation Error\n");
-		char data[262144];
-		int len;
-		glGetShaderInfoLog(fragmentShader, 262144, &len, data);
-		printf("%s", data);
-	}
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &status);
-	if (status == GL_FALSE){
-		printf("ERROR: Shader Program Link Error\n");
-	}
-
-	// get shader variables
-	vs_displacementMap = glGetUniformLocation(shaderProgram, "displacementMap");
-	vs_mapIndex = glGetAttribLocation(shaderProgram, "mapIndex");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -767,7 +676,7 @@ static void setSphereNormal(glm::vec3* data, int slice, int stack) {
 ////////////////////////////////////////////////////////////////////////////////
 //! Set Vertex Buffer Data
 ////////////////////////////////////////////////////////////////////////////////
-void setSphereVertexBufferData()
+void setVertexBufferData()
 {
 	int slice, stack;
 	int i;
@@ -796,37 +705,6 @@ void setSphereVertexBufferData()
     }
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 }
-void setCubeVertexBufferData()
-{
-	int slice, stack;
-	int i;
-
-	// upload vertex points data
-	glBindBuffer(GL_ARRAY_BUFFER, cubeVerts);
-	glm::vec3* verts =( glm::vec3*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-	i = 0;
-	for (slice=0; slice<CUBE_SLICES/2; slice++) {
-		for (stack=0; stack<=CUBE_STACKS; stack++) {
-			setcubeVertex(&verts[i++], slice, stack);
-			setcubeVertex(&verts[i++], slice+1, stack);
-		}
-    }
-	glUnmapBuffer(GL_ARRAY_BUFFER);
-
-	// upload vertex normal data
-	glBindBuffer(GL_ARRAY_BUFFER, cubeNormals);
-	glm::vec3* normals =( glm::vec3*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-	i = 0;
-	for (slice=0; slice<CUBE_SLICES/2; slice++) {
-		for (stack=0; stack<=CUBE_STACKS; stack++) {
-			setcubeNormal(&normals[i++], slice, stack);
-			setcubeNormal(&normals[i++], slice+1, stack);
-		}
-    }
-	glUnmapBuffer(GL_ARRAY_BUFFER);
-}
-
-
 
 
 
@@ -878,10 +756,8 @@ void display()
 	//Set light position
 	glLightfv(GL_LIGHT0, GL_POSITION, LIGHT_POSITION);
 
-    ///set shader uniforms using tissue program
-    glUseProgram(tissueShaderProgram);
-
-    //Draw TissueBlock Agents in default state
+	
+	//Draw TissueBlock Agents in default state
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_BUFFER_EXT, TissueBlock_default_displacementTex);
 	//loop
@@ -892,22 +768,19 @@ void display()
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
 
-		glBindBuffer(GL_ARRAY_BUFFER, cubeVerts);
+		glBindBuffer(GL_ARRAY_BUFFER, sphereVerts);
 		glVertexPointer(3, GL_FLOAT, 0, 0);
 
-		glBindBuffer(GL_ARRAY_BUFFER, cubeNormals);
+		glBindBuffer(GL_ARRAY_BUFFER, sphereNormals);
 		glNormalPointer(GL_FLOAT, 0, 0);
 
-		glDrawArrays(GL_TRIANGLE_STRIP, 24, CUBE_SLICES * (CUBE_STACKS+1));
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, SPHERE_SLICES * (SPHERE_STACKS+1));
 
 		glDisableClientState(GL_NORMAL_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}
-
-	///  use fibroblast shader for fibroblasts
-    glUseProgram(fibroblastShaderProgram);
-
-    //Draw Fibroblast Agents in Quiescent state
+	
+	//Draw Fibroblast Agents in Quiescent state
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_BUFFER_EXT, Fibroblast_Quiescent_displacementTex);
 	//loop
@@ -1060,10 +933,7 @@ void close()
     // Cleanup visualisation memory
     deleteVBO( &sphereVerts);
     deleteVBO( &sphereNormals);
-
-	deleteVBO( &cubeVerts);
-	deleteVBO( &cubeVerts);
-
+    
     deleteTBO( &TissueBlock_default_cgr, &TissueBlock_default_tbo);
     
     deleteTBO( &Fibroblast_Quiescent_cgr, &Fibroblast_Quiescent_tbo);

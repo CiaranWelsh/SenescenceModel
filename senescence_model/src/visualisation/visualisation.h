@@ -18,8 +18,8 @@
 #define __VISUALISATION_H
 
 // constants
-const unsigned int WINDOW_WIDTH = 512;
-const unsigned int WINDOW_HEIGHT = 512;
+const unsigned int WINDOW_WIDTH = 1000;
+const unsigned int WINDOW_HEIGHT = 1000;
 
 //frustrum
 const float NEAR_CLIP = 0.1;
