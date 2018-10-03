@@ -190,6 +190,10 @@
                     <!--5: repairing-->
                     <name>current_state</name>
                 </gpu:variable>
+                <gpu:variable>
+                    <type>int</type>
+                    <name>colour</name>
+                </gpu:variable>
             </memory>
             <functions>
                 <gpu:function>

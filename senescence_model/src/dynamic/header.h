@@ -175,6 +175,7 @@ struct __align__(16) xmachine_memory_Fibroblast
     int damage;    /**< X-machine memory variable damage of type int.*/
     int early_sen_time_counter;    /**< X-machine memory variable early_sen_time_counter of type int.*/
     int current_state;    /**< X-machine memory variable current_state of type int.*/
+    int colour;    /**< X-machine memory variable colour of type int.*/
 };
 
 
@@ -301,6 +302,7 @@ struct xmachine_memory_Fibroblast_list
     int damage [xmachine_memory_Fibroblast_MAX];    /**< X-machine memory variable list damage of type int.*/
     int early_sen_time_counter [xmachine_memory_Fibroblast_MAX];    /**< X-machine memory variable list early_sen_time_counter of type int.*/
     int current_state [xmachine_memory_Fibroblast_MAX];    /**< X-machine memory variable list current_state of type int.*/
+    int colour [xmachine_memory_Fibroblast_MAX];    /**< X-machine memory variable list colour of type int.*/
 };
 
 
@@ -780,8 +782,9 @@ __FLAME_GPU_FUNC__ void add_TissueBlock_agent(xmachine_memory_TissueBlock_list* 
  * @param damage	agent agent variable of type int
  * @param early_sen_time_counter	agent agent variable of type int
  * @param current_state	agent agent variable of type int
+ * @param colour	agent agent variable of type int
  */
-__FLAME_GPU_FUNC__ void add_Fibroblast_agent(xmachine_memory_Fibroblast_list* agents, int id, float x, float y, float z, float doublings, int damage, int early_sen_time_counter, int current_state);
+__FLAME_GPU_FUNC__ void add_Fibroblast_agent(xmachine_memory_Fibroblast_list* agents, int id, float x, float y, float z, float doublings, int damage, int early_sen_time_counter, int current_state, int colour);
 
 
 /* Graph loading function prototypes implemented in io.cu */
@@ -1173,6 +1176,15 @@ __host__ int get_Fibroblast_Quiescent_variable_early_sen_time_counter(unsigned i
  */
 __host__ int get_Fibroblast_Quiescent_variable_current_state(unsigned int index);
 
+/** int get_Fibroblast_Quiescent_variable_colour(unsigned int index)
+ * Gets the value of the colour variable of an Fibroblast agent in the Quiescent state on the host. 
+ * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
+ * This has a potentially significant performance impact if used improperly.
+ * @param index the index of the agent within the list.
+ * @return value of agent variable colour
+ */
+__host__ int get_Fibroblast_Quiescent_variable_colour(unsigned int index);
+
 /** int get_Fibroblast_EarlySenescent_variable_id(unsigned int index)
  * Gets the value of the id variable of an Fibroblast agent in the EarlySenescent state on the host. 
  * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
@@ -1244,6 +1256,15 @@ __host__ int get_Fibroblast_EarlySenescent_variable_early_sen_time_counter(unsig
  * @return value of agent variable current_state
  */
 __host__ int get_Fibroblast_EarlySenescent_variable_current_state(unsigned int index);
+
+/** int get_Fibroblast_EarlySenescent_variable_colour(unsigned int index)
+ * Gets the value of the colour variable of an Fibroblast agent in the EarlySenescent state on the host. 
+ * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
+ * This has a potentially significant performance impact if used improperly.
+ * @param index the index of the agent within the list.
+ * @return value of agent variable colour
+ */
+__host__ int get_Fibroblast_EarlySenescent_variable_colour(unsigned int index);
 
 /** int get_Fibroblast_Senescent_variable_id(unsigned int index)
  * Gets the value of the id variable of an Fibroblast agent in the Senescent state on the host. 
@@ -1317,6 +1338,15 @@ __host__ int get_Fibroblast_Senescent_variable_early_sen_time_counter(unsigned i
  */
 __host__ int get_Fibroblast_Senescent_variable_current_state(unsigned int index);
 
+/** int get_Fibroblast_Senescent_variable_colour(unsigned int index)
+ * Gets the value of the colour variable of an Fibroblast agent in the Senescent state on the host. 
+ * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
+ * This has a potentially significant performance impact if used improperly.
+ * @param index the index of the agent within the list.
+ * @return value of agent variable colour
+ */
+__host__ int get_Fibroblast_Senescent_variable_colour(unsigned int index);
+
 /** int get_Fibroblast_Proliferating_variable_id(unsigned int index)
  * Gets the value of the id variable of an Fibroblast agent in the Proliferating state on the host. 
  * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
@@ -1389,6 +1419,15 @@ __host__ int get_Fibroblast_Proliferating_variable_early_sen_time_counter(unsign
  */
 __host__ int get_Fibroblast_Proliferating_variable_current_state(unsigned int index);
 
+/** int get_Fibroblast_Proliferating_variable_colour(unsigned int index)
+ * Gets the value of the colour variable of an Fibroblast agent in the Proliferating state on the host. 
+ * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
+ * This has a potentially significant performance impact if used improperly.
+ * @param index the index of the agent within the list.
+ * @return value of agent variable colour
+ */
+__host__ int get_Fibroblast_Proliferating_variable_colour(unsigned int index);
+
 /** int get_Fibroblast_Repair_variable_id(unsigned int index)
  * Gets the value of the id variable of an Fibroblast agent in the Repair state on the host. 
  * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
@@ -1460,6 +1499,15 @@ __host__ int get_Fibroblast_Repair_variable_early_sen_time_counter(unsigned int 
  * @return value of agent variable current_state
  */
 __host__ int get_Fibroblast_Repair_variable_current_state(unsigned int index);
+
+/** int get_Fibroblast_Repair_variable_colour(unsigned int index)
+ * Gets the value of the colour variable of an Fibroblast agent in the Repair state on the host. 
+ * If the data is not currently on the host, a memcpy of the data of all agents in that state list will be issued, via a global.
+ * This has a potentially significant performance impact if used improperly.
+ * @param index the index of the agent within the list.
+ * @return value of agent variable colour
+ */
+__host__ int get_Fibroblast_Repair_variable_colour(unsigned int index);
 
 
 
@@ -1915,6 +1963,32 @@ int min_Fibroblast_Quiescent_current_state_variable();
  */
 int max_Fibroblast_Quiescent_current_state_variable();
 
+/** int reduce_Fibroblast_Quiescent_colour_variable();
+ * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the reduced variable value of the specified agent name and state
+ */
+int reduce_Fibroblast_Quiescent_colour_variable();
+
+
+
+/** int count_Fibroblast_Quiescent_colour_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Quiescent_colour_variable(int count_value);
+
+/** int min_Fibroblast_Quiescent_colour_variable();
+ * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int min_Fibroblast_Quiescent_colour_variable();
+/** int max_Fibroblast_Quiescent_colour_variable();
+ * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int max_Fibroblast_Quiescent_colour_variable();
+
 /** int reduce_Fibroblast_EarlySenescent_id_variable();
  * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the reduced variable value of the specified agent name and state
@@ -2094,6 +2168,32 @@ int min_Fibroblast_EarlySenescent_current_state_variable();
  * @return the minimum variable value of the specified agent name and state
  */
 int max_Fibroblast_EarlySenescent_current_state_variable();
+
+/** int reduce_Fibroblast_EarlySenescent_colour_variable();
+ * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the reduced variable value of the specified agent name and state
+ */
+int reduce_Fibroblast_EarlySenescent_colour_variable();
+
+
+
+/** int count_Fibroblast_EarlySenescent_colour_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_EarlySenescent_colour_variable(int count_value);
+
+/** int min_Fibroblast_EarlySenescent_colour_variable();
+ * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int min_Fibroblast_EarlySenescent_colour_variable();
+/** int max_Fibroblast_EarlySenescent_colour_variable();
+ * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int max_Fibroblast_EarlySenescent_colour_variable();
 
 /** int reduce_Fibroblast_Senescent_id_variable();
  * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
@@ -2275,6 +2375,32 @@ int min_Fibroblast_Senescent_current_state_variable();
  */
 int max_Fibroblast_Senescent_current_state_variable();
 
+/** int reduce_Fibroblast_Senescent_colour_variable();
+ * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the reduced variable value of the specified agent name and state
+ */
+int reduce_Fibroblast_Senescent_colour_variable();
+
+
+
+/** int count_Fibroblast_Senescent_colour_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Senescent_colour_variable(int count_value);
+
+/** int min_Fibroblast_Senescent_colour_variable();
+ * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int min_Fibroblast_Senescent_colour_variable();
+/** int max_Fibroblast_Senescent_colour_variable();
+ * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int max_Fibroblast_Senescent_colour_variable();
+
 /** int reduce_Fibroblast_Proliferating_id_variable();
  * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the reduced variable value of the specified agent name and state
@@ -2455,6 +2581,32 @@ int min_Fibroblast_Proliferating_current_state_variable();
  */
 int max_Fibroblast_Proliferating_current_state_variable();
 
+/** int reduce_Fibroblast_Proliferating_colour_variable();
+ * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the reduced variable value of the specified agent name and state
+ */
+int reduce_Fibroblast_Proliferating_colour_variable();
+
+
+
+/** int count_Fibroblast_Proliferating_colour_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Proliferating_colour_variable(int count_value);
+
+/** int min_Fibroblast_Proliferating_colour_variable();
+ * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int min_Fibroblast_Proliferating_colour_variable();
+/** int max_Fibroblast_Proliferating_colour_variable();
+ * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int max_Fibroblast_Proliferating_colour_variable();
+
 /** int reduce_Fibroblast_Repair_id_variable();
  * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
  * @return the reduced variable value of the specified agent name and state
@@ -2634,6 +2786,32 @@ int min_Fibroblast_Repair_current_state_variable();
  * @return the minimum variable value of the specified agent name and state
  */
 int max_Fibroblast_Repair_current_state_variable();
+
+/** int reduce_Fibroblast_Repair_colour_variable();
+ * Reduction functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the reduced variable value of the specified agent name and state
+ */
+int reduce_Fibroblast_Repair_colour_variable();
+
+
+
+/** int count_Fibroblast_Repair_colour_variable(int count_value){
+ * Count can be used for integer only agent variables and allows unique values to be counted using a reduction. Useful for generating histograms.
+ * @param count_value The unique value which should be counted
+ * @return The number of unique values of the count_value found in the agent state variable list
+ */
+int count_Fibroblast_Repair_colour_variable(int count_value);
+
+/** int min_Fibroblast_Repair_colour_variable();
+ * Min functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int min_Fibroblast_Repair_colour_variable();
+/** int max_Fibroblast_Repair_colour_variable();
+ * Max functions can be used by visualisations, step and exit functions to gather data for plotting or updating global variables
+ * @return the minimum variable value of the specified agent name and state
+ */
+int max_Fibroblast_Repair_colour_variable();
 
 
   

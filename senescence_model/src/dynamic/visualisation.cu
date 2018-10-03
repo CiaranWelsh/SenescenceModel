@@ -37,31 +37,34 @@
 GLuint sphereVerts;
 GLuint sphereNormals;
 
+GLuint cubeVerts;
+GLuint cubeNormals;
+
 //Simulation output buffers/textures
 
-cudaGraphicsResource_t A_moving_A_cgr;
-GLuint A_moving_A_tbo;
-GLuint A_moving_A_displacementTex;
+cudaGraphicsResource_t TissueBlock_default_cgr;
+GLuint TissueBlock_default_tbo;
+GLuint TissueBlock_default_displacementTex;
 
-cudaGraphicsResource_t A_change_direction_A_cgr;
-GLuint A_change_direction_A_tbo;
-GLuint A_change_direction_A_displacementTex;
+cudaGraphicsResource_t Fibroblast_Quiescent_cgr;
+GLuint Fibroblast_Quiescent_tbo;
+GLuint Fibroblast_Quiescent_displacementTex;
 
-cudaGraphicsResource_t A_get_going_again_A_cgr;
-GLuint A_get_going_again_A_tbo;
-GLuint A_get_going_again_A_displacementTex;
+cudaGraphicsResource_t Fibroblast_EarlySenescent_cgr;
+GLuint Fibroblast_EarlySenescent_tbo;
+GLuint Fibroblast_EarlySenescent_displacementTex;
 
-cudaGraphicsResource_t B_moving_B_cgr;
-GLuint B_moving_B_tbo;
-GLuint B_moving_B_displacementTex;
+cudaGraphicsResource_t Fibroblast_Senescent_cgr;
+GLuint Fibroblast_Senescent_tbo;
+GLuint Fibroblast_Senescent_displacementTex;
 
-cudaGraphicsResource_t B_change_direction_B_cgr;
-GLuint B_change_direction_B_tbo;
-GLuint B_change_direction_B_displacementTex;
+cudaGraphicsResource_t Fibroblast_Proliferating_cgr;
+GLuint Fibroblast_Proliferating_tbo;
+GLuint Fibroblast_Proliferating_displacementTex;
 
-cudaGraphicsResource_t B_get_going_again_B_cgr;
-GLuint B_get_going_again_B_tbo;
-GLuint B_get_going_again_B_displacementTex;
+cudaGraphicsResource_t Fibroblast_Repair_cgr;
+GLuint Fibroblast_Repair_tbo;
+GLuint Fibroblast_Repair_displacementTex;
 
 
 // mouse controls
@@ -77,10 +80,53 @@ bool paused = true;
 bool paused = false;
 #endif
 
+// cube vertix positions
+static const GLfloat cube_vertic_positions[] = {
+        -1.0f,-1.0f,-1.0f, // triangle 1 : begin
+        -1.0f,-1.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f, // triangle 1 : end
+        1.0f, 1.0f,-1.0f, // triangle 2 : begin
+        -1.0f,-1.0f,-1.0f,
+        -1.0f, 1.0f,-1.0f, // triangle 2 : end
+        1.0f,-1.0f, 1.0f,
+        -1.0f,-1.0f,-1.0f,
+        1.0f,-1.0f,-1.0f,
+        1.0f, 1.0f,-1.0f,
+        1.0f,-1.0f,-1.0f,
+        -1.0f,-1.0f,-1.0f,
+        -1.0f,-1.0f,-1.0f,
+        -1.0f, 1.0f, 1.0f,
+        -1.0f, 1.0f,-1.0f,
+        1.0f,-1.0f, 1.0f,
+        -1.0f,-1.0f, 1.0f,
+        -1.0f,-1.0f,-1.0f,
+        -1.0f, 1.0f, 1.0f,
+        -1.0f,-1.0f, 1.0f,
+        1.0f,-1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f,
+        1.0f,-1.0f,-1.0f,
+        1.0f, 1.0f,-1.0f,
+        1.0f,-1.0f,-1.0f,
+        1.0f, 1.0f, 1.0f,
+        1.0f,-1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f,-1.0f,
+        -1.0f, 1.0f,-1.0f,
+        1.0f, 1.0f, 1.0f,
+        -1.0f, 1.0f,-1.0f,
+        -1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f,
+        1.0f,-1.0f, 1.0f
+};
+
 // vertex Shader
-GLuint vertexShader;
-GLuint fragmentShader;
-GLuint shaderProgram;
+GLuint tissueVertexShader;
+GLuint tissueFragmentShader;
+GLuint fibroblastVertexShader;
+GLuint fibroblastFragmentShader;
+GLuint tissueShaderProgram;
+GLuint fibroblastShaderProgram;
 GLuint vs_displacementMap;
 GLuint vs_mapIndex;
 
@@ -99,12 +145,14 @@ int delay_count = 0;
 
 // prototypes
 int initGL();
-void initShader();
+void initFragmentShader();
+void initTissueShader();
 void createVBO( GLuint* vbo, GLuint size);
 void deleteVBO( GLuint* vbo);
 void createTBO( cudaGraphicsResource_t* cudaResource, GLuint* tbo, GLuint* tex, GLuint size);
 void deleteTBO( cudaGraphicsResource_t* cudaResource, GLuint* tbo);
-void setVertexBufferData();
+void setSphereVertexBufferData();
+void setCubeVertexBufferData();
 void reshape(int width, int height);
 void display();
 void close();
@@ -137,7 +185,7 @@ inline void gpuLaunchAssert(const char *file, int line, bool abort=true)
    
 }
 
-const char vertexShaderSource[] = 
+const char fibroblastVertexShaderSource[] =
 {  
 	"#extension GL_EXT_gpu_shader4 : enable										\n"
 	"uniform samplerBuffer displacementMap;										\n"
@@ -148,7 +196,7 @@ const char vertexShaderSource[] =
     "{																			\n"
 	"	vec4 position = gl_Vertex;											    \n"
 	"	vec4 lookup = texelFetchBuffer(displacementMap, (int)mapIndex);		    \n"
-    "	if (lookup.w > 7.5)	                								\n"
+    "	if (lookup.w > 7.5)	                								    \n"
 	"		colour = vec4(0.518, 0.353, 0.02, 0.0);						    	\n"
     "	else if (lookup.w > 6.5)	               								\n"
 	"		colour = vec4(1.0, 1.0, 1.0, 0.0);								    \n"
@@ -177,6 +225,30 @@ const char vertexShaderSource[] =
     "}																			\n"
 };
 
+const char tissueVertexShaderSource[] =
+        {
+                "#extension GL_EXT_gpu_shader4 : enable										\n"
+                "uniform samplerBuffer displacementMap;										\n"
+                "attribute in float mapIndex;												\n"
+                "varying vec3 normal, lightDir;												\n"
+                "varying vec4 colour;														\n"
+                "void main()																\n"
+                "{																			\n"
+                "	vec4 position = gl_Vertex;											    \n"
+                "	vec4 lookup = texelFetchBuffer(displacementMap, (int)mapIndex);	        \n"
+                "   colour = vec4(vec4.w, 0, 0)                                             \n"
+                "																    		\n"
+                "	lookup.w = 1.0;												    		\n"
+                "	position += lookup;											    		\n"
+                "   gl_Position = gl_ModelViewProjectionMatrix * position;		    		\n"
+                "																			\n"
+                "	vec3 mvVertex = vec3(gl_ModelViewMatrix * position);			    	\n"
+                "	lightDir = vec3(gl_LightSource[0].position.xyz - mvVertex);				\n"
+                "	normal = gl_NormalMatrix * gl_Normal;									\n"
+                "}																			\n"
+        };
+
+
 const char fragmentShaderSource[] = 
 {  
 	"varying vec3 normal, lightDir;												\n"
@@ -202,7 +274,10 @@ const char fragmentShaderSource[] =
 
 //GPU Kernels
 
-__global__ void output_A_agent_to_VBO(xmachine_memory_A_list* agents, glm::vec4* vbo, glm::vec3 centralise){
+__global__ void output_TissueBlock_agent_to_VBO(
+        xmachine_memory_TissueBlock_list* agents,
+        glm::vec4* vbo,
+        glm::vec3 centralise){
 
 	//global thread index
 	int index = __mul24(blockIdx.x,blockDim.x) + threadIdx.x;
@@ -214,10 +289,10 @@ __global__ void output_A_agent_to_VBO(xmachine_memory_A_list* agents, glm::vec4*
     vbo[index].x = agents->x[index] - centralise.x;
     vbo[index].y = agents->y[index] - centralise.y;
     vbo[index].z = agents->z[index] - centralise.z;
-    vbo[index].w = agents->colour[index];
+    vbo[index].w = agents->damage;
 }
 
-__global__ void output_B_agent_to_VBO(xmachine_memory_B_list* agents, glm::vec4* vbo, glm::vec3 centralise){
+__global__ void output_Fibroblast_agent_to_VBO(xmachine_memory_Fibroblast_list* agents, glm::vec4* vbo, glm::vec3 centralise){
 
 	//global thread index
 	int index = __mul24(blockIdx.x,blockDim.x) + threadIdx.x;
@@ -249,7 +324,8 @@ void initVisualisation()
 	if( !initGL()) {
 			return;
 	}
-	initShader();
+	initFibroblastShader();
+	initTissueShader();
 
 	// register callbacks
 	glutReshapeFunc( reshape);
@@ -267,24 +343,31 @@ void initVisualisation()
 	// create VBO's
 	createVBO( &sphereVerts, SPHERE_SLICES* (SPHERE_STACKS+1) * sizeof(glm::vec3));
 	createVBO( &sphereNormals, SPHERE_SLICES* (SPHERE_STACKS+1) * sizeof (glm::vec3));
-	setVertexBufferData();
+
+	createVBO( &cubevERTS, CUBE_SLICES* (CUBE_STACKS+1) * sizeof (glm::vec3));
+	createVBO( &cubeNormals, CUBE_SLICES* (CUBE_STACKS+1) * sizeof (glm::vec3));
+
+
+	setSphereVertexBufferData();
+	setCubeVertexBufferData();
 
 	// create TBO
-	createTBO(&A_moving_A_cgr, &A_moving_A_tbo, &A_moving_A_displacementTex, xmachine_memory_A_MAX * sizeof( glm::vec4));
+	createTBO(&TissueBlock_default_cgr, &TissueBlock_default_tbo, &TissueBlock_default_displacementTex, xmachine_memory_TissueBlock_MAX * sizeof( glm::vec4));
 	
-	createTBO(&A_change_direction_A_cgr, &A_change_direction_A_tbo, &A_change_direction_A_displacementTex, xmachine_memory_A_MAX * sizeof( glm::vec4));
+	createTBO(&Fibroblast_Quiescent_cgr, &Fibroblast_Quiescent_tbo, &Fibroblast_Quiescent_displacementTex, xmachine_memory_Fibroblast_MAX * sizeof( glm::vec4));
 	
-	createTBO(&A_get_going_again_A_cgr, &A_get_going_again_A_tbo, &A_get_going_again_A_displacementTex, xmachine_memory_A_MAX * sizeof( glm::vec4));
+	createTBO(&Fibroblast_EarlySenescent_cgr, &Fibroblast_EarlySenescent_tbo, &Fibroblast_EarlySenescent_displacementTex, xmachine_memory_Fibroblast_MAX * sizeof( glm::vec4));
 	
-	createTBO(&B_moving_B_cgr, &B_moving_B_tbo, &B_moving_B_displacementTex, xmachine_memory_B_MAX * sizeof( glm::vec4));
+	createTBO(&Fibroblast_Senescent_cgr, &Fibroblast_Senescent_tbo, &Fibroblast_Senescent_displacementTex, xmachine_memory_Fibroblast_MAX * sizeof( glm::vec4));
 	
-	createTBO(&B_change_direction_B_cgr, &B_change_direction_B_tbo, &B_change_direction_B_displacementTex, xmachine_memory_B_MAX * sizeof( glm::vec4));
+	createTBO(&Fibroblast_Proliferating_cgr, &Fibroblast_Proliferating_tbo, &Fibroblast_Proliferating_displacementTex, xmachine_memory_Fibroblast_MAX * sizeof( glm::vec4));
 	
-	createTBO(&B_get_going_again_B_cgr, &B_get_going_again_B_tbo, &B_get_going_again_B_displacementTex, xmachine_memory_B_MAX * sizeof( glm::vec4));
+	createTBO(&Fibroblast_Repair_cgr, &Fibroblast_Repair_tbo, &Fibroblast_Repair_displacementTex, xmachine_memory_Fibroblast_MAX * sizeof( glm::vec4));
 	
 
 	//set shader uniforms
-	glUseProgram(shaderProgram);
+	glUseProgram(tissueShaderProgram);
+	glUseProgram(fibroblastShaderProgram);
 
 	//create a events for timer
 	cudaEventCreate(&start);
@@ -327,14 +410,14 @@ void runCuda()
 	glm::vec4 *dptr;
 
 	
-	if (get_agent_A_moving_A_count() > 0)
+	if (get_agent_TissueBlock_default_count() > 0)
 	{
 		// map OpenGL buffer object for writing from CUDA
         size_t accessibleBufferSize = 0;
-        gpuErrchk(cudaGraphicsMapResources(1, &A_moving_A_cgr));
-		gpuErrchk(cudaGraphicsResourceGetMappedPointer( (void**)&dptr, &accessibleBufferSize, A_moving_A_cgr));
+        gpuErrchk(cudaGraphicsMapResources(1, &TissueBlock_default_cgr));
+		gpuErrchk(cudaGraphicsResourceGetMappedPointer( (void**)&dptr, &accessibleBufferSize, TissueBlock_default_cgr));
 		//cuda block size
-		tile_size = (int) ceil((float)get_agent_A_moving_A_count()/threads_per_tile);
+		tile_size = (int) ceil((float)get_agent_TissueBlock_default_count()/threads_per_tile);
 		grid = dim3(tile_size, 1, 1);
 		threads = dim3(threads_per_tile, 1, 1);
         
@@ -342,20 +425,20 @@ void runCuda()
         centralise = getMaximumBounds() + getMinimumBounds();
         centralise /= 2;
         
-		output_A_agent_to_VBO<<< grid, threads>>>(get_device_A_moving_A_agents(), dptr, centralise);
+		output_TissueBlock_agent_to_VBO<<< grid, threads>>>(get_device_TissueBlock_default_agents(), dptr, centralise);
 		gpuErrchkLaunch();
 		// unmap buffer object
-        gpuErrchk(cudaGraphicsUnmapResources(1, &A_moving_A_cgr));
+        gpuErrchk(cudaGraphicsUnmapResources(1, &TissueBlock_default_cgr));
 	}
 	
-	if (get_agent_A_change_direction_A_count() > 0)
+	if (get_agent_Fibroblast_Quiescent_count() > 0)
 	{
 		// map OpenGL buffer object for writing from CUDA
         size_t accessibleBufferSize = 0;
-        gpuErrchk(cudaGraphicsMapResources(1, &A_change_direction_A_cgr));
-		gpuErrchk(cudaGraphicsResourceGetMappedPointer( (void**)&dptr, &accessibleBufferSize, A_change_direction_A_cgr));
+        gpuErrchk(cudaGraphicsMapResources(1, &Fibroblast_Quiescent_cgr));
+		gpuErrchk(cudaGraphicsResourceGetMappedPointer( (void**)&dptr, &accessibleBufferSize, Fibroblast_Quiescent_cgr));
 		//cuda block size
-		tile_size = (int) ceil((float)get_agent_A_change_direction_A_count()/threads_per_tile);
+		tile_size = (int) ceil((float)get_agent_Fibroblast_Quiescent_count()/threads_per_tile);
 		grid = dim3(tile_size, 1, 1);
 		threads = dim3(threads_per_tile, 1, 1);
         
@@ -363,20 +446,20 @@ void runCuda()
         centralise = getMaximumBounds() + getMinimumBounds();
         centralise /= 2;
         
-		output_A_agent_to_VBO<<< grid, threads>>>(get_device_A_change_direction_A_agents(), dptr, centralise);
+		output_Fibroblast_agent_to_VBO<<< grid, threads>>>(get_device_Fibroblast_Quiescent_agents(), dptr, centralise);
 		gpuErrchkLaunch();
 		// unmap buffer object
-        gpuErrchk(cudaGraphicsUnmapResources(1, &A_change_direction_A_cgr));
+        gpuErrchk(cudaGraphicsUnmapResources(1, &Fibroblast_Quiescent_cgr));
 	}
 	
-	if (get_agent_A_get_going_again_A_count() > 0)
+	if (get_agent_Fibroblast_EarlySenescent_count() > 0)
 	{
 		// map OpenGL buffer object for writing from CUDA
         size_t accessibleBufferSize = 0;
-        gpuErrchk(cudaGraphicsMapResources(1, &A_get_going_again_A_cgr));
-		gpuErrchk(cudaGraphicsResourceGetMappedPointer( (void**)&dptr, &accessibleBufferSize, A_get_going_again_A_cgr));
+        gpuErrchk(cudaGraphicsMapResources(1, &Fibroblast_EarlySenescent_cgr));
+		gpuErrchk(cudaGraphicsResourceGetMappedPointer( (void**)&dptr, &accessibleBufferSize, Fibroblast_EarlySenescent_cgr));
 		//cuda block size
-		tile_size = (int) ceil((float)get_agent_A_get_going_again_A_count()/threads_per_tile);
+		tile_size = (int) ceil((float)get_agent_Fibroblast_EarlySenescent_count()/threads_per_tile);
 		grid = dim3(tile_size, 1, 1);
 		threads = dim3(threads_per_tile, 1, 1);
         
@@ -384,20 +467,20 @@ void runCuda()
         centralise = getMaximumBounds() + getMinimumBounds();
         centralise /= 2;
         
-		output_A_agent_to_VBO<<< grid, threads>>>(get_device_A_get_going_again_A_agents(), dptr, centralise);
+		output_Fibroblast_agent_to_VBO<<< grid, threads>>>(get_device_Fibroblast_EarlySenescent_agents(), dptr, centralise);
 		gpuErrchkLaunch();
 		// unmap buffer object
-        gpuErrchk(cudaGraphicsUnmapResources(1, &A_get_going_again_A_cgr));
+        gpuErrchk(cudaGraphicsUnmapResources(1, &Fibroblast_EarlySenescent_cgr));
 	}
 	
-	if (get_agent_B_moving_B_count() > 0)
+	if (get_agent_Fibroblast_Senescent_count() > 0)
 	{
 		// map OpenGL buffer object for writing from CUDA
         size_t accessibleBufferSize = 0;
-        gpuErrchk(cudaGraphicsMapResources(1, &B_moving_B_cgr));
-		gpuErrchk(cudaGraphicsResourceGetMappedPointer( (void**)&dptr, &accessibleBufferSize, B_moving_B_cgr));
+        gpuErrchk(cudaGraphicsMapResources(1, &Fibroblast_Senescent_cgr));
+		gpuErrchk(cudaGraphicsResourceGetMappedPointer( (void**)&dptr, &accessibleBufferSize, Fibroblast_Senescent_cgr));
 		//cuda block size
-		tile_size = (int) ceil((float)get_agent_B_moving_B_count()/threads_per_tile);
+		tile_size = (int) ceil((float)get_agent_Fibroblast_Senescent_count()/threads_per_tile);
 		grid = dim3(tile_size, 1, 1);
 		threads = dim3(threads_per_tile, 1, 1);
         
@@ -405,20 +488,20 @@ void runCuda()
         centralise = getMaximumBounds() + getMinimumBounds();
         centralise /= 2;
         
-		output_B_agent_to_VBO<<< grid, threads>>>(get_device_B_moving_B_agents(), dptr, centralise);
+		output_Fibroblast_agent_to_VBO<<< grid, threads>>>(get_device_Fibroblast_Senescent_agents(), dptr, centralise);
 		gpuErrchkLaunch();
 		// unmap buffer object
-        gpuErrchk(cudaGraphicsUnmapResources(1, &B_moving_B_cgr));
+        gpuErrchk(cudaGraphicsUnmapResources(1, &Fibroblast_Senescent_cgr));
 	}
 	
-	if (get_agent_B_change_direction_B_count() > 0)
+	if (get_agent_Fibroblast_Proliferating_count() > 0)
 	{
 		// map OpenGL buffer object for writing from CUDA
         size_t accessibleBufferSize = 0;
-        gpuErrchk(cudaGraphicsMapResources(1, &B_change_direction_B_cgr));
-		gpuErrchk(cudaGraphicsResourceGetMappedPointer( (void**)&dptr, &accessibleBufferSize, B_change_direction_B_cgr));
+        gpuErrchk(cudaGraphicsMapResources(1, &Fibroblast_Proliferating_cgr));
+		gpuErrchk(cudaGraphicsResourceGetMappedPointer( (void**)&dptr, &accessibleBufferSize, Fibroblast_Proliferating_cgr));
 		//cuda block size
-		tile_size = (int) ceil((float)get_agent_B_change_direction_B_count()/threads_per_tile);
+		tile_size = (int) ceil((float)get_agent_Fibroblast_Proliferating_count()/threads_per_tile);
 		grid = dim3(tile_size, 1, 1);
 		threads = dim3(threads_per_tile, 1, 1);
         
@@ -426,20 +509,20 @@ void runCuda()
         centralise = getMaximumBounds() + getMinimumBounds();
         centralise /= 2;
         
-		output_B_agent_to_VBO<<< grid, threads>>>(get_device_B_change_direction_B_agents(), dptr, centralise);
+		output_Fibroblast_agent_to_VBO<<< grid, threads>>>(get_device_Fibroblast_Proliferating_agents(), dptr, centralise);
 		gpuErrchkLaunch();
 		// unmap buffer object
-        gpuErrchk(cudaGraphicsUnmapResources(1, &B_change_direction_B_cgr));
+        gpuErrchk(cudaGraphicsUnmapResources(1, &Fibroblast_Proliferating_cgr));
 	}
 	
-	if (get_agent_B_get_going_again_B_count() > 0)
+	if (get_agent_Fibroblast_Repair_count() > 0)
 	{
 		// map OpenGL buffer object for writing from CUDA
         size_t accessibleBufferSize = 0;
-        gpuErrchk(cudaGraphicsMapResources(1, &B_get_going_again_B_cgr));
-		gpuErrchk(cudaGraphicsResourceGetMappedPointer( (void**)&dptr, &accessibleBufferSize, B_get_going_again_B_cgr));
+        gpuErrchk(cudaGraphicsMapResources(1, &Fibroblast_Repair_cgr));
+		gpuErrchk(cudaGraphicsResourceGetMappedPointer( (void**)&dptr, &accessibleBufferSize, Fibroblast_Repair_cgr));
 		//cuda block size
-		tile_size = (int) ceil((float)get_agent_B_get_going_again_B_count()/threads_per_tile);
+		tile_size = (int) ceil((float)get_agent_Fibroblast_Repair_count()/threads_per_tile);
 		grid = dim3(tile_size, 1, 1);
 		threads = dim3(threads_per_tile, 1, 1);
         
@@ -447,10 +530,10 @@ void runCuda()
         centralise = getMaximumBounds() + getMinimumBounds();
         centralise /= 2;
         
-		output_B_agent_to_VBO<<< grid, threads>>>(get_device_B_get_going_again_B_agents(), dptr, centralise);
+		output_Fibroblast_agent_to_VBO<<< grid, threads>>>(get_device_Fibroblast_Repair_agents(), dptr, centralise);
 		gpuErrchkLaunch();
 		// unmap buffer object
-        gpuErrchk(cudaGraphicsUnmapResources(1, &B_get_going_again_B_cgr));
+        gpuErrchk(cudaGraphicsUnmapResources(1, &Fibroblast_Repair_cgr));
 	}
 	
 }
@@ -486,10 +569,10 @@ int initGL()
 ////////////////////////////////////////////////////////////////////////////////
 //! Initialize GLSL Vertex Shader
 ////////////////////////////////////////////////////////////////////////////////
-void initShader()
+void initFibroblastShader()
 {
-	const char* v = vertexShaderSource;
-	const char* f = fragmentShaderSource;
+	const char* v = fibroblastVertexShaderSource;
+	const char* v = fibroblastFragmentShaderSource;
 
 	//vertex shader
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -533,6 +616,54 @@ void initShader()
 	// get shader variables
 	vs_displacementMap = glGetUniformLocation(shaderProgram, "displacementMap");
 	vs_mapIndex = glGetAttribLocation(shaderProgram, "mapIndex"); 
+}
+void initTissueShader()
+{
+	const char* v = tissueVertexShaderSource;
+	const char* v = tissueFragmentShaderSource;
+
+	//vertex shader
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &v, 0);
+	glCompileShader(vertexShader);
+
+	//fragment shader
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &f, 0);
+	glCompileShader(fragmentShader);
+
+	//program
+	shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+
+	// check for errors
+	GLint status;
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &status);
+	if (status == GL_FALSE){
+		printf("ERROR: Shader Compilation Error\n");
+		char data[262144];
+		int len;
+		glGetShaderInfoLog(vertexShader, 262144, &len, data);
+		printf("%s", data);
+	}
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &status);
+	if (status == GL_FALSE){
+		printf("ERROR: Shader Compilation Error\n");
+		char data[262144];
+		int len;
+		glGetShaderInfoLog(fragmentShader, 262144, &len, data);
+		printf("%s", data);
+	}
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &status);
+	if (status == GL_FALSE){
+		printf("ERROR: Shader Program Link Error\n");
+	}
+
+	// get shader variables
+	vs_displacementMap = glGetUniformLocation(shaderProgram, "displacementMap");
+	vs_mapIndex = glGetAttribLocation(shaderProgram, "mapIndex");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -636,7 +767,7 @@ static void setSphereNormal(glm::vec3* data, int slice, int stack) {
 ////////////////////////////////////////////////////////////////////////////////
 //! Set Vertex Buffer Data
 ////////////////////////////////////////////////////////////////////////////////
-void setVertexBufferData()
+void setSphereVertexBufferData()
 {
 	int slice, stack;
 	int i;
@@ -665,6 +796,37 @@ void setVertexBufferData()
     }
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 }
+void setCubeVertexBufferData()
+{
+	int slice, stack;
+	int i;
+
+	// upload vertex points data
+	glBindBuffer(GL_ARRAY_BUFFER, cubeVerts);
+	glm::vec3* verts =( glm::vec3*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+	i = 0;
+	for (slice=0; slice<CUBE_SLICES/2; slice++) {
+		for (stack=0; stack<=CUBE_STACKS; stack++) {
+			setcubeVertex(&verts[i++], slice, stack);
+			setcubeVertex(&verts[i++], slice+1, stack);
+		}
+    }
+	glUnmapBuffer(GL_ARRAY_BUFFER);
+
+	// upload vertex normal data
+	glBindBuffer(GL_ARRAY_BUFFER, cubeNormals);
+	glm::vec3* normals =( glm::vec3*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+	i = 0;
+	for (slice=0; slice<CUBE_SLICES/2; slice++) {
+		for (stack=0; stack<=CUBE_STACKS; stack++) {
+			setcubeNormal(&normals[i++], slice, stack);
+			setcubeNormal(&normals[i++], slice+1, stack);
+		}
+    }
+	glUnmapBuffer(GL_ARRAY_BUFFER);
+}
+
+
 
 
 
@@ -716,12 +878,40 @@ void display()
 	//Set light position
 	glLightfv(GL_LIGHT0, GL_POSITION, LIGHT_POSITION);
 
-	
-	//Draw A Agents in moving_A state
+    ///set shader uniforms using tissue program
+    glUseProgram(tissueShaderProgram);
+
+    //Draw TissueBlock Agents in default state
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_BUFFER_EXT, A_moving_A_displacementTex);
+	glBindTexture(GL_TEXTURE_BUFFER_EXT, TissueBlock_default_displacementTex);
 	//loop
-	for (int i=0; i< get_agent_A_moving_A_count(); i++){
+	for (int i=0; i< get_agent_TissueBlock_default_count(); i++){
+		glVertexAttrib1f(vs_mapIndex, (float)i);
+		
+		//draw using vertex and attribute data on the gpu (fast)
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_NORMAL_ARRAY);
+
+		glBindBuffer(GL_ARRAY_BUFFER, cubeVerts);
+		glVertexPointer(3, GL_FLOAT, 0, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, cubeNormals);
+		glNormalPointer(GL_FLOAT, 0, 0);
+
+		glDrawArrays(GL_TRIANGLE_STRIP, 24, CUBE_SLICES * (CUBE_STACKS+1));
+
+		glDisableClientState(GL_NORMAL_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+	}
+
+	///  use fibroblast shader for fibroblasts
+    glUseProgram(fibroblastShaderProgram);
+
+    //Draw Fibroblast Agents in Quiescent state
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_BUFFER_EXT, Fibroblast_Quiescent_displacementTex);
+	//loop
+	for (int i=0; i< get_agent_Fibroblast_Quiescent_count(); i++){
 		glVertexAttrib1f(vs_mapIndex, (float)i);
 		
 		//draw using vertex and attribute data on the gpu (fast)
@@ -740,11 +930,11 @@ void display()
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}
 	
-	//Draw A Agents in change_direction_A state
+	//Draw Fibroblast Agents in EarlySenescent state
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_BUFFER_EXT, A_change_direction_A_displacementTex);
+	glBindTexture(GL_TEXTURE_BUFFER_EXT, Fibroblast_EarlySenescent_displacementTex);
 	//loop
-	for (int i=0; i< get_agent_A_change_direction_A_count(); i++){
+	for (int i=0; i< get_agent_Fibroblast_EarlySenescent_count(); i++){
 		glVertexAttrib1f(vs_mapIndex, (float)i);
 		
 		//draw using vertex and attribute data on the gpu (fast)
@@ -763,11 +953,11 @@ void display()
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}
 	
-	//Draw A Agents in get_going_again_A state
+	//Draw Fibroblast Agents in Senescent state
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_BUFFER_EXT, A_get_going_again_A_displacementTex);
+	glBindTexture(GL_TEXTURE_BUFFER_EXT, Fibroblast_Senescent_displacementTex);
 	//loop
-	for (int i=0; i< get_agent_A_get_going_again_A_count(); i++){
+	for (int i=0; i< get_agent_Fibroblast_Senescent_count(); i++){
 		glVertexAttrib1f(vs_mapIndex, (float)i);
 		
 		//draw using vertex and attribute data on the gpu (fast)
@@ -786,11 +976,11 @@ void display()
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}
 	
-	//Draw B Agents in moving_B state
+	//Draw Fibroblast Agents in Proliferating state
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_BUFFER_EXT, B_moving_B_displacementTex);
+	glBindTexture(GL_TEXTURE_BUFFER_EXT, Fibroblast_Proliferating_displacementTex);
 	//loop
-	for (int i=0; i< get_agent_B_moving_B_count(); i++){
+	for (int i=0; i< get_agent_Fibroblast_Proliferating_count(); i++){
 		glVertexAttrib1f(vs_mapIndex, (float)i);
 		
 		//draw using vertex and attribute data on the gpu (fast)
@@ -809,34 +999,11 @@ void display()
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}
 	
-	//Draw B Agents in change_direction_B state
+	//Draw Fibroblast Agents in Repair state
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_BUFFER_EXT, B_change_direction_B_displacementTex);
+	glBindTexture(GL_TEXTURE_BUFFER_EXT, Fibroblast_Repair_displacementTex);
 	//loop
-	for (int i=0; i< get_agent_B_change_direction_B_count(); i++){
-		glVertexAttrib1f(vs_mapIndex, (float)i);
-		
-		//draw using vertex and attribute data on the gpu (fast)
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_NORMAL_ARRAY);
-
-		glBindBuffer(GL_ARRAY_BUFFER, sphereVerts);
-		glVertexPointer(3, GL_FLOAT, 0, 0);
-
-		glBindBuffer(GL_ARRAY_BUFFER, sphereNormals);
-		glNormalPointer(GL_FLOAT, 0, 0);
-
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, SPHERE_SLICES * (SPHERE_STACKS+1));
-
-		glDisableClientState(GL_NORMAL_ARRAY);
-		glDisableClientState(GL_VERTEX_ARRAY);
-	}
-	
-	//Draw B Agents in get_going_again_B state
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_BUFFER_EXT, B_get_going_again_B_displacementTex);
-	//loop
-	for (int i=0; i< get_agent_B_get_going_again_B_count(); i++){
+	for (int i=0; i< get_agent_Fibroblast_Repair_count(); i++){
 		glVertexAttrib1f(vs_mapIndex, (float)i);
 		
 		//draw using vertex and attribute data on the gpu (fast)
@@ -893,18 +1060,21 @@ void close()
     // Cleanup visualisation memory
     deleteVBO( &sphereVerts);
     deleteVBO( &sphereNormals);
+
+	deleteVBO( &cubeVerts);
+	deleteVBO( &cubeVerts);
+
+    deleteTBO( &TissueBlock_default_cgr, &TissueBlock_default_tbo);
     
-    deleteTBO( &A_moving_A_cgr, &A_moving_A_tbo);
+    deleteTBO( &Fibroblast_Quiescent_cgr, &Fibroblast_Quiescent_tbo);
     
-    deleteTBO( &A_change_direction_A_cgr, &A_change_direction_A_tbo);
+    deleteTBO( &Fibroblast_EarlySenescent_cgr, &Fibroblast_EarlySenescent_tbo);
     
-    deleteTBO( &A_get_going_again_A_cgr, &A_get_going_again_A_tbo);
+    deleteTBO( &Fibroblast_Senescent_cgr, &Fibroblast_Senescent_tbo);
     
-    deleteTBO( &B_moving_B_cgr, &B_moving_B_tbo);
+    deleteTBO( &Fibroblast_Proliferating_cgr, &Fibroblast_Proliferating_tbo);
     
-    deleteTBO( &B_change_direction_B_cgr, &B_change_direction_B_tbo);
-    
-    deleteTBO( &B_get_going_again_B_cgr, &B_get_going_again_B_tbo);
+    deleteTBO( &Fibroblast_Repair_cgr, &Fibroblast_Repair_tbo);
     
     // Destroy cuda events
     cudaEventDestroy(start);

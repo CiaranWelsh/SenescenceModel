@@ -30,6 +30,10 @@ const int SPHERE_SLICES = 20;
 const int SPHERE_STACKS = 20;
 const float SPHERE_RADIUS = 0.025f;
 
+const int CUBE_SLICES = 20;
+const int CUBE_STACKS = 20;
+
+
 //Viewing Distance
 const float VIEW_DISTANCE = 1.5;
 

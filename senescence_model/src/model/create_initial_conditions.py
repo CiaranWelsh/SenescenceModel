@@ -33,7 +33,7 @@ def add_agent(root, agent_attributes):
     return root
 
 
-def add_fibroblast_agents(n, root, lower_bound=0, upper_bound=10):
+def add_fibroblast_agents(n, root, lower_bound=0, upper_bound=1):
     """
     construct tissue agent data
     """
@@ -55,6 +55,7 @@ def add_fibroblast_agents(n, root, lower_bound=0, upper_bound=10):
             'damage': damage,
             'current_State': current_state,
             'early_sen_time_counter': early_sen_time_counter,
+            'colour': 0
         }
         add_agent(root, agent_args)
 
@@ -62,11 +63,12 @@ def add_fibroblast_agents(n, root, lower_bound=0, upper_bound=10):
 
 
 
-def add_tissue_agents(scale=1, grid_size=10):
+def add_tissue_agents(scale=0.1, grid_size=1):
     centers = []
-    for x in range(grid_size):
-        for y in range(grid_size):
-            for z in range(grid_size):
+    resolution = grid_size / float(scale)
+    for x in numpy.linspace(0, 1, resolution):
+        for y in numpy.linspace(0, 1, resolution):
+            for z in numpy.linspace(0, 1, resolution):
                 bottom_left_back = numpy.array([x, y, z])
                 bottom_left_front = numpy.array([x, y + scale, z])
                 bottom_right_back = numpy.array([x + scale, y, z])
@@ -115,10 +117,10 @@ def to_file(root, fname):
 
 if __name__ == '__main__':
     root = create_root()
-    root = add_fibroblast_agents(10, root)
-    root = add_tissue_agents(1, 3)
+    root = add_fibroblast_agents(100, root, lower_bound=0, upper_bound=1)
+    root = add_tissue_agents(scale=1, grid_size=10)
 
-    fname = os.path.join(os.path.dirname(__file__), 'init.xml')
+    fname = os.path.join(os.path.dirname(__file__), 'init10.xml')
 
     to_file(root, fname)
 

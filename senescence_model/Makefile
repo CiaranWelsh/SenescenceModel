@@ -2,10 +2,10 @@
 MODEL := senescence_model
 
 # Flag indicating if a visualistion target should exist
-HAS_VISUALISATION := 0
+HAS_VISUALISATION := 1
 
 # Flag indicating if a custom visulisation is used. 0 = no, 1 = yes.
-CUSTOM_VISUALISATION := 0
+CUSTOM_VISUALISATION := 1
 
 # Relative path to the root FLAME GPU directory. Must end with a trainling slash.
 FLAMEGPU_ROOT := ../
@@ -15,6 +15,17 @@ MODEL_BIN_DIR := $(MODEL)/bin
 
 # Directory for temprorary files
 MODEL_BUILD_DIR := ./build
+
+# Custom gencode arguments for this model (if any), otherwise the defaults for FLAME GPU are used from common.mk
+# SMS ?= 50 60
+
+# Optionally Disable XSLT generation of certain files. 
+# TRANSFORM_HEADER_XSLT_DISABLED := 1
+# TRANSFORM_FLAMEGPU_KERNALS_XSLT_DISABLED := 1
+# TRANSFORM_IO_XSLT_DISABLED := 1
+# TRANSFORM_SIMULATION_XSLT_DISABLED := 1
+# TRANSFORM_MAIN_XSLT_DISABLED := 1
+TRANSFORM_VISUALISTION_XSLT_DISABLED := 1
 
 # This file contains common variables, rules and targets for compilation of
 # the FLAME GPU MODEL projects, but this depnds upon several variables being

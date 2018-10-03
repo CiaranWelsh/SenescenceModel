@@ -321,6 +321,11 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
 		fputs(data, file);
 		fputs("</current_state>\n", file);
         
+		fputs("<colour>", file);
+        sprintf(data, "%d", h_Fibroblasts_Quiescent->colour[i]);
+		fputs(data, file);
+		fputs("</colour>\n", file);
+        
 		fputs("</xagent>\n", file);
 	}
 	//Write each Fibroblast agent to xml
@@ -367,6 +372,11 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
         sprintf(data, "%d", h_Fibroblasts_EarlySenescent->current_state[i]);
 		fputs(data, file);
 		fputs("</current_state>\n", file);
+        
+		fputs("<colour>", file);
+        sprintf(data, "%d", h_Fibroblasts_EarlySenescent->colour[i]);
+		fputs(data, file);
+		fputs("</colour>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
@@ -415,6 +425,11 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
 		fputs(data, file);
 		fputs("</current_state>\n", file);
         
+		fputs("<colour>", file);
+        sprintf(data, "%d", h_Fibroblasts_Senescent->colour[i]);
+		fputs(data, file);
+		fputs("</colour>\n", file);
+        
 		fputs("</xagent>\n", file);
 	}
 	//Write each Fibroblast agent to xml
@@ -461,6 +476,11 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
         sprintf(data, "%d", h_Fibroblasts_Proliferating->current_state[i]);
 		fputs(data, file);
 		fputs("</current_state>\n", file);
+        
+		fputs("<colour>", file);
+        sprintf(data, "%d", h_Fibroblasts_Proliferating->colour[i]);
+		fputs(data, file);
+		fputs("</colour>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
@@ -509,6 +529,11 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
 		fputs(data, file);
 		fputs("</current_state>\n", file);
         
+		fputs("<colour>", file);
+        sprintf(data, "%d", h_Fibroblasts_Repair->colour[i]);
+		fputs(data, file);
+		fputs("</colour>\n", file);
+        
 		fputs("</xagent>\n", file);
 	}
 	
@@ -554,6 +579,7 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
     int in_Fibroblast_damage;
     int in_Fibroblast_early_sen_time_counter;
     int in_Fibroblast_current_state;
+    int in_Fibroblast_colour;
     
     /* tags for environment global variables */
     int in_env;
@@ -607,6 +633,7 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 	int Fibroblast_damage;
 	int Fibroblast_early_sen_time_counter;
 	int Fibroblast_current_state;
+	int Fibroblast_colour;
 
     /* Variables for environment variables */
     float env_TISSUE_DAMAGE_PROB;
@@ -655,6 +682,7 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 	in_Fibroblast_damage = 0;
 	in_Fibroblast_early_sen_time_counter = 0;
 	in_Fibroblast_current_state = 0;
+	in_Fibroblast_colour = 0;
     in_env_TISSUE_DAMAGE_PROB = 0;
     in_env_EARLY_SENESCENT_MIGRATION_SCALE = 0;
     in_env_SENESCENT_MIGRATION_SCALE = 0;
@@ -694,6 +722,7 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 		h_Fibroblasts->damage[k] = 0;
 		h_Fibroblasts->early_sen_time_counter[k] = 0;
 		h_Fibroblasts->current_state[k] = 0;
+		h_Fibroblasts->colour[k] = 0;
 	}
 	
 
@@ -711,6 +740,7 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
     Fibroblast_damage = 0;
     Fibroblast_early_sen_time_counter = 0;
     Fibroblast_current_state = 0;
+    Fibroblast_colour = 0;
 
     /* Default variables for environment variables */
     env_TISSUE_DAMAGE_PROB = 0;
@@ -887,6 +917,7 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 					h_Fibroblasts->damage[*h_xmachine_memory_Fibroblast_count] = Fibroblast_damage;
 					h_Fibroblasts->early_sen_time_counter[*h_xmachine_memory_Fibroblast_count] = Fibroblast_early_sen_time_counter;
 					h_Fibroblasts->current_state[*h_xmachine_memory_Fibroblast_count] = Fibroblast_current_state;
+					h_Fibroblasts->colour[*h_xmachine_memory_Fibroblast_count] = Fibroblast_colour;
 					(*h_xmachine_memory_Fibroblast_count) ++;	
 				}
 				else
@@ -910,6 +941,7 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
                 Fibroblast_damage = 0;
                 Fibroblast_early_sen_time_counter = 0;
                 Fibroblast_current_state = 0;
+                Fibroblast_colour = 0;
                 
                 in_xagent = 0;
 			}
@@ -939,6 +971,8 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 			if(strcmp(buffer, "/early_sen_time_counter") == 0) in_Fibroblast_early_sen_time_counter = 0;
 			if(strcmp(buffer, "current_state") == 0) in_Fibroblast_current_state = 1;
 			if(strcmp(buffer, "/current_state") == 0) in_Fibroblast_current_state = 0;
+			if(strcmp(buffer, "colour") == 0) in_Fibroblast_colour = 1;
+			if(strcmp(buffer, "/colour") == 0) in_Fibroblast_colour = 0;
 			
             /* environment variables */
             if(strcmp(buffer, "TISSUE_DAMAGE_PROB") == 0) in_env_TISSUE_DAMAGE_PROB = 1;
@@ -1029,6 +1063,9 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
                 }
 				if(in_Fibroblast_current_state){
                     Fibroblast_current_state = (int) fpgu_strtol(buffer); 
+                }
+				if(in_Fibroblast_colour){
+                    Fibroblast_colour = (int) fpgu_strtol(buffer); 
                 }
 				
             }

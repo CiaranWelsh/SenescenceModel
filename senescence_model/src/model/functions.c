@@ -55,7 +55,7 @@ inline __device__ glm::vec3 compute_next_fibroblast_location(
 // scale:   proportion of the distance between fibroblast and damaged tissue to traverse
 // Note:    this means of fibroblast migration is not ideal and will probably change, once
 //          have simulations running
-return add_a_to_b(a, (b- a)* scale);
+return add_a_to_b(a, (b-a)* scale);
 }
 
 
@@ -64,11 +64,11 @@ return add_a_to_b(a, (b- a)* scale);
  * Automatically generated using functions.xslt
  */
 __FLAME_GPU_INIT_FUNC__ void setConstants() {
-    float TISSUE_DAMAGE_PROB = 0.01f;
-    float EARLY_SENESCENT_MIGRATION_SCALE = 0.001f;
+    float TISSUE_DAMAGE_PROB = 0.25f;
+    float EARLY_SENESCENT_MIGRATION_SCALE = 0.1f;
     float SENESCENT_MIGRATION_SCALE = 0.001f;
-    float QUIESCENT_MIGRATION_SCALE = 0.01f;
-    float PROLIFERATION_PROB = 0.1f;
+    float QUIESCENT_MIGRATION_SCALE = 0.0001f;
+    float PROLIFERATION_PROB = 0.0001f;
 
     float BYSTANDER_DISTANCE = 0.1f;
     float BYSTANDER_PROB = 0.1f;
@@ -449,6 +449,7 @@ __FLAME_GPU_FUNC__ int TransitionToProliferating(
     float random_number = rnd<CONTINUOUS>(rand48);
     if (random_number < PROLIFERATION_PROB) {
         agent->current_state = 4;
+        agent->colour = 4;
     }
 
     return 0;
@@ -473,6 +474,7 @@ __FLAME_GPU_FUNC__ int Proliferation(
     int damage = 0;
     int early_sen_time_counter = 0;
     int current_state = 0;
+    int colour = 0;
 
     add_Fibroblast_agent(
             Fibroblast_agents,
@@ -480,9 +482,11 @@ __FLAME_GPU_FUNC__ int Proliferation(
             doublings,
             damage,
             early_sen_time_counter,
-            current_state);
+            current_state,
+            colour);
 
     agent->current_state = 0;
+    agent->colour = 0;
     agent->doublings += 1;
     return 0;
 }
@@ -617,6 +621,7 @@ __FLAME_GPU_FUNC__ int TransitionToFullSenescence(
     float random_number = rnd<CONTINUOUS>(rand48);
     if (random_number < TRANSITION_TO_FULL_SENESCENCE_PROB) {
         agent->current_state = 2;
+        agent->colour = 2;
     }
 
     return 0;
@@ -695,6 +700,7 @@ __FLAME_GPU_FUNC__ int DetectDamage(
 
         if (separation < REPAIR_RADIUS){
             agent->current_state = 5;
+            agent->colour = 5;
         }
 
         current_message = get_next_tissue_damage_report_message(
