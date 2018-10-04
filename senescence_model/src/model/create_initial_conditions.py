@@ -53,7 +53,7 @@ def add_fibroblast_agents(n, root, lower_bound=0, upper_bound=1):
             'z': z,
             'doublings': doublings,
             'damage': damage,
-            'current_State': current_state,
+            'currentState': current_state,
             'early_sen_time_counter': early_sen_time_counter,
             'colour': 0
         }

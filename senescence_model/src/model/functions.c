@@ -65,13 +65,13 @@ return add_a_to_b(a, (b-a)* scale);
  */
 __FLAME_GPU_INIT_FUNC__ void setConstants() {
     float TISSUE_DAMAGE_PROB = 0.1f;
-    float EARLY_SENESCENT_MIGRATION_SCALE = 0.1f;
-    float SENESCENT_MIGRATION_SCALE = 0.001f;
-    float QUIESCENT_MIGRATION_SCALE = 0.0001f;
+    float EARLY_SENESCENT_MIGRATION_SCALE = 0.0005f;
+    float SENESCENT_MIGRATION_SCALE = 0.0005f;
+    float QUIESCENT_MIGRATION_SCALE = 0.00005f;
     float PROLIFERATION_PROB = 0.0001f;
 
-    float BYSTANDER_DISTANCE = 0.1f;
-    float BYSTANDER_PROB = 0.1f;
+    float BYSTANDER_DISTANCE = 0.01f;
+    float BYSTANDER_PROB = 0.01f;
 
     int EXCESSIVE_DAMAGE_AMOUNT = 100;
     float EXCESSIVE_DAMAGE_PROB = 0.1f;
@@ -81,12 +81,12 @@ __FLAME_GPU_INIT_FUNC__ void setConstants() {
 
     int EARLY_SENESCENT_MATURATION_TIME = 10000;
 
-    float TRANSITION_TO_FULL_SENESCENCE_PROB = 0.1f;
+    float TRANSITION_TO_FULL_SENESCENCE_PROB = 0.01f;
 
     float CLEARANCE_EARLY_SEN_PROB = 0.1f;
     float CLEARANCE_SEN_PROB = 0.1f;
 
-    float REPAIR_RADIUS = 0.01f;
+    float REPAIR_RADIUS = 0.001f;
 
 
 

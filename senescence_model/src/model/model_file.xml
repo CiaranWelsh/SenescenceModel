@@ -525,16 +525,16 @@
                 <name>TransitionToFullSenescence</name>
             </gpu:layerFunction>
         </layer>
-        <layer>
-            <gpu:layerFunction>
-                <name>ClearanceOfEarlySenescent</name>
-            </gpu:layerFunction>
-        </layer>
-        <layer>
-            <gpu:layerFunction>
-                <name>ClearanceOfSenescent</name>
-            </gpu:layerFunction>
-        </layer>
+        <!--<layer>-->
+            <!--<gpu:layerFunction>-->
+                <!--<name>ClearanceOfEarlySenescent</name>-->
+            <!--</gpu:layerFunction>-->
+        <!--</layer>-->
+        <!--<layer>-->
+            <!--<gpu:layerFunction>-->
+                <!--<name>ClearanceOfSenescent</name>-->
+            <!--</gpu:layerFunction>-->
+        <!--</layer>-->
         <layer>
             <gpu:layerFunction>
                 <name>DetectDamage</name>

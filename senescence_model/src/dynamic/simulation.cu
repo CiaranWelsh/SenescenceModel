@@ -1274,20 +1274,6 @@ PROFILE_SCOPED_RANGE("singleIteration");
 #if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
 	cudaEventRecord(instrument_start);
 #endif
-	cudaDeviceSynchronize();
-  
-	/* Layer 10*/
-	
-#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
-	cudaEventRecord(instrument_start);
-#endif
-	cudaDeviceSynchronize();
-  
-	/* Layer 11*/
-	
-#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
-	cudaEventRecord(instrument_start);
-#endif
 	
     PROFILE_PUSH_RANGE("Fibroblast_DetectDamage");
 	Fibroblast_DetectDamage(stream1);
