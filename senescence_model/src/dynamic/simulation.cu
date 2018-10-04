@@ -187,38 +187,6 @@ unsigned int h_Fibroblasts_Repair_variable_colour_data_iteration;
 
 /* Message Memory */
 
-/* fibroblast_damage_report Message variables */
-xmachine_message_fibroblast_damage_report_list* h_fibroblast_damage_reports;         /**< Pointer to message list on host*/
-xmachine_message_fibroblast_damage_report_list* d_fibroblast_damage_reports;         /**< Pointer to message list on device*/
-xmachine_message_fibroblast_damage_report_list* d_fibroblast_damage_reports_swap;    /**< Pointer to message swap list on device (used for holding optional messages)*/
-/* Non partitioned and spatial partitioned message variables  */
-int h_message_fibroblast_damage_report_count;         /**< message list counter*/
-int h_message_fibroblast_damage_report_output_type;   /**< message output type (single or optional)*/
-/* Spatial Partitioning Variables*/
-#ifdef FAST_ATOMIC_SORTING
-	uint * d_xmachine_message_fibroblast_damage_report_local_bin_index;	  /**< index offset within the assigned bin */
-	uint * d_xmachine_message_fibroblast_damage_report_unsorted_index;		/**< unsorted index (hash) value for message */
-    // Values for CUB exclusive scan of spatially partitioned variables
-    void * d_temp_scan_storage_xmachine_message_fibroblast_damage_report;
-    size_t temp_scan_bytes_xmachine_message_fibroblast_damage_report;
-#else
-	uint * d_xmachine_message_fibroblast_damage_report_keys;	  /**< message sort identifier keys*/
-	uint * d_xmachine_message_fibroblast_damage_report_values;  /**< message sort identifier values */
-#endif
-xmachine_message_fibroblast_damage_report_PBM * d_fibroblast_damage_report_partition_matrix;  /**< Pointer to PCB matrix */
-glm::vec3 h_message_fibroblast_damage_report_min_bounds;           /**< min bounds (x,y,z) of partitioning environment */
-glm::vec3 h_message_fibroblast_damage_report_max_bounds;           /**< max bounds (x,y,z) of partitioning environment */
-glm::ivec3 h_message_fibroblast_damage_report_partitionDim;           /**< partition dimensions (x,y,z) of partitioning environment */
-float h_message_fibroblast_damage_report_radius;                 /**< partition radius (used to determin the size of the partitions) */
-/* Texture offset values for host */
-int h_tex_xmachine_message_fibroblast_damage_report_id_offset;
-int h_tex_xmachine_message_fibroblast_damage_report_x_offset;
-int h_tex_xmachine_message_fibroblast_damage_report_y_offset;
-int h_tex_xmachine_message_fibroblast_damage_report_z_offset;
-int h_tex_xmachine_message_fibroblast_damage_report_damage_offset;
-int h_tex_xmachine_message_fibroblast_damage_report_pbm_start_offset;
-int h_tex_xmachine_message_fibroblast_damage_report_pbm_end_or_count_offset;
-
 /* tissue_damage_report Message variables */
 xmachine_message_tissue_damage_report_list* h_tissue_damage_reports;         /**< Pointer to message list on host*/
 xmachine_message_tissue_damage_report_list* d_tissue_damage_reports;         /**< Pointer to message list on device*/
@@ -250,22 +218,6 @@ int h_tex_xmachine_message_tissue_damage_report_z_offset;
 int h_tex_xmachine_message_tissue_damage_report_damage_offset;
 int h_tex_xmachine_message_tissue_damage_report_pbm_start_offset;
 int h_tex_xmachine_message_tissue_damage_report_pbm_end_or_count_offset;
-
-/* doublings Message variables */
-xmachine_message_doublings_list* h_doublingss;         /**< Pointer to message list on host*/
-xmachine_message_doublings_list* d_doublingss;         /**< Pointer to message list on device*/
-xmachine_message_doublings_list* d_doublingss_swap;    /**< Pointer to message swap list on device (used for holding optional messages)*/
-/* Non partitioned and spatial partitioned message variables  */
-int h_message_doublings_count;         /**< message list counter*/
-int h_message_doublings_output_type;   /**< message output type (single or optional)*/
-
-/* count Message variables */
-xmachine_message_count_list* h_counts;         /**< Pointer to message list on host*/
-xmachine_message_count_list* d_counts;         /**< Pointer to message list on device*/
-xmachine_message_count_list* d_counts_swap;    /**< Pointer to message swap list on device (used for holding optional messages)*/
-/* Non partitioned and spatial partitioned message variables  */
-int h_message_count_count;         /**< message list counter*/
-int h_message_count_output_type;   /**< message output type (single or optional)*/
 
 /* fibroblast_location_report Message variables */
 xmachine_message_fibroblast_location_report_list* h_fibroblast_location_reports;         /**< Pointer to message list on host*/
@@ -373,11 +325,6 @@ void Fibroblast_EarlySenescentMigration(cudaStream_t &stream);
  * Agent function prototype for QuiescentTakesDamage function of Fibroblast agent
  */
 void Fibroblast_QuiescentTakesDamage(cudaStream_t &stream);
-
-/** Fibroblast_QuiescentSendDamageReport
- * Agent function prototype for QuiescentSendDamageReport function of Fibroblast agent
- */
-void Fibroblast_QuiescentSendDamageReport(cudaStream_t &stream);
 
 /** Fibroblast_TransitionToProliferating
  * Agent function prototype for TransitionToProliferating function of Fibroblast agent
@@ -589,14 +536,8 @@ void initialise(char * inputfile){
 	h_Fibroblasts_Repair = (xmachine_memory_Fibroblast_list*)malloc(xmachine_Fibroblast_SoA_size);
 
 	/* Message memory allocation (CPU) */
-	int message_fibroblast_damage_report_SoA_size = sizeof(xmachine_message_fibroblast_damage_report_list);
-	h_fibroblast_damage_reports = (xmachine_message_fibroblast_damage_report_list*)malloc(message_fibroblast_damage_report_SoA_size);
 	int message_tissue_damage_report_SoA_size = sizeof(xmachine_message_tissue_damage_report_list);
 	h_tissue_damage_reports = (xmachine_message_tissue_damage_report_list*)malloc(message_tissue_damage_report_SoA_size);
-	int message_doublings_SoA_size = sizeof(xmachine_message_doublings_list);
-	h_doublingss = (xmachine_message_doublings_list*)malloc(message_doublings_SoA_size);
-	int message_count_SoA_size = sizeof(xmachine_message_count_list);
-	h_counts = (xmachine_message_count_list*)malloc(message_count_SoA_size);
 	int message_fibroblast_location_report_SoA_size = sizeof(xmachine_message_fibroblast_location_report_list);
 	h_fibroblast_location_reports = (xmachine_message_fibroblast_location_report_list*)malloc(message_fibroblast_location_report_SoA_size);
 
@@ -608,25 +549,12 @@ void initialise(char * inputfile){
     PROFILE_POP_RANGE(); //"allocate host"
 	
 			
-	/* Set spatial partitioning fibroblast_damage_report message variables (min_bounds, max_bounds)*/
-	h_message_fibroblast_damage_report_radius = (float)1;
-	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_damage_report_radius, &h_message_fibroblast_damage_report_radius, sizeof(float)));	
-	    h_message_fibroblast_damage_report_min_bounds = glm::vec3((float)0.0, (float)0.0, (float)0.0);
-	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_damage_report_min_bounds, &h_message_fibroblast_damage_report_min_bounds, sizeof(glm::vec3)));	
-	h_message_fibroblast_damage_report_max_bounds = glm::vec3((float)10, (float)10, (float)10);
-	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_damage_report_max_bounds, &h_message_fibroblast_damage_report_max_bounds, sizeof(glm::vec3)));	
-	h_message_fibroblast_damage_report_partitionDim.x = (int)ceil((h_message_fibroblast_damage_report_max_bounds.x - h_message_fibroblast_damage_report_min_bounds.x)/h_message_fibroblast_damage_report_radius);
-	h_message_fibroblast_damage_report_partitionDim.y = (int)ceil((h_message_fibroblast_damage_report_max_bounds.y - h_message_fibroblast_damage_report_min_bounds.y)/h_message_fibroblast_damage_report_radius);
-	h_message_fibroblast_damage_report_partitionDim.z = (int)ceil((h_message_fibroblast_damage_report_max_bounds.z - h_message_fibroblast_damage_report_min_bounds.z)/h_message_fibroblast_damage_report_radius);
-	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_damage_report_partitionDim, &h_message_fibroblast_damage_report_partitionDim, sizeof(glm::ivec3)));	
-	
-			
 	/* Set spatial partitioning tissue_damage_report message variables (min_bounds, max_bounds)*/
-	h_message_tissue_damage_report_radius = (float)1;
+	h_message_tissue_damage_report_radius = (float)0.1;
 	gpuErrchk(cudaMemcpyToSymbol( d_message_tissue_damage_report_radius, &h_message_tissue_damage_report_radius, sizeof(float)));	
 	    h_message_tissue_damage_report_min_bounds = glm::vec3((float)0.0, (float)0.0, (float)0.0);
 	gpuErrchk(cudaMemcpyToSymbol( d_message_tissue_damage_report_min_bounds, &h_message_tissue_damage_report_min_bounds, sizeof(glm::vec3)));	
-	h_message_tissue_damage_report_max_bounds = glm::vec3((float)10, (float)10, (float)10);
+	h_message_tissue_damage_report_max_bounds = glm::vec3((float)1.0, (float)1.0, (float)1.0);
 	gpuErrchk(cudaMemcpyToSymbol( d_message_tissue_damage_report_max_bounds, &h_message_tissue_damage_report_max_bounds, sizeof(glm::vec3)));	
 	h_message_tissue_damage_report_partitionDim.x = (int)ceil((h_message_tissue_damage_report_max_bounds.x - h_message_tissue_damage_report_min_bounds.x)/h_message_tissue_damage_report_radius);
 	h_message_tissue_damage_report_partitionDim.y = (int)ceil((h_message_tissue_damage_report_max_bounds.y - h_message_tissue_damage_report_min_bounds.y)/h_message_tissue_damage_report_radius);
@@ -635,11 +563,11 @@ void initialise(char * inputfile){
 	
 			
 	/* Set spatial partitioning fibroblast_location_report message variables (min_bounds, max_bounds)*/
-	h_message_fibroblast_location_report_radius = (float)1;
+	h_message_fibroblast_location_report_radius = (float)0.25;
 	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_location_report_radius, &h_message_fibroblast_location_report_radius, sizeof(float)));	
 	    h_message_fibroblast_location_report_min_bounds = glm::vec3((float)0.0, (float)0.0, (float)0.0);
 	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_location_report_min_bounds, &h_message_fibroblast_location_report_min_bounds, sizeof(glm::vec3)));	
-	h_message_fibroblast_location_report_max_bounds = glm::vec3((float)10, (float)10, (float)10);
+	h_message_fibroblast_location_report_max_bounds = glm::vec3((float)1.0, (float)1.0, (float)1.0);
 	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_location_report_max_bounds, &h_message_fibroblast_location_report_max_bounds, sizeof(glm::vec3)));	
 	h_message_fibroblast_location_report_partitionDim.x = (int)ceil((h_message_fibroblast_location_report_max_bounds.x - h_message_fibroblast_location_report_min_bounds.x)/h_message_fibroblast_location_report_radius);
 	h_message_fibroblast_location_report_partitionDim.y = (int)ceil((h_message_fibroblast_location_report_max_bounds.y - h_message_fibroblast_location_report_min_bounds.y)/h_message_fibroblast_location_report_radius);
@@ -693,30 +621,6 @@ void initialise(char * inputfile){
 	gpuErrchk( cudaMalloc( (void**) &d_Fibroblasts_Repair, xmachine_Fibroblast_SoA_size));
 	gpuErrchk( cudaMemcpy( d_Fibroblasts_Repair, h_Fibroblasts_Repair, xmachine_Fibroblast_SoA_size, cudaMemcpyHostToDevice));
     
-	/* fibroblast_damage_report Message memory allocation (GPU) */
-	gpuErrchk( cudaMalloc( (void**) &d_fibroblast_damage_reports, message_fibroblast_damage_report_SoA_size));
-	gpuErrchk( cudaMalloc( (void**) &d_fibroblast_damage_reports_swap, message_fibroblast_damage_report_SoA_size));
-	gpuErrchk( cudaMemcpy( d_fibroblast_damage_reports, h_fibroblast_damage_reports, message_fibroblast_damage_report_SoA_size, cudaMemcpyHostToDevice));
-	gpuErrchk( cudaMalloc( (void**) &d_fibroblast_damage_report_partition_matrix, sizeof(xmachine_message_fibroblast_damage_report_PBM)));
-#ifdef FAST_ATOMIC_SORTING
-	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_fibroblast_damage_report_local_bin_index, xmachine_message_fibroblast_damage_report_MAX* sizeof(uint)));
-	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_fibroblast_damage_report_unsorted_index, xmachine_message_fibroblast_damage_report_MAX* sizeof(uint)));
-    /* Calculate and allocate CUB temporary memory for exclusive scans */
-    d_temp_scan_storage_xmachine_message_fibroblast_damage_report = nullptr;
-    temp_scan_bytes_xmachine_message_fibroblast_damage_report = 0;
-    cub::DeviceScan::ExclusiveSum(
-        d_temp_scan_storage_xmachine_message_fibroblast_damage_report, 
-        temp_scan_bytes_xmachine_message_fibroblast_damage_report, 
-        (int*) nullptr, 
-        (int*) nullptr, 
-        xmachine_message_fibroblast_damage_report_grid_size
-    );
-    gpuErrchk(cudaMalloc(&d_temp_scan_storage_xmachine_message_fibroblast_damage_report, temp_scan_bytes_xmachine_message_fibroblast_damage_report));
-#else
-	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_fibroblast_damage_report_keys, xmachine_message_fibroblast_damage_report_MAX* sizeof(uint)));
-	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_fibroblast_damage_report_values, xmachine_message_fibroblast_damage_report_MAX* sizeof(uint)));
-#endif
-	
 	/* tissue_damage_report Message memory allocation (GPU) */
 	gpuErrchk( cudaMalloc( (void**) &d_tissue_damage_reports, message_tissue_damage_report_SoA_size));
 	gpuErrchk( cudaMalloc( (void**) &d_tissue_damage_reports_swap, message_tissue_damage_report_SoA_size));
@@ -740,16 +644,6 @@ void initialise(char * inputfile){
 	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_tissue_damage_report_keys, xmachine_message_tissue_damage_report_MAX* sizeof(uint)));
 	gpuErrchk( cudaMalloc( (void**) &d_xmachine_message_tissue_damage_report_values, xmachine_message_tissue_damage_report_MAX* sizeof(uint)));
 #endif
-	
-	/* doublings Message memory allocation (GPU) */
-	gpuErrchk( cudaMalloc( (void**) &d_doublingss, message_doublings_SoA_size));
-	gpuErrchk( cudaMalloc( (void**) &d_doublingss_swap, message_doublings_SoA_size));
-	gpuErrchk( cudaMemcpy( d_doublingss, h_doublingss, message_doublings_SoA_size, cudaMemcpyHostToDevice));
-	
-	/* count Message memory allocation (GPU) */
-	gpuErrchk( cudaMalloc( (void**) &d_counts, message_count_SoA_size));
-	gpuErrchk( cudaMalloc( (void**) &d_counts_swap, message_count_SoA_size));
-	gpuErrchk( cudaMemcpy( d_counts, h_counts, message_count_SoA_size, cudaMemcpyHostToDevice));
 	
 	/* fibroblast_location_report Message memory allocation (GPU) */
 	gpuErrchk( cudaMalloc( (void**) &d_fibroblast_location_reports, message_fibroblast_location_report_SoA_size));
@@ -1099,22 +993,6 @@ void cleanup(){
 
 	/* Message data free */
 	
-	/* fibroblast_damage_report Message variables */
-	free( h_fibroblast_damage_reports);
-	gpuErrchk(cudaFree(d_fibroblast_damage_reports));
-	gpuErrchk(cudaFree(d_fibroblast_damage_reports_swap));
-	gpuErrchk(cudaFree(d_fibroblast_damage_report_partition_matrix));
-#ifdef FAST_ATOMIC_SORTING
-	gpuErrchk(cudaFree(d_xmachine_message_fibroblast_damage_report_local_bin_index));
-	gpuErrchk(cudaFree(d_xmachine_message_fibroblast_damage_report_unsorted_index));
-  gpuErrchk(cudaFree(d_temp_scan_storage_xmachine_message_fibroblast_damage_report));
-  d_temp_scan_storage_xmachine_message_fibroblast_damage_report = nullptr;
-  temp_scan_bytes_xmachine_message_fibroblast_damage_report = 0;
-#else
-	gpuErrchk(cudaFree(d_xmachine_message_fibroblast_damage_report_keys));
-	gpuErrchk(cudaFree(d_xmachine_message_fibroblast_damage_report_values));
-#endif
-	
 	/* tissue_damage_report Message variables */
 	free( h_tissue_damage_reports);
 	gpuErrchk(cudaFree(d_tissue_damage_reports));
@@ -1130,16 +1008,6 @@ void cleanup(){
 	gpuErrchk(cudaFree(d_xmachine_message_tissue_damage_report_keys));
 	gpuErrchk(cudaFree(d_xmachine_message_tissue_damage_report_values));
 #endif
-	
-	/* doublings Message variables */
-	free( h_doublingss);
-	gpuErrchk(cudaFree(d_doublingss));
-	gpuErrchk(cudaFree(d_doublingss_swap));
-	
-	/* count Message variables */
-	free( h_counts);
-	gpuErrchk(cudaFree(d_counts));
-	gpuErrchk(cudaFree(d_counts_swap));
 	
 	/* fibroblast_location_report Message variables */
 	free( h_fibroblast_location_reports);
@@ -1204,21 +1072,9 @@ PROFILE_SCOPED_RANGE("singleIteration");
     g_iterationNumber++;
 
   /* set all non partitioned, spatial partitioned and On-Graph Partitioned message counts to 0*/
-	h_message_fibroblast_damage_report_count = 0;
-	//upload to device constant
-	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_damage_report_count, &h_message_fibroblast_damage_report_count, sizeof(int)));
-	
 	h_message_tissue_damage_report_count = 0;
 	//upload to device constant
 	gpuErrchk(cudaMemcpyToSymbol( d_message_tissue_damage_report_count, &h_message_tissue_damage_report_count, sizeof(int)));
-	
-	h_message_doublings_count = 0;
-	//upload to device constant
-	gpuErrchk(cudaMemcpyToSymbol( d_message_doublings_count, &h_message_doublings_count, sizeof(int)));
-	
-	h_message_count_count = 0;
-	//upload to device constant
-	gpuErrchk(cudaMemcpyToSymbol( d_message_count_count, &h_message_count_count, sizeof(int)));
 	
 	h_message_fibroblast_location_report_count = 0;
 	//upload to device constant
@@ -1487,6 +1343,84 @@ PROFILE_SCOPED_RANGE("singleIteration");
     
     /* Call all step functions */
 	
+#if defined(INSTRUMENT_STEP_FUNCTIONS) && INSTRUMENT_STEP_FUNCTIONS
+	cudaEventRecord(instrument_start);
+#endif
+    PROFILE_PUSH_RANGE("Tissuelogs");
+	Tissuelogs();
+	
+    PROFILE_POP_RANGE();
+#if defined(INSTRUMENT_STEP_FUNCTIONS) && INSTRUMENT_STEP_FUNCTIONS
+	cudaEventRecord(instrument_stop);
+	cudaEventSynchronize(instrument_stop);
+	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
+	printf("Instrumentation: Tissuelogs = %f (ms)\n", instrument_milliseconds);
+#endif
+#if defined(INSTRUMENT_STEP_FUNCTIONS) && INSTRUMENT_STEP_FUNCTIONS
+	cudaEventRecord(instrument_start);
+#endif
+    PROFILE_PUSH_RANGE("FibroblastQuiescentlogs");
+	FibroblastQuiescentlogs();
+	
+    PROFILE_POP_RANGE();
+#if defined(INSTRUMENT_STEP_FUNCTIONS) && INSTRUMENT_STEP_FUNCTIONS
+	cudaEventRecord(instrument_stop);
+	cudaEventSynchronize(instrument_stop);
+	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
+	printf("Instrumentation: FibroblastQuiescentlogs = %f (ms)\n", instrument_milliseconds);
+#endif
+#if defined(INSTRUMENT_STEP_FUNCTIONS) && INSTRUMENT_STEP_FUNCTIONS
+	cudaEventRecord(instrument_start);
+#endif
+    PROFILE_PUSH_RANGE("FibroblastEarlySenescentlogs");
+	FibroblastEarlySenescentlogs();
+	
+    PROFILE_POP_RANGE();
+#if defined(INSTRUMENT_STEP_FUNCTIONS) && INSTRUMENT_STEP_FUNCTIONS
+	cudaEventRecord(instrument_stop);
+	cudaEventSynchronize(instrument_stop);
+	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
+	printf("Instrumentation: FibroblastEarlySenescentlogs = %f (ms)\n", instrument_milliseconds);
+#endif
+#if defined(INSTRUMENT_STEP_FUNCTIONS) && INSTRUMENT_STEP_FUNCTIONS
+	cudaEventRecord(instrument_start);
+#endif
+    PROFILE_PUSH_RANGE("FibroblastSenescentlogs");
+	FibroblastSenescentlogs();
+	
+    PROFILE_POP_RANGE();
+#if defined(INSTRUMENT_STEP_FUNCTIONS) && INSTRUMENT_STEP_FUNCTIONS
+	cudaEventRecord(instrument_stop);
+	cudaEventSynchronize(instrument_stop);
+	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
+	printf("Instrumentation: FibroblastSenescentlogs = %f (ms)\n", instrument_milliseconds);
+#endif
+#if defined(INSTRUMENT_STEP_FUNCTIONS) && INSTRUMENT_STEP_FUNCTIONS
+	cudaEventRecord(instrument_start);
+#endif
+    PROFILE_PUSH_RANGE("FibroblastProliferatinglogs");
+	FibroblastProliferatinglogs();
+	
+    PROFILE_POP_RANGE();
+#if defined(INSTRUMENT_STEP_FUNCTIONS) && INSTRUMENT_STEP_FUNCTIONS
+	cudaEventRecord(instrument_stop);
+	cudaEventSynchronize(instrument_stop);
+	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
+	printf("Instrumentation: FibroblastProliferatinglogs = %f (ms)\n", instrument_milliseconds);
+#endif
+#if defined(INSTRUMENT_STEP_FUNCTIONS) && INSTRUMENT_STEP_FUNCTIONS
+	cudaEventRecord(instrument_start);
+#endif
+    PROFILE_PUSH_RANGE("FibroblastRepairlogs");
+	FibroblastRepairlogs();
+	
+    PROFILE_POP_RANGE();
+#if defined(INSTRUMENT_STEP_FUNCTIONS) && INSTRUMENT_STEP_FUNCTIONS
+	cudaEventRecord(instrument_stop);
+	cudaEventSynchronize(instrument_stop);
+	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
+	printf("Instrumentation: FibroblastRepairlogs = %f (ms)\n", instrument_milliseconds);
+#endif
 
 #if defined(OUTPUT_POPULATION_PER_ITERATION) && OUTPUT_POPULATION_PER_ITERATION
 	// Print the agent population size of all agents in all states
@@ -6267,12 +6201,7 @@ void Fibroblast_EarlySenescentMigration(cudaStream_t &stream){
 int Fibroblast_QuiescentTakesDamage_sm_size(int blockSize){
 	int sm_size;
 	sm_size = SM_START;
-  //Continuous agent and message input is spatially partitioned
-	sm_size += (blockSize * sizeof(xmachine_message_fibroblast_damage_report));
-	
-	//all continuous agent types require single 32bit word per thread offset (to avoid sm bank conflicts)
-	sm_size += (blockSize * PADDING);
-	
+  
 	return sm_size;
 }
 
@@ -6333,232 +6262,22 @@ void Fibroblast_QuiescentTakesDamage(cudaStream_t &stream){
 	
 	
 	
-	//BIND APPROPRIATE MESSAGE INPUT VARIABLES TO TEXTURES (to make use of the texture cache)
-	//any agent with discrete or partitioned message input uses texture caching
-	size_t tex_xmachine_message_fibroblast_damage_report_id_byte_offset;    
-	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_damage_report_id_byte_offset, tex_xmachine_message_fibroblast_damage_report_id, d_fibroblast_damage_reports->id, sizeof(int)*xmachine_message_fibroblast_damage_report_MAX));
-	h_tex_xmachine_message_fibroblast_damage_report_id_offset = (int)tex_xmachine_message_fibroblast_damage_report_id_byte_offset / sizeof(int);
-	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_damage_report_id_offset, &h_tex_xmachine_message_fibroblast_damage_report_id_offset, sizeof(int)));
-	size_t tex_xmachine_message_fibroblast_damage_report_x_byte_offset;    
-	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_damage_report_x_byte_offset, tex_xmachine_message_fibroblast_damage_report_x, d_fibroblast_damage_reports->x, sizeof(float)*xmachine_message_fibroblast_damage_report_MAX));
-	h_tex_xmachine_message_fibroblast_damage_report_x_offset = (int)tex_xmachine_message_fibroblast_damage_report_x_byte_offset / sizeof(float);
-	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_damage_report_x_offset, &h_tex_xmachine_message_fibroblast_damage_report_x_offset, sizeof(int)));
-	size_t tex_xmachine_message_fibroblast_damage_report_y_byte_offset;    
-	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_damage_report_y_byte_offset, tex_xmachine_message_fibroblast_damage_report_y, d_fibroblast_damage_reports->y, sizeof(float)*xmachine_message_fibroblast_damage_report_MAX));
-	h_tex_xmachine_message_fibroblast_damage_report_y_offset = (int)tex_xmachine_message_fibroblast_damage_report_y_byte_offset / sizeof(float);
-	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_damage_report_y_offset, &h_tex_xmachine_message_fibroblast_damage_report_y_offset, sizeof(int)));
-	size_t tex_xmachine_message_fibroblast_damage_report_z_byte_offset;    
-	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_damage_report_z_byte_offset, tex_xmachine_message_fibroblast_damage_report_z, d_fibroblast_damage_reports->z, sizeof(float)*xmachine_message_fibroblast_damage_report_MAX));
-	h_tex_xmachine_message_fibroblast_damage_report_z_offset = (int)tex_xmachine_message_fibroblast_damage_report_z_byte_offset / sizeof(float);
-	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_damage_report_z_offset, &h_tex_xmachine_message_fibroblast_damage_report_z_offset, sizeof(int)));
-	size_t tex_xmachine_message_fibroblast_damage_report_damage_byte_offset;    
-	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_damage_report_damage_byte_offset, tex_xmachine_message_fibroblast_damage_report_damage, d_fibroblast_damage_reports->damage, sizeof(int)*xmachine_message_fibroblast_damage_report_MAX));
-	h_tex_xmachine_message_fibroblast_damage_report_damage_offset = (int)tex_xmachine_message_fibroblast_damage_report_damage_byte_offset / sizeof(int);
-	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_damage_report_damage_offset, &h_tex_xmachine_message_fibroblast_damage_report_damage_offset, sizeof(int)));
-	//bind pbm start and end indices to textures
-	size_t tex_xmachine_message_fibroblast_damage_report_pbm_start_byte_offset;
-	size_t tex_xmachine_message_fibroblast_damage_report_pbm_end_or_count_byte_offset;
-	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_damage_report_pbm_start_byte_offset, tex_xmachine_message_fibroblast_damage_report_pbm_start, d_fibroblast_damage_report_partition_matrix->start, sizeof(int)*xmachine_message_fibroblast_damage_report_grid_size));
-	h_tex_xmachine_message_fibroblast_damage_report_pbm_start_offset = (int)tex_xmachine_message_fibroblast_damage_report_pbm_start_byte_offset / sizeof(int);
-	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_damage_report_pbm_start_offset, &h_tex_xmachine_message_fibroblast_damage_report_pbm_start_offset, sizeof(int)));
-	gpuErrchk( cudaBindTexture(&tex_xmachine_message_fibroblast_damage_report_pbm_end_or_count_byte_offset, tex_xmachine_message_fibroblast_damage_report_pbm_end_or_count, d_fibroblast_damage_report_partition_matrix->end_or_count, sizeof(int)*xmachine_message_fibroblast_damage_report_grid_size));
-  h_tex_xmachine_message_fibroblast_damage_report_pbm_end_or_count_offset = (int)tex_xmachine_message_fibroblast_damage_report_pbm_end_or_count_byte_offset / sizeof(int);
-	gpuErrchk(cudaMemcpyToSymbol( d_tex_xmachine_message_fibroblast_damage_report_pbm_end_or_count_offset, &h_tex_xmachine_message_fibroblast_damage_report_pbm_end_or_count_offset, sizeof(int)));
-
-	
 	
 	//MAIN XMACHINE FUNCTION CALL (QuiescentTakesDamage)
 	//Reallocate   : false
-	//Input        : fibroblast_damage_report
+	//Input        : 
 	//Output       : 
 	//Agent Output : 
-	GPUFLAME_QuiescentTakesDamage<<<g, b, sm_size, stream>>>(d_Fibroblasts, d_fibroblast_damage_reports, d_fibroblast_damage_report_partition_matrix, d_rand48);
+	GPUFLAME_QuiescentTakesDamage<<<g, b, sm_size, stream>>>(d_Fibroblasts, d_rand48);
 	gpuErrchkLaunch();
 	
 	
-	//UNBIND MESSAGE INPUT VARIABLE TEXTURES
-	//any agent with discrete or partitioned message input uses texture caching
-	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_damage_report_id));
-	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_damage_report_x));
-	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_damage_report_y));
-	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_damage_report_z));
-	gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_damage_report_damage));
-	//unbind pbm indices
-    gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_damage_report_pbm_start));
-    gpuErrchk( cudaUnbindTexture(tex_xmachine_message_fibroblast_damage_report_pbm_end_or_count));
-    
 	
 	//************************ MOVE AGENTS TO NEXT STATE ****************************
     
 	//check the working agents wont exceed the buffer size in the new state list
 	if (h_xmachine_memory_Fibroblast_Quiescent_count+h_xmachine_memory_Fibroblast_count > xmachine_memory_Fibroblast_MAX){
 		printf("Error: Buffer size of QuiescentTakesDamage agents in state Quiescent will be exceeded moving working agents to next state in function QuiescentTakesDamage\n");
-      exit(EXIT_FAILURE);
-      }
-      
-  //pointer swap the updated data
-  Fibroblasts_Quiescent_temp = d_Fibroblasts;
-  d_Fibroblasts = d_Fibroblasts_Quiescent;
-  d_Fibroblasts_Quiescent = Fibroblasts_Quiescent_temp;
-        
-	//update new state agent size
-	h_xmachine_memory_Fibroblast_Quiescent_count += h_xmachine_memory_Fibroblast_count;
-	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_Quiescent_count, &h_xmachine_memory_Fibroblast_Quiescent_count, sizeof(int)));	
-	
-	
-}
-
-
-
-	
-/* Shared memory size calculator for agent function */
-int Fibroblast_QuiescentSendDamageReport_sm_size(int blockSize){
-	int sm_size;
-	sm_size = SM_START;
-  
-	return sm_size;
-}
-
-/** Fibroblast_QuiescentSendDamageReport
- * Agent function prototype for QuiescentSendDamageReport function of Fibroblast agent
- */
-void Fibroblast_QuiescentSendDamageReport(cudaStream_t &stream){
-
-    int sm_size;
-    int blockSize;
-    int minGridSize;
-    int gridSize;
-    int state_list_size;
-	dim3 g; //grid for agent func
-	dim3 b; //block for agent func
-
-	
-	//CHECK THE CURRENT STATE LIST COUNT IS NOT EQUAL TO 0
-	
-	if (h_xmachine_memory_Fibroblast_Quiescent_count == 0)
-	{
-		return;
-	}
-	
-	
-	//SET SM size to 0 and save state list size for occupancy calculations
-	sm_size = SM_START;
-	state_list_size = h_xmachine_memory_Fibroblast_Quiescent_count;
-
-	
-
-	//******************************** AGENT FUNCTION CONDITION *********************
-	//THERE IS NOT A FUNCTION CONDITION
-	//currentState maps to working list
-	xmachine_memory_Fibroblast_list* Fibroblasts_Quiescent_temp = d_Fibroblasts;
-	d_Fibroblasts = d_Fibroblasts_Quiescent;
-	d_Fibroblasts_Quiescent = Fibroblasts_Quiescent_temp;
-	//set working count to current state count
-	h_xmachine_memory_Fibroblast_count = h_xmachine_memory_Fibroblast_Quiescent_count;
-	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_count, &h_xmachine_memory_Fibroblast_count, sizeof(int)));	
-	//set current state count to 0
-	h_xmachine_memory_Fibroblast_Quiescent_count = 0;
-	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_Quiescent_count, &h_xmachine_memory_Fibroblast_Quiescent_count, sizeof(int)));	
-	
- 
-
-	//******************************** AGENT FUNCTION *******************************
-
-	
-	//CONTINUOUS AGENT CHECK FUNCTION OUTPUT BUFFERS FOR OUT OF BOUNDS
-	if (h_message_fibroblast_damage_report_count + h_xmachine_memory_Fibroblast_count > xmachine_message_fibroblast_damage_report_MAX){
-		printf("Error: Buffer size of fibroblast_damage_report message will be exceeded in function QuiescentSendDamageReport\n");
-		exit(EXIT_FAILURE);
-	}
-	
-	
-	//calculate the grid block size for main agent function
-	cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, GPUFLAME_QuiescentSendDamageReport, Fibroblast_QuiescentSendDamageReport_sm_size, state_list_size);
-	gridSize = (state_list_size + blockSize - 1) / blockSize;
-	b.x = blockSize;
-	g.x = gridSize;
-	
-	sm_size = Fibroblast_QuiescentSendDamageReport_sm_size(blockSize);
-	
-	
-	
-	//SET THE OUTPUT MESSAGE TYPE FOR CONTINUOUS AGENTS
-	//Set the message_type for non partitioned, spatially partitioned and On-Graph Partitioned message outputs
-	h_message_fibroblast_damage_report_output_type = single_message;
-	gpuErrchk( cudaMemcpyToSymbol( d_message_fibroblast_damage_report_output_type, &h_message_fibroblast_damage_report_output_type, sizeof(int)));
-	
-	
-	//MAIN XMACHINE FUNCTION CALL (QuiescentSendDamageReport)
-	//Reallocate   : false
-	//Input        : 
-	//Output       : fibroblast_damage_report
-	//Agent Output : 
-	GPUFLAME_QuiescentSendDamageReport<<<g, b, sm_size, stream>>>(d_Fibroblasts, d_fibroblast_damage_reports, d_rand48);
-	gpuErrchkLaunch();
-	
-	
-	//CONTINUOUS AGENTS SCATTER NON PARTITIONED OPTIONAL OUTPUT MESSAGES
-	
-	//UPDATE MESSAGE COUNTS FOR CONTINUOUS AGENTS WITH NON PARTITIONED MESSAGE OUTPUT 
-	h_message_fibroblast_damage_report_count += h_xmachine_memory_Fibroblast_count;
-	//Copy count to device
-	gpuErrchk( cudaMemcpyToSymbol( d_message_fibroblast_damage_report_count, &h_message_fibroblast_damage_report_count, sizeof(int)));	
-	
-	//reset partition matrix
-	gpuErrchk( cudaMemset( (void*) d_fibroblast_damage_report_partition_matrix, 0, sizeof(xmachine_message_fibroblast_damage_report_PBM)));
-    //PR Bug fix: Second fix. This should prevent future problems when multiple agents write the same message as now the message structure is completely rebuilt after an output.
-    if (h_message_fibroblast_damage_report_count > 0){
-#ifdef FAST_ATOMIC_SORTING
-      //USE ATOMICS TO BUILD PARTITION BOUNDARY
-	  cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, hist_fibroblast_damage_report_messages, no_sm, h_message_fibroblast_damage_report_count); 
-	  gridSize = (h_message_fibroblast_damage_report_count + blockSize - 1) / blockSize;
-	  hist_fibroblast_damage_report_messages<<<gridSize, blockSize, 0, stream>>>(d_xmachine_message_fibroblast_damage_report_local_bin_index, d_xmachine_message_fibroblast_damage_report_unsorted_index, d_fibroblast_damage_report_partition_matrix->end_or_count, d_fibroblast_damage_reports, h_message_fibroblast_damage_report_count);
-	  gpuErrchkLaunch();
-	
-      // Scan
-      cub::DeviceScan::ExclusiveSum(
-          d_temp_scan_storage_xmachine_message_fibroblast_damage_report, 
-          temp_scan_bytes_xmachine_message_fibroblast_damage_report, 
-          d_fibroblast_damage_report_partition_matrix->end_or_count,
-          d_fibroblast_damage_report_partition_matrix->start,
-          xmachine_message_fibroblast_damage_report_grid_size, 
-          stream
-      );
-	
-	  cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, reorder_fibroblast_damage_report_messages, no_sm, h_message_fibroblast_damage_report_count); 
-	  gridSize = (h_message_fibroblast_damage_report_count + blockSize - 1) / blockSize; 	// Round up according to array size 
-	  reorder_fibroblast_damage_report_messages <<<gridSize, blockSize, 0, stream>>>(d_xmachine_message_fibroblast_damage_report_local_bin_index, d_xmachine_message_fibroblast_damage_report_unsorted_index, d_fibroblast_damage_report_partition_matrix->start, d_fibroblast_damage_reports, d_fibroblast_damage_reports_swap, h_message_fibroblast_damage_report_count);
-	  gpuErrchkLaunch();
-#else
-	  //HASH, SORT, REORDER AND BUILD PMB FOR SPATIAL PARTITIONING MESSAGE OUTPUTS
-	  //Get message hash values for sorting
-	  cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, hash_fibroblast_damage_report_messages, no_sm, h_message_fibroblast_damage_report_count); 
-	  gridSize = (h_message_fibroblast_damage_report_count + blockSize - 1) / blockSize;
-	  hash_fibroblast_damage_report_messages<<<gridSize, blockSize, 0, stream>>>(d_xmachine_message_fibroblast_damage_report_keys, d_xmachine_message_fibroblast_damage_report_values, d_fibroblast_damage_reports);
-	  gpuErrchkLaunch();
-	  //Sort
-	  thrust::sort_by_key(thrust::cuda::par.on(stream), thrust::device_pointer_cast(d_xmachine_message_fibroblast_damage_report_keys),  thrust::device_pointer_cast(d_xmachine_message_fibroblast_damage_report_keys) + h_message_fibroblast_damage_report_count,  thrust::device_pointer_cast(d_xmachine_message_fibroblast_damage_report_values));
-	  gpuErrchkLaunch();
-	  //reorder and build pcb
-	  gpuErrchk(cudaMemset(d_fibroblast_damage_report_partition_matrix->start, 0xffffffff, xmachine_message_fibroblast_damage_report_grid_size* sizeof(int)));
-	  cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, reorder_fibroblast_damage_report_messages, reorder_messages_sm_size, h_message_fibroblast_damage_report_count); 
-	  gridSize = (h_message_fibroblast_damage_report_count + blockSize - 1) / blockSize;
-	  int reorder_sm_size = reorder_messages_sm_size(blockSize);
-	  reorder_fibroblast_damage_report_messages<<<gridSize, blockSize, reorder_sm_size, stream>>>(d_xmachine_message_fibroblast_damage_report_keys, d_xmachine_message_fibroblast_damage_report_values, d_fibroblast_damage_report_partition_matrix, d_fibroblast_damage_reports, d_fibroblast_damage_reports_swap);
-	  gpuErrchkLaunch();
-#endif
-  }
-	//swap ordered list
-	xmachine_message_fibroblast_damage_report_list* d_fibroblast_damage_reports_temp = d_fibroblast_damage_reports;
-	d_fibroblast_damage_reports = d_fibroblast_damage_reports_swap;
-	d_fibroblast_damage_reports_swap = d_fibroblast_damage_reports_temp;
-	
-	
-	//************************ MOVE AGENTS TO NEXT STATE ****************************
-    
-	//check the working agents wont exceed the buffer size in the new state list
-	if (h_xmachine_memory_Fibroblast_Quiescent_count+h_xmachine_memory_Fibroblast_count > xmachine_memory_Fibroblast_MAX){
-		printf("Error: Buffer size of QuiescentSendDamageReport agents in state Quiescent will be exceeded moving working agents to next state in function QuiescentSendDamageReport\n");
       exit(EXIT_FAILURE);
       }
       

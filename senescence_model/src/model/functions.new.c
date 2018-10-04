@@ -32,6 +32,54 @@ __FLAME_GPU_INIT_FUNC__ void setConstants(){
 }
 
 /**
+ * Tissuelogs FLAMEGPU Step function
+ * Automatically generated using functions.xslt
+ */
+__FLAME_GPU_STEP_FUNC__ void Tissuelogs(){
+
+}
+
+/**
+ * FibroblastQuiescentlogs FLAMEGPU Step function
+ * Automatically generated using functions.xslt
+ */
+__FLAME_GPU_STEP_FUNC__ void FibroblastQuiescentlogs(){
+
+}
+
+/**
+ * FibroblastEarlySenescentlogs FLAMEGPU Step function
+ * Automatically generated using functions.xslt
+ */
+__FLAME_GPU_STEP_FUNC__ void FibroblastEarlySenescentlogs(){
+
+}
+
+/**
+ * FibroblastSenescentlogs FLAMEGPU Step function
+ * Automatically generated using functions.xslt
+ */
+__FLAME_GPU_STEP_FUNC__ void FibroblastSenescentlogs(){
+
+}
+
+/**
+ * FibroblastProliferatinglogs FLAMEGPU Step function
+ * Automatically generated using functions.xslt
+ */
+__FLAME_GPU_STEP_FUNC__ void FibroblastProliferatinglogs(){
+
+}
+
+/**
+ * FibroblastRepairlogs FLAMEGPU Step function
+ * Automatically generated using functions.xslt
+ */
+__FLAME_GPU_STEP_FUNC__ void FibroblastRepairlogs(){
+
+}
+
+/**
  * TissueTakesDamage FLAMEGPU Agent Function
  * Automatically generated using functions.xslt
  * @param agent Pointer to an agent structure of type xmachine_memory_TissueBlock. This represents a single agent instance and can be modified directly.
@@ -249,8 +297,9 @@ __FLAME_GPU_FUNC__ int Proliferation(xmachine_memory_Fibroblast* agent, xmachine
     int damage = 0;
     int early_sen_time_counter = 0;
     int current_state = 0;
+    int colour = 0;
     
-    add_Fibroblast_agent(Fibroblast_agents, int id, float x, float y, float z, float doublings, int damage, int early_sen_time_counter, int current_state);
+    add_Fibroblast_agent(Fibroblast_agents, int id, float x, float y, float z, float doublings, int damage, int early_sen_time_counter, int current_state, int colour);
     */
     
     return 0;

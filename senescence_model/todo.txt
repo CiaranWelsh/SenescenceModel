@@ -1,0 +1,24 @@
+List of things to do within the agent based senescent model
+===========================================================
+- Build analytic functions for plotting
+- Custom visualisation, following instructions from github question
+- Remember to answer github question with a thank you
+- Modify visualisation to:
+	- Use separate vertex shaders for both agents
+	- Convert Tissue agent to a cube shape
+	- See if I can use cuda for getting unique IDs for each new fibroblast generated
+	- build in mechanism for modifying parameters and restarting simulation during the visualisation
+
+
+
+
+
+
+
+
+
+
+
+
+
+

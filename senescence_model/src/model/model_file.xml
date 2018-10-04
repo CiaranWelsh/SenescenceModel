@@ -77,6 +77,26 @@
                 <gpu:name>setConstants</gpu:name>
             </gpu:initFunction>
         </gpu:initFunctions>
+        <gpu:stepFunctions>
+            <gpu:stepFunction>
+                <gpu:name>Tissuelogs</gpu:name>
+            </gpu:stepFunction>
+            <gpu:stepFunction>
+                <gpu:name>FibroblastQuiescentlogs</gpu:name>
+            </gpu:stepFunction>
+            <gpu:stepFunction>
+                <gpu:name>FibroblastEarlySenescentlogs</gpu:name>
+            </gpu:stepFunction>
+            <gpu:stepFunction>
+                <gpu:name>FibroblastSenescentlogs</gpu:name>
+            </gpu:stepFunction>
+            <gpu:stepFunction>
+                <gpu:name>FibroblastProliferatinglogs</gpu:name>
+            </gpu:stepFunction>
+            <gpu:stepFunction>
+                <gpu:name>FibroblastRepairlogs</gpu:name>
+            </gpu:stepFunction>
+        </gpu:stepFunctions>
     </gpu:environment>
     <xagents>
         <gpu:xagent>
@@ -240,28 +260,17 @@
                     <description>Quiescent fibroblasts randomly take damage</description>
                     <currentState>Quiescent</currentState>
                     <nextState>Quiescent</nextState>
-                    <inputs>
-                        <gpu:input>
-                            <messageName>fibroblast_damage_report</messageName>
-                        </gpu:input>
-                    </inputs>
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
                     <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
-                <gpu:function>
-                    <name>QuiescentSendDamageReport</name>
-                    <description>Quiescent report their damage status</description>
-                    <currentState>Quiescent</currentState>
-                    <nextState>Quiescent</nextState>
-                    <outputs>
-                        <gpu:output>
-                            <messageName>fibroblast_damage_report</messageName>
-                            <gpu:type>single_message</gpu:type>
-                        </gpu:output>
-                    </outputs>                           <!-- optional -->
-                    <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
-                    <gpu:RNG>true</gpu:RNG>                        <!-- optional -->
-                </gpu:function>
+                <!--<gpu:function>-->
+                    <!--<name>QuiescentSendDamageReport</name>-->
+                    <!--<description>Quiescent report their damage status</description>-->
+                    <!--<currentState>Quiescent</currentState>-->
+                    <!--<nextState>Quiescent</nextState>-->
+                    <!--<gpu:reallocate>false</gpu:reallocate>          &lt;!&ndash; optional &ndash;&gt;-->
+                    <!--<gpu:RNG>true</gpu:RNG>                        &lt;!&ndash; optional &ndash;&gt;-->
+                <!--</gpu:function>-->
                 <gpu:function>
                     <name>TransitionToProliferating</name>
                     <description>Quiescent transitions to proliferating fibroblast</description>
@@ -389,41 +398,41 @@
         </gpu:xagent>
     </xagents>
     <messages>
-        <gpu:message>
-            <name>fibroblast_damage_report</name>
-            <variables>
-                <gpu:variable>
-                    <type>int</type>
-                    <name>id</name>
-                </gpu:variable>
-                <gpu:variable>
-                    <type>float</type>
-                    <name>x</name>
-                </gpu:variable>
-                <gpu:variable>
-                    <type>float</type>
-                    <name>y</name>
-                </gpu:variable>
-                <gpu:variable>
-                    <type>float</type>
-                    <name>z</name>
-                </gpu:variable>
-                <gpu:variable>
-                    <type>int</type>
-                    <name>damage</name>
-                </gpu:variable>
-            </variables>
-            <gpu:partitioningSpatial>
-                <gpu:radius>1</gpu:radius>
-                <gpu:xmin>0.0</gpu:xmin>
-                <gpu:xmax>10</gpu:xmax>
-                <gpu:ymin>0.0</gpu:ymin>
-                <gpu:ymax>10</gpu:ymax>
-                <gpu:zmin>0.0</gpu:zmin>
-                <gpu:zmax>10</gpu:zmax>
-            </gpu:partitioningSpatial>
-            <gpu:bufferSize>4096</gpu:bufferSize>
-        </gpu:message>
+        <!--<gpu:message>-->
+            <!--<name>fibroblast_damage_report</name>-->
+            <!--<variables>-->
+                <!--<gpu:variable>-->
+                    <!--<type>int</type>-->
+                    <!--<name>id</name>-->
+                <!--</gpu:variable>-->
+                <!--<gpu:variable>-->
+                    <!--<type>float</type>-->
+                    <!--<name>x</name>-->
+                <!--</gpu:variable>-->
+                <!--<gpu:variable>-->
+                    <!--<type>float</type>-->
+                    <!--<name>y</name>-->
+                <!--</gpu:variable>-->
+                <!--<gpu:variable>-->
+                    <!--<type>float</type>-->
+                    <!--<name>z</name>-->
+                <!--</gpu:variable>-->
+                <!--<gpu:variable>-->
+                    <!--<type>int</type>-->
+                    <!--<name>damage</name>-->
+                <!--</gpu:variable>-->
+            <!--</variables>-->
+            <!--<gpu:partitioningSpatial>-->
+                <!--<gpu:radius>0.1</gpu:radius>-->
+                <!--<gpu:xmin>0.0</gpu:xmin>-->
+                <!--<gpu:xmax>1.0</gpu:xmax>-->
+                <!--<gpu:ymin>0.0</gpu:ymin>-->
+                <!--<gpu:ymax>1.0</gpu:ymax>-->
+                <!--<gpu:zmin>0.0</gpu:zmin>-->
+                <!--<gpu:zmax>1.0</gpu:zmax>-->
+            <!--</gpu:partitioningSpatial>-->
+            <!--<gpu:bufferSize>4096</gpu:bufferSize>-->
+        <!--</gpu:message>-->
         <gpu:message>
             <name>tissue_damage_report</name>
             <variables>
@@ -449,36 +458,14 @@
                 </gpu:variable>
             </variables>
             <gpu:partitioningSpatial>
-                <gpu:radius>1</gpu:radius>
+                <gpu:radius>0.1</gpu:radius>
                 <gpu:xmin>0.0</gpu:xmin>
-                <gpu:xmax>10</gpu:xmax>
+                <gpu:xmax>1.0</gpu:xmax>
                 <gpu:ymin>0.0</gpu:ymin>
-                <gpu:ymax>10</gpu:ymax>
+                <gpu:ymax>1.0</gpu:ymax>
                 <gpu:zmin>0.0</gpu:zmin>
-                <gpu:zmax>10</gpu:zmax>
+                <gpu:zmax>1.0</gpu:zmax>
             </gpu:partitioningSpatial>
-            <gpu:bufferSize>4096</gpu:bufferSize>
-        </gpu:message>
-        <gpu:message>
-            <name>doublings</name>
-            <variables>
-                <gpu:variable>
-                    <type>int</type>
-                    <name>number</name>
-                </gpu:variable>
-            </variables>
-            <gpu:partitioningNone/>
-            <gpu:bufferSize>4096</gpu:bufferSize>
-        </gpu:message>
-        <gpu:message>
-            <name>count</name>
-            <variables>
-                <gpu:variable>
-                    <type>int</type>
-                    <name>number</name>
-                </gpu:variable>
-            </variables>
-            <gpu:partitioningNone/>
             <gpu:bufferSize>4096</gpu:bufferSize>
         </gpu:message>
         <gpu:message>
@@ -506,13 +493,13 @@
                 </gpu:variable>
             </variables>
             <gpu:partitioningSpatial>
-                <gpu:radius>1</gpu:radius>
+                <gpu:radius>0.25</gpu:radius>
                 <gpu:xmin>0.0</gpu:xmin>
-                <gpu:xmax>10</gpu:xmax>
+                <gpu:xmax>1.0</gpu:xmax>
                 <gpu:ymin>0.0</gpu:ymin>
-                <gpu:ymax>10</gpu:ymax>
+                <gpu:ymax>1.0</gpu:ymax>
                 <gpu:zmin>0.0</gpu:zmin>
-                <gpu:zmax>10</gpu:zmax>
+                <gpu:zmax>1.0</gpu:zmax>
             </gpu:partitioningSpatial>
             <gpu:bufferSize>4096</gpu:bufferSize>
         </gpu:message>

@@ -14,16 +14,16 @@ CMake Error at /cygdrive/c/Users/cwels/.CLion2018.2/system/cygwin_cmake/share/cm
 
     Change Dir: /cygdrive/d/Documents/SenescenceModel/cmake-build-debug/CMakeFiles/CMakeTmp
     
-    Run Build Command:"/cygdrive/c/strawberry/c/bin/gmake.exe" "cmTC_1a27a/fast"
-    C:/strawberry/c/bin/gmake -f CMakeFiles/cmTC_1a27a.dir/build.make CMakeFiles/cmTC_1a27a.dir/build
+    Run Build Command:"/cygdrive/c/strawberry/c/bin/gmake.exe" "cmTC_724cb/fast"
+    C:/strawberry/c/bin/gmake -f CMakeFiles/cmTC_724cb.dir/build.make CMakeFiles/cmTC_724cb.dir/build
     gmake[1]: Entering directory `D:/Documents/SenescenceModel/cmake-build-debug/CMakeFiles/CMakeTmp'
-    Building C object CMakeFiles/cmTC_1a27a.dir/testCCompiler.c.o
-    /usr/bin/cc    -o CMakeFiles/cmTC_1a27a.dir/testCCompiler.c.o   -c /cygdrive/d/Documents/SenescenceModel/cmake-build-debug/CMakeFiles/CMakeTmp/testCCompiler.c
-    process_begin: CreateProcess(NULL, /usr/bin/cc -o CMakeFiles/cmTC_1a27a.dir/testCCompiler.c.o -c /cygdrive/d/Documents/SenescenceModel/cmake-build-debug/CMakeFiles/CMakeTmp/testCCompiler.c, ...) failed.
+    Building C object CMakeFiles/cmTC_724cb.dir/testCCompiler.c.o
+    /usr/bin/cc    -o CMakeFiles/cmTC_724cb.dir/testCCompiler.c.o   -c /cygdrive/d/Documents/SenescenceModel/cmake-build-debug/CMakeFiles/CMakeTmp/testCCompiler.c
+    process_begin: CreateProcess(NULL, /usr/bin/cc -o CMakeFiles/cmTC_724cb.dir/testCCompiler.c.o -c /cygdrive/d/Documents/SenescenceModel/cmake-build-debug/CMakeFiles/CMakeTmp/testCCompiler.c, ...) failed.
     make (e=2): The system cannot find the file specified.
-    gmake[1]: *** [CMakeFiles/cmTC_1a27a.dir/testCCompiler.c.o] Error 2
+    gmake[1]: *** [CMakeFiles/cmTC_724cb.dir/testCCompiler.c.o] Error 2
     gmake[1]: Leaving directory `D:/Documents/SenescenceModel/cmake-build-debug/CMakeFiles/CMakeTmp'
-    gmake: *** [cmTC_1a27a/fast] Error 2
+    gmake: *** [cmTC_724cb/fast] Error 2
     
 
   

@@ -86,7 +86,7 @@ __FLAME_GPU_INIT_FUNC__ void setConstants() {
     float CLEARANCE_EARLY_SEN_PROB = 0.1f;
     float CLEARANCE_SEN_PROB = 0.1f;
 
-    float REPAIR_RADIUS = 1.0f;
+    float REPAIR_RADIUS = 0.01f;
 
 
 
@@ -117,6 +117,323 @@ __FLAME_GPU_INIT_FUNC__ void setConstants() {
 }
 
 /**
+ * logs FLAMEGPU Step function
+ * Automatically generated using functions.xslt
+ */
+__FLAME_GPU_STEP_FUNC__ void Tissuelogs(){
+
+    // Get some values and construct an output path.
+    const char * directory = getOutputDir();
+
+//    fprintf(stdout, todirectory);
+
+    unsigned int iteration = getIterationNumber();
+
+    std::string outputFilename = std::string( std::string(directory) + "results/tissue/" + "tissue-logs-" + std::to_string(iteration) +".csv");
+
+    // Get a file handle for output.
+    FILE * fp = fopen(outputFilename.c_str(), "w");
+    // If the file has been opened successfully
+    if(fp != nullptr){
+        fprintf(stdout, "Outputting some Tissue agent data to %s\n", outputFilename.c_str());
+
+        // Output a header row for the CSV
+        fprintf(fp, "ID, x, y, z, damage\n");
+
+        // For each agent of a target type in a target state
+        for(int index = 0; index < get_agent_TissueBlock_default_count(); index++){
+            // Append a row to the CSV file.
+            fprintf(
+                    fp,
+                    "%u, %f, %f, %f, %u\n",
+                    get_TissueBlock_default_variable_id(index),
+                    get_TissueBlock_default_variable_x(index),
+                    get_TissueBlock_default_variable_y(index),
+                    get_TissueBlock_default_variable_z(index),
+                    get_TissueBlock_default_variable_damage(index)
+            );
+        }
+        // Flush the file handle
+        fflush(fp);
+//        fprintf(stderr, "debug: file %s was created for customOutputStepFunction\n", outputFilename.c_str());
+
+    } else {
+        fprintf(stderr, "Error: file %s could not be created for customOutputStepFunction\n", outputFilename.c_str());
+    }
+    // Close the file handle if necessary.
+    if (fp != nullptr && fp != stdout && fp != stderr){
+        fclose(fp);
+        fp = nullptr;
+    }
+}
+
+__FLAME_GPU_STEP_FUNC__ void FibroblastQuiescentlogs(){
+
+    // Get some values and construct an output path.
+    const char * directory = getOutputDir();
+
+//    fprintf(stdout, todirectory);
+
+    unsigned int iteration = getIterationNumber();
+
+    std::string outputFilename = std::string( std::string(directory) + "results/quiescent/"+"fibroblast-quiescent-logs-" + std::to_string(iteration) +".csv");
+
+    // Get a file handle for output.
+    FILE * fp = fopen(outputFilename.c_str(), "w");
+    // If the file has been opened successfully
+    if(fp != nullptr){
+        fprintf(stdout, "Outputting some agent data to %s\n", outputFilename.c_str());
+
+        // Output a header row for the CSV
+        fprintf(fp, "ID, x, y, z, doublings, damage, early_sen_time_counter\n");
+
+        // For each agent of a target type in a target state
+        for(int index = 0; index < get_agent_Fibroblast_Quiescent_count(); index++){
+            // Append a row to the CSV file.
+            fprintf(
+                    fp,
+                    "%u, %f, %f, %f, %f, %u, %u \n",
+                    get_Fibroblast_Quiescent_variable_id(index),
+                    get_Fibroblast_Quiescent_variable_x(index),
+                    get_Fibroblast_Quiescent_variable_y(index),
+                    get_Fibroblast_Quiescent_variable_z(index),
+                    get_Fibroblast_Quiescent_variable_doublings(index),
+                    get_Fibroblast_Quiescent_variable_damage(index),
+                    get_Fibroblast_Quiescent_variable_early_sen_time_counter(index)
+            );
+        }
+        // Flush the file handle
+        fflush(fp);
+//        fprintf(stderr, "debug: file %s was created for customOutputStepFunction\n", outputFilename.c_str());
+
+    } else {
+        fprintf(stderr, "Error: file %s could not be created for customOutputStepFunction\n", outputFilename.c_str());
+    }
+    // Close the file handle if necessary.
+    if (fp != nullptr && fp != stdout && fp != stderr){
+        fclose(fp);
+        fp = nullptr;
+    }
+}
+
+
+/**
+ * FibroblastEarlySenescentlogs FLAMEGPU Step function
+ * Automatically generated using functions.xslt
+ */
+__FLAME_GPU_STEP_FUNC__ void FibroblastEarlySenescentlogs(){
+
+    // Get some values and construct an output path.
+    const char * directory = getOutputDir();
+
+//    fprintf(stdout, todirectory);
+
+    unsigned int iteration = getIterationNumber();
+
+    std::string outputFilename = std::string( std::string(directory) + "results/early-sen/"+"fibroblast-early-senescent-logs-" + std::to_string(iteration) +".csv");
+
+    // Get a file handle for output.
+    FILE * fp = fopen(outputFilename.c_str(), "w");
+    // If the file has been opened successfully
+    if(fp != nullptr){
+        fprintf(stdout, "Outputting some agent data to %s\n", outputFilename.c_str());
+
+        // Output a header row for the CSV
+        fprintf(fp, "ID, x, y, z, doublings, damage, early_sen_time_counter\n");
+
+        // For each agent of a target type in a target state
+        for(int index = 0; index < get_agent_Fibroblast_EarlySenescent_count(); index++){
+            // Append a row to the CSV file.
+            fprintf(
+                    fp,
+                    "%u, %f, %f, %f, %f, %u, %u \n",
+                    get_Fibroblast_EarlySenescent_variable_id(index),
+                    get_Fibroblast_EarlySenescent_variable_x(index),
+                    get_Fibroblast_EarlySenescent_variable_y(index),
+                    get_Fibroblast_EarlySenescent_variable_z(index),
+                    get_Fibroblast_EarlySenescent_variable_doublings(index),
+                    get_Fibroblast_EarlySenescent_variable_damage(index),
+                    get_Fibroblast_EarlySenescent_variable_early_sen_time_counter(index)
+            );
+        }
+        // Flush the file handle
+        fflush(fp);
+//        fprintf(stderr, "debug: file %s was created for customOutputStepFunction\n", outputFilename.c_str());
+
+    } else {
+        fprintf(stderr, "Error: file %s could not be created for customOutputStepFunction\n", outputFilename.c_str());
+    }
+    // Close the file handle if necessary.
+    if (fp != nullptr && fp != stdout && fp != stderr){
+        fclose(fp);
+        fp = nullptr;
+    }
+}
+
+
+/**
+ * FibroblastSenescentlogs FLAMEGPU Step function
+ * Automatically generated using functions.xslt
+ */
+__FLAME_GPU_STEP_FUNC__ void FibroblastSenescentlogs(){
+
+    // Get some values and construct an output path.
+    const char * directory = getOutputDir();
+
+//    fprintf(stdout, todirectory);
+
+    unsigned int iteration = getIterationNumber();
+
+    std::string outputFilename = std::string( std::string(directory) + "results/sen/"+"fibroblast-senescent-logs-" + std::to_string(iteration) +".csv");
+
+    // Get a file handle for output.
+    FILE * fp = fopen(outputFilename.c_str(), "w");
+    // If the file has been opened successfully
+    if(fp != nullptr){
+        fprintf(stdout, "Outputting some agent data to %s\n", outputFilename.c_str());
+
+        // Output a header row for the CSV
+        fprintf(fp, "ID, x, y, z, doublings, damage, early_sen_time_counter\n");
+
+        // For each agent of a target type in a target state
+        for(int index = 0; index < get_agent_Fibroblast_Senescent_count(); index++){
+            // Append a row to the CSV file.
+            fprintf(
+                    fp,
+                    "%u, %f, %f, %f, %f, %u, %u \n",
+                    get_Fibroblast_Senescent_variable_id(index),
+                    get_Fibroblast_Senescent_variable_x(index),
+                    get_Fibroblast_Senescent_variable_y(index),
+                    get_Fibroblast_Senescent_variable_z(index),
+                    get_Fibroblast_Senescent_variable_doublings(index),
+                    get_Fibroblast_Senescent_variable_damage(index),
+                    get_Fibroblast_Senescent_variable_early_sen_time_counter(index)
+            );
+        }
+        // Flush the file handle
+        fflush(fp);
+//        fprintf(stderr, "debug: file %s was created for customOutputStepFunction\n", outputFilename.c_str());
+
+    } else {
+        fprintf(stderr, "Error: file %s could not be created for customOutputStepFunction\n", outputFilename.c_str());
+    }
+    // Close the file handle if necessary.
+    if (fp != nullptr && fp != stdout && fp != stderr){
+        fclose(fp);
+        fp = nullptr;
+    }
+}
+
+
+/**
+ * FibroblastProliferatinglogs FLAMEGPU Step function
+ * Automatically generated using functions.xslt
+ */
+__FLAME_GPU_STEP_FUNC__ void FibroblastProliferatinglogs(){
+
+    // Get some values and construct an output path.
+    const char * directory = getOutputDir();
+
+//    fprintf(stdout, todirectory);
+
+    unsigned int iteration = getIterationNumber();
+
+    std::string outputFilename = std::string( std::string(directory) + "results/prolif/"+"fibroblast-proliferating-logs-" + std::to_string(iteration) +".csv");
+
+    // Get a file handle for output.
+    FILE * fp = fopen(outputFilename.c_str(), "w");
+    // If the file has been opened successfully
+    if(fp != nullptr){
+        fprintf(stdout, "Outputting some agent data to %s\n", outputFilename.c_str());
+
+        // Output a header row for the CSV
+        fprintf(fp, "ID, x, y, z, doublings, damage, early_sen_time_counter\n");
+
+        // For each agent of a target type in a target state
+        for(int index = 0; index < get_agent_Fibroblast_Proliferating_count(); index++){
+            // Append a row to the CSV file.
+            fprintf(
+                    fp,
+                    "%u, %f, %f, %f, %f, %u, %u \n",
+                    get_Fibroblast_Proliferating_variable_id(index),
+                    get_Fibroblast_Proliferating_variable_x(index),
+                    get_Fibroblast_Proliferating_variable_y(index),
+                    get_Fibroblast_Proliferating_variable_z(index),
+                    get_Fibroblast_Proliferating_variable_doublings(index),
+            get_Fibroblast_Proliferating_variable_damage(index),
+            get_Fibroblast_Proliferating_variable_early_sen_time_counter(index)
+            );
+        }
+        // Flush the file handle
+        fflush(fp);
+//        fprintf(stderr, "debug: file %s was created for customOutputStepFunction\n", outputFilename.c_str());
+
+    } else {
+        fprintf(stderr, "Error: file %s could not be created for customOutputStepFunction\n", outputFilename.c_str());
+    }
+    // Close the file handle if necessary.
+    if (fp != nullptr && fp != stdout && fp != stderr){
+        fclose(fp);
+        fp = nullptr;
+    }
+}
+
+
+/**
+ * FibroblastRepairlogs FLAMEGPU Step function
+ * Automatically generated using functions.xslt
+ */
+__FLAME_GPU_STEP_FUNC__ void FibroblastRepairlogs(){
+
+    // Get some values and construct an output path.
+    const char * directory = getOutputDir();
+
+//    fprintf(stdout, todirectory);
+
+    unsigned int iteration = getIterationNumber();
+
+    std::string outputFilename = std::string( std::string(directory) + "results/repair/"+"fibroblast-repair-logs-" + std::to_string(iteration) +".csv");
+
+    // Get a file handle for output.
+    FILE * fp = fopen(outputFilename.c_str(), "w");
+    // If the file has been opened successfully
+    if(fp != nullptr){
+        fprintf(stdout, "Outputting some agent data to %s\n", outputFilename.c_str());
+
+        // Output a header row for the CSV
+        fprintf(fp, "ID, x, y, z, doublings, damage, early_sen_time_counter\n");
+
+        // For each agent of a target type in a target state
+        for(int index = 0; index < get_agent_Fibroblast_Repair_count(); index++){
+            // Append a row to the CSV file.
+            fprintf(
+                    fp,
+                    "%u, %f, %f, %f, %f, %u, %u \n",
+                    get_Fibroblast_Repair_variable_id(index),
+                    get_Fibroblast_Repair_variable_x(index),
+                    get_Fibroblast_Repair_variable_y(index),
+                    get_Fibroblast_Repair_variable_z(index),
+                    get_Fibroblast_Repair_variable_doublings(index),
+            get_Fibroblast_Repair_variable_damage(index),
+            get_Fibroblast_Repair_variable_early_sen_time_counter(index)
+            );
+        }
+        // Flush the file handle
+        fflush(fp);
+//        fprintf(stderr, "debug: file %s was created for customOutputStepFunction\n", outputFilename.c_str());
+
+    } else {
+        fprintf(stderr, "Error: file %s could not be created for customOutputStepFunction\n", outputFilename.c_str());
+    }
+    // Close the file handle if necessary.
+    if (fp != nullptr && fp != stdout && fp != stderr){
+        fclose(fp);
+        fp = nullptr;
+    }
+}
+
+
+/**
  * TissueTakesDamage FLAMEGPU Agent Function
  * Automatically generated using functions.xslt
  * @param agent Pointer to an agent structure of type xmachine_memory_TissueBlock. This represents a single agent instance and can be modified directly.
@@ -145,7 +462,7 @@ __FLAME_GPU_FUNC__ int TissueSendDamageReport(
 
 
     //Template for message output function
-    int id = agent->id;
+    int id = agent->id+1000;
     float x = agent->x;
     float y = agent->y;
     float z = agent->z;
@@ -187,7 +504,7 @@ __FLAME_GPU_FUNC__ int ReapirDamage(xmachine_memory_TissueBlock* agent, xmachine
             float separation = magnitude_of_vec(tissue_location - fibroblast_location);
             /// if repairative fibroblast within REPAIR_RADIUS distance, subtract a point of damage
             if (separation < REPAIR_RADIUS){
-                agent->damage -= 1;
+                agent->damage = agent->damage - 1;
             }
 
 
@@ -391,8 +708,6 @@ __FLAME_GPU_FUNC__ int EarlySenescentMigration(
  */
 __FLAME_GPU_FUNC__ int QuiescentTakesDamage(
         xmachine_memory_Fibroblast *agent,
-        xmachine_message_fibroblast_damage_report_list *fibroblast_damage_report_messages,
-        xmachine_message_fibroblast_damage_report_PBM *partition_matrix,
         RNG_rand48 *rand48) {
 
 
@@ -402,31 +717,6 @@ __FLAME_GPU_FUNC__ int QuiescentTakesDamage(
 
     return 0;
 }
-
-/**
- * QuiescentSendDamageReport FLAMEGPU Agent Function
- * Automatically generated using functions.xslt
- * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- * @param fibroblast_damage_report_messages Pointer to output message list of type xmachine_message_fibroblast_damage_report_list. Must be passed as an argument to the add_fibroblast_damage_report_message function.* @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
- */
-__FLAME_GPU_FUNC__ int QuiescentSendDamageReport(
-        xmachine_memory_Fibroblast *agent,
-        xmachine_message_fibroblast_damage_report_list *fibroblast_damage_report_messages,
-        RNG_rand48 *rand48) {
-
-    //Template for message output function
-    int id = agent->id;
-    float x = agent->x;
-    float y = agent->y;
-    float z = agent->z;
-    int damage = agent->damage;
-
-    add_fibroblast_damage_report_message(
-            fibroblast_damage_report_messages, id, x, y, z, damage);
-
-    return 0;
-}
-
 
 /**
  * TransitionToProliferating FLAMEGPU Agent Function

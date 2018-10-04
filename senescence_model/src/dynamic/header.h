@@ -80,17 +80,8 @@ typedef glm::dvec4 dvec4;
   
   
 /* Message population size definitions */
-//Maximum population size of xmachine_mmessage_fibroblast_damage_report
-#define xmachine_message_fibroblast_damage_report_MAX 4096
-
 //Maximum population size of xmachine_mmessage_tissue_damage_report
 #define xmachine_message_tissue_damage_report_MAX 4096
-
-//Maximum population size of xmachine_mmessage_doublings
-#define xmachine_message_doublings_MAX 4096
-
-//Maximum population size of xmachine_mmessage_count
-#define xmachine_message_count_MAX 4096
 
 //Maximum population size of xmachine_mmessage_fibroblast_location_report
 #define xmachine_message_fibroblast_location_report_MAX 4096
@@ -98,19 +89,14 @@ typedef glm::dvec4 dvec4;
 
 /* Define preprocessor symbols for each message to specify the type, to simplify / improve portability */
 
-#define xmachine_message_fibroblast_damage_report_partitioningSpatial
 #define xmachine_message_tissue_damage_report_partitioningSpatial
-#define xmachine_message_doublings_partitioningNone
-#define xmachine_message_count_partitioningNone
 #define xmachine_message_fibroblast_location_report_partitioningSpatial
 
 /* Spatial partitioning grid size definitions */
-//xmachine_message_fibroblast_damage_report partition grid size (gridDim.X*gridDim.Y*gridDim.Z)
-#define xmachine_message_fibroblast_damage_report_grid_size 1000
 //xmachine_message_tissue_damage_report partition grid size (gridDim.X*gridDim.Y*gridDim.Z)
 #define xmachine_message_tissue_damage_report_grid_size 1000
 //xmachine_message_fibroblast_location_report partition grid size (gridDim.X*gridDim.Y*gridDim.Z)
-#define xmachine_message_fibroblast_location_report_grid_size 1000
+#define xmachine_message_fibroblast_location_report_grid_size 64
 
 /* Static Graph size definitions*/
   
@@ -182,25 +168,6 @@ struct __align__(16) xmachine_memory_Fibroblast
 
 /* Message structures */
 
-/** struct xmachine_message_fibroblast_damage_report
- * Spatial Partitioning
- * Holds all message variables and is aligned to help with coalesced reads on the GPU
- */
-struct __align__(16) xmachine_message_fibroblast_damage_report
-{	
-    /* Spatial Partitioning Variables */
-    glm::ivec3 _relative_cell;    /**< Relative cell position from agent grid cell position range -1 to 1 */
-    int _cell_index_max;    /**< Max boundary value of current cell */
-    glm::ivec3 _agent_grid_cell;  /**< Agents partition cell position */
-    int _cell_index;        /**< Index of position in current cell */  
-      
-    int id;        /**< Message variable id of type int.*/  
-    float x;        /**< Message variable x of type float.*/  
-    float y;        /**< Message variable y of type float.*/  
-    float z;        /**< Message variable z of type float.*/  
-    int damage;        /**< Message variable damage of type int.*/
-};
-
 /** struct xmachine_message_tissue_damage_report
  * Spatial Partitioning
  * Holds all message variables and is aligned to help with coalesced reads on the GPU
@@ -218,30 +185,6 @@ struct __align__(16) xmachine_message_tissue_damage_report
     float y;        /**< Message variable y of type float.*/  
     float z;        /**< Message variable z of type float.*/  
     int damage;        /**< Message variable damage of type int.*/
-};
-
-/** struct xmachine_message_doublings
- * Brute force: No Partitioning
- * Holds all message variables and is aligned to help with coalesced reads on the GPU
- */
-struct __align__(16) xmachine_message_doublings
-{	
-    /* Brute force Partitioning Variables */
-    int _position;          /**< 1D position of message in linear message list */   
-      
-    int number;        /**< Message variable number of type int.*/
-};
-
-/** struct xmachine_message_count
- * Brute force: No Partitioning
- * Holds all message variables and is aligned to help with coalesced reads on the GPU
- */
-struct __align__(16) xmachine_message_count
-{	
-    /* Brute force Partitioning Variables */
-    int _position;          /**< 1D position of message in linear message list */   
-      
-    int number;        /**< Message variable number of type int.*/
 };
 
 /** struct xmachine_message_fibroblast_location_report
@@ -309,24 +252,6 @@ struct xmachine_memory_Fibroblast_list
 
 /* Message lists. Structure of Array (SoA) for memory coalescing on GPU */
 
-/** struct xmachine_message_fibroblast_damage_report_list
- * Spatial Partitioning
- * Structure of Array for memory coalescing 
- */
-struct xmachine_message_fibroblast_damage_report_list
-{
-    /* Non discrete messages have temp variables used for reductions with optional message outputs */
-    int _position [xmachine_message_fibroblast_damage_report_MAX];    /**< Holds agents position in the 1D agent list */
-    int _scan_input [xmachine_message_fibroblast_damage_report_MAX];  /**< Used during parallel prefix sum */
-    
-    int id [xmachine_message_fibroblast_damage_report_MAX];    /**< Message memory variable list id of type int.*/
-    float x [xmachine_message_fibroblast_damage_report_MAX];    /**< Message memory variable list x of type float.*/
-    float y [xmachine_message_fibroblast_damage_report_MAX];    /**< Message memory variable list y of type float.*/
-    float z [xmachine_message_fibroblast_damage_report_MAX];    /**< Message memory variable list z of type float.*/
-    int damage [xmachine_message_fibroblast_damage_report_MAX];    /**< Message memory variable list damage of type int.*/
-    
-};
-
 /** struct xmachine_message_tissue_damage_report_list
  * Spatial Partitioning
  * Structure of Array for memory coalescing 
@@ -342,34 +267,6 @@ struct xmachine_message_tissue_damage_report_list
     float y [xmachine_message_tissue_damage_report_MAX];    /**< Message memory variable list y of type float.*/
     float z [xmachine_message_tissue_damage_report_MAX];    /**< Message memory variable list z of type float.*/
     int damage [xmachine_message_tissue_damage_report_MAX];    /**< Message memory variable list damage of type int.*/
-    
-};
-
-/** struct xmachine_message_doublings_list
- * Brute force: No Partitioning
- * Structure of Array for memory coalescing 
- */
-struct xmachine_message_doublings_list
-{
-    /* Non discrete messages have temp variables used for reductions with optional message outputs */
-    int _position [xmachine_message_doublings_MAX];    /**< Holds agents position in the 1D agent list */
-    int _scan_input [xmachine_message_doublings_MAX];  /**< Used during parallel prefix sum */
-    
-    int number [xmachine_message_doublings_MAX];    /**< Message memory variable list number of type int.*/
-    
-};
-
-/** struct xmachine_message_count_list
- * Brute force: No Partitioning
- * Structure of Array for memory coalescing 
- */
-struct xmachine_message_count_list
-{
-    /* Non discrete messages have temp variables used for reductions with optional message outputs */
-    int _position [xmachine_message_count_MAX];    /**< Holds agents position in the 1D agent list */
-    int _scan_input [xmachine_message_count_MAX];  /**< Used during parallel prefix sum */
-    
-    int number [xmachine_message_count_MAX];    /**< Message memory variable list number of type int.*/
     
 };
 
@@ -394,15 +291,6 @@ struct xmachine_message_fibroblast_location_report_list
 
 
 /* Spatially Partitioned Message boundary Matrices */
-
-/** struct xmachine_message_fibroblast_damage_report_PBM
- * Partition Boundary Matrix (PBM) for xmachine_message_fibroblast_damage_report 
- */
-struct xmachine_message_fibroblast_damage_report_PBM
-{
-	int start[xmachine_message_fibroblast_damage_report_grid_size];
-	int end_or_count[xmachine_message_fibroblast_damage_report_grid_size];
-};
 
 /** struct xmachine_message_tissue_damage_report_PBM
  * Partition Boundary Matrix (PBM) for xmachine_message_tissue_damage_report 
@@ -514,16 +402,9 @@ __FLAME_GPU_FUNC__ int EarlySenescentMigration(xmachine_memory_Fibroblast* agent
 /**
  * QuiescentTakesDamage FLAMEGPU Agent Function
  * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- * @param fibroblast_damage_report_messages  fibroblast_damage_report_messages Pointer to input message list of type xmachine_message__list. Must be passed as an argument to the get_first_fibroblast_damage_report_message and get_next_fibroblast_damage_report_message functions.* @param partition_matrix Pointer to the partition matrix of type xmachine_message_fibroblast_damage_report_PBM. Used within the get_first__message and get_next__message functions for spatially partitioned message access.* @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
+ * @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
  */
-__FLAME_GPU_FUNC__ int QuiescentTakesDamage(xmachine_memory_Fibroblast* agent, xmachine_message_fibroblast_damage_report_list* fibroblast_damage_report_messages, xmachine_message_fibroblast_damage_report_PBM* partition_matrix, RNG_rand48* rand48);
-
-/**
- * QuiescentSendDamageReport FLAMEGPU Agent Function
- * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- * @param fibroblast_damage_report_messages Pointer to output message list of type xmachine_message_fibroblast_damage_report_list. Must be passed as an argument to the add_fibroblast_damage_report_message function ??.* @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
- */
-__FLAME_GPU_FUNC__ int QuiescentSendDamageReport(xmachine_memory_Fibroblast* agent, xmachine_message_fibroblast_damage_report_list* fibroblast_damage_report_messages, RNG_rand48* rand48);
+__FLAME_GPU_FUNC__ int QuiescentTakesDamage(xmachine_memory_Fibroblast* agent, RNG_rand48* rand48);
 
 /**
  * TransitionToProliferating FLAMEGPU Agent Function
@@ -596,42 +477,6 @@ __FLAME_GPU_FUNC__ int ClearanceOfSenescent(xmachine_memory_Fibroblast* agent, R
 __FLAME_GPU_FUNC__ int DetectDamage(xmachine_memory_Fibroblast* agent, xmachine_message_tissue_damage_report_list* tissue_damage_report_messages, xmachine_message_tissue_damage_report_PBM* partition_matrix);
 
   
-/* Message Function Prototypes for Spatially Partitioned fibroblast_damage_report message implemented in FLAMEGPU_Kernels */
-
-/** add_fibroblast_damage_report_message
- * Function for all types of message partitioning
- * Adds a new fibroblast_damage_report agent to the xmachine_memory_fibroblast_damage_report_list list using a linear mapping
- * @param agents	xmachine_memory_fibroblast_damage_report_list agent list
- * @param id	message variable of type int
- * @param x	message variable of type float
- * @param y	message variable of type float
- * @param z	message variable of type float
- * @param damage	message variable of type int
- */
- 
- __FLAME_GPU_FUNC__ void add_fibroblast_damage_report_message(xmachine_message_fibroblast_damage_report_list* fibroblast_damage_report_messages, int id, float x, float y, float z, int damage);
- 
-/** get_first_fibroblast_damage_report_message
- * Get first message function for spatially partitioned messages
- * @param fibroblast_damage_report_messages message list
- * @param partition_matrix the boundary partition matrix for the spatially partitioned message list
- * @param agentx x position of the agent
- * @param agenty y position of the agent
- * @param agentz z position of the agent
- * @return        returns the first message from the message list (offset depending on agent block)
- */
-__FLAME_GPU_FUNC__ xmachine_message_fibroblast_damage_report * get_first_fibroblast_damage_report_message(xmachine_message_fibroblast_damage_report_list* fibroblast_damage_report_messages, xmachine_message_fibroblast_damage_report_PBM* partition_matrix, float x, float y, float z);
-
-/** get_next_fibroblast_damage_report_message
- * Get first message function for discrete partitioned messages. Template function will call either shared memory or texture cache implementation depending on AGENT_TYPE
- * @param current the current message struct
- * @param fibroblast_damage_report_messages message list
- * @param partition_matrix the boundary partition matrix for the spatially partitioned message list
- * @return        returns the first message from the message list (offset depending on agent block)
- */
-__FLAME_GPU_FUNC__ xmachine_message_fibroblast_damage_report * get_next_fibroblast_damage_report_message(xmachine_message_fibroblast_damage_report* current, xmachine_message_fibroblast_damage_report_list* fibroblast_damage_report_messages, xmachine_message_fibroblast_damage_report_PBM* partition_matrix);
-
-  
 /* Message Function Prototypes for Spatially Partitioned tissue_damage_report message implemented in FLAMEGPU_Kernels */
 
 /** add_tissue_damage_report_message
@@ -666,60 +511,6 @@ __FLAME_GPU_FUNC__ xmachine_message_tissue_damage_report * get_first_tissue_dama
  * @return        returns the first message from the message list (offset depending on agent block)
  */
 __FLAME_GPU_FUNC__ xmachine_message_tissue_damage_report * get_next_tissue_damage_report_message(xmachine_message_tissue_damage_report* current, xmachine_message_tissue_damage_report_list* tissue_damage_report_messages, xmachine_message_tissue_damage_report_PBM* partition_matrix);
-
-  
-/* Message Function Prototypes for Brute force (No Partitioning) doublings message implemented in FLAMEGPU_Kernels */
-
-/** add_doublings_message
- * Function for all types of message partitioning
- * Adds a new doublings agent to the xmachine_memory_doublings_list list using a linear mapping
- * @param agents	xmachine_memory_doublings_list agent list
- * @param number	message variable of type int
- */
- 
- __FLAME_GPU_FUNC__ void add_doublings_message(xmachine_message_doublings_list* doublings_messages, int number);
- 
-/** get_first_doublings_message
- * Get first message function for non partitioned (brute force) messages
- * @param doublings_messages message list
- * @return        returns the first message from the message list (offset depending on agent block)
- */
-__FLAME_GPU_FUNC__ xmachine_message_doublings * get_first_doublings_message(xmachine_message_doublings_list* doublings_messages);
-
-/** get_next_doublings_message
- * Get first message function for non partitioned (brute force) messages
- * @param current the current message struct
- * @param doublings_messages message list
- * @return        returns the first message from the message list (offset depending on agent block)
- */
-__FLAME_GPU_FUNC__ xmachine_message_doublings * get_next_doublings_message(xmachine_message_doublings* current, xmachine_message_doublings_list* doublings_messages);
-
-  
-/* Message Function Prototypes for Brute force (No Partitioning) count message implemented in FLAMEGPU_Kernels */
-
-/** add_count_message
- * Function for all types of message partitioning
- * Adds a new count agent to the xmachine_memory_count_list list using a linear mapping
- * @param agents	xmachine_memory_count_list agent list
- * @param number	message variable of type int
- */
- 
- __FLAME_GPU_FUNC__ void add_count_message(xmachine_message_count_list* count_messages, int number);
- 
-/** get_first_count_message
- * Get first message function for non partitioned (brute force) messages
- * @param count_messages message list
- * @return        returns the first message from the message list (offset depending on agent block)
- */
-__FLAME_GPU_FUNC__ xmachine_message_count * get_first_count_message(xmachine_message_count_list* count_messages);
-
-/** get_next_count_message
- * Get first message function for non partitioned (brute force) messages
- * @param current the current message struct
- * @param count_messages message list
- * @return        returns the first message from the message list (offset depending on agent block)
- */
-__FLAME_GPU_FUNC__ xmachine_message_count * get_next_count_message(xmachine_message_count* current, xmachine_message_count_list* count_messages);
 
   
 /* Message Function Prototypes for Spatially Partitioned fibroblast_location_report message implemented in FLAMEGPU_Kernels */
