@@ -224,47 +224,9 @@ __FLAME_GPU_FUNC__ int EarlySenescentMigration(xmachine_memory_Fibroblast* agent
  * QuiescentTakesDamage FLAMEGPU Agent Function
  * Automatically generated using functions.xslt
  * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- * @param fibroblast_damage_report_messages  fibroblast_damage_report_messages Pointer to input message list of type xmachine_message__list. Must be passed as an argument to the get_first_fibroblast_damage_report_message and get_next_fibroblast_damage_report_message functions.* @param partition_matrix Pointer to the partition matrix of type xmachine_message_fibroblast_damage_report_PBM. Used within the get_first__message and get_next__message functions for spatially partitioned message access.* @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
+ * @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
  */
-__FLAME_GPU_FUNC__ int QuiescentTakesDamage(xmachine_memory_Fibroblast* agent, xmachine_message_fibroblast_damage_report_list* fibroblast_damage_report_messages, xmachine_message_fibroblast_damage_report_PBM* partition_matrix, RNG_rand48* rand48){
-    
-    /*
-    // Position within space
-    float agent_x = 0.0;
-    float agent_y = 0.0;
-    float agent_z = 0.0;
-    
-    //Template for input message iteration
-    xmachine_message_fibroblast_damage_report* current_message = get_first_fibroblast_damage_report_message(fibroblast_damage_report_messages, partition_matrix, agent_x, agent_y, agent_z);
-    while (current_message)
-    {
-        //INSERT MESSAGE PROCESSING CODE HERE
-        
-        current_message = get_next_fibroblast_damage_report_message(current_message, fibroblast_damage_report_messages, partition_matrix);
-    }
-    */
-    
-    return 0;
-}
-
-/**
- * QuiescentSendDamageReport FLAMEGPU Agent Function
- * Automatically generated using functions.xslt
- * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- * @param fibroblast_damage_report_messages Pointer to output message list of type xmachine_message_fibroblast_damage_report_list. Must be passed as an argument to the add_fibroblast_damage_report_message function.* @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
- */
-__FLAME_GPU_FUNC__ int QuiescentSendDamageReport(xmachine_memory_Fibroblast* agent, xmachine_message_fibroblast_damage_report_list* fibroblast_damage_report_messages, RNG_rand48* rand48){
-    
-    /* 
-    //Template for message output function
-    int id = 0;
-    float x = 0;
-    float y = 0;
-    float z = 0;
-    int damage = 0;
-    
-    add_fibroblast_damage_report_message(fibroblast_damage_report_messages, id, x, y, z, damage);
-    */     
+__FLAME_GPU_FUNC__ int QuiescentTakesDamage(xmachine_memory_Fibroblast* agent, RNG_rand48* rand48){
     
     return 0;
 }
@@ -297,9 +259,8 @@ __FLAME_GPU_FUNC__ int Proliferation(xmachine_memory_Fibroblast* agent, xmachine
     int damage = 0;
     int early_sen_time_counter = 0;
     int current_state = 0;
-    int colour = 0;
     
-    add_Fibroblast_agent(Fibroblast_agents, int id, float x, float y, float z, float doublings, int damage, int early_sen_time_counter, int current_state, int colour);
+    add_Fibroblast_agent(Fibroblast_agents, int id, float x, float y, float z, float doublings, int damage, int early_sen_time_counter, int current_state);
     */
     
     return 0;
@@ -372,28 +333,6 @@ __FLAME_GPU_FUNC__ int EarlySenCountTime(xmachine_memory_Fibroblast* agent){
  * @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
  */
 __FLAME_GPU_FUNC__ int TransitionToFullSenescence(xmachine_memory_Fibroblast* agent, RNG_rand48* rand48){
-    
-    return 0;
-}
-
-/**
- * ClearanceOfEarlySenescent FLAMEGPU Agent Function
- * Automatically generated using functions.xslt
- * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- * @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
- */
-__FLAME_GPU_FUNC__ int ClearanceOfEarlySenescent(xmachine_memory_Fibroblast* agent, RNG_rand48* rand48){
-    
-    return 0;
-}
-
-/**
- * ClearanceOfSenescent FLAMEGPU Agent Function
- * Automatically generated using functions.xslt
- * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- * @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
- */
-__FLAME_GPU_FUNC__ int ClearanceOfSenescent(xmachine_memory_Fibroblast* agent, RNG_rand48* rand48){
     
     return 0;
 }
