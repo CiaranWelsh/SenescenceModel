@@ -64,7 +64,7 @@ return add_a_to_b(a, (b-a)* scale);
  * Automatically generated using functions.xslt
  */
 __FLAME_GPU_INIT_FUNC__ void setConstants() {
-    float TISSUE_DAMAGE_PROB = 0.25f;
+    float TISSUE_DAMAGE_PROB = 0.1f;
     float EARLY_SENESCENT_MIGRATION_SCALE = 0.1f;
     float SENESCENT_MIGRATION_SCALE = 0.001f;
     float QUIESCENT_MIGRATION_SCALE = 0.0001f;
@@ -86,7 +86,7 @@ __FLAME_GPU_INIT_FUNC__ void setConstants() {
     float CLEARANCE_EARLY_SEN_PROB = 0.1f;
     float CLEARANCE_SEN_PROB = 0.1f;
 
-    float REPAIR_RADIUS = 0.1f;
+    float REPAIR_RADIUS = 1.0f;
 
 
 
@@ -128,8 +128,7 @@ __FLAME_GPU_FUNC__ int TissueTakesDamage(
 
     float random_number = rnd<CONTINUOUS>(rand48);
     if (random_number < TISSUE_DAMAGE_PROB)
-        if (agent->damage != 0)
-            agent->damage = agent->damage - 1;
+        agent->damage = agent->damage + 1;
 
     return 0;
 }
@@ -399,8 +398,7 @@ __FLAME_GPU_FUNC__ int QuiescentTakesDamage(
 
     float random_number = rnd<CONTINUOUS>(rand48);
     if (random_number < TISSUE_DAMAGE_PROB)
-        if (agent->damage != 0)
-            agent->damage = agent->damage - 1;
+        agent->damage = agent->damage + 1;
 
     return 0;
 }

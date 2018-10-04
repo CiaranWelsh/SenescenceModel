@@ -78,9 +78,15 @@ bool paused = false;
 #endif
 
 // vertex Shader
-GLuint vertexShader;
-GLuint fragmentShader;
-GLuint shaderProgram;
+GLuint tissueVertexShader;
+GLuint fibroblastVertexShader;
+
+///fragment shaders
+GLuint tissueFragmentShader;
+GLuint fibroblastFragmentShader;
+
+GLuint fibroblastShaderProgram;
+GLuint tissueShaderProgram;
 GLuint vs_displacementMap;
 GLuint vs_mapIndex;
 
@@ -100,6 +106,7 @@ int delay_count = 0;
 // prototypes
 int initGL();
 void initFibroblastShader();
+void initTissueShader();
 void createVBO( GLuint* vbo, GLuint size);
 void deleteVBO( GLuint* vbo);
 void createTBO( cudaGraphicsResource_t* cudaResource, GLuint* tbo, GLuint* tex, GLuint size);
@@ -188,8 +195,8 @@ const char tissueVertexShaderSource[] =
     "{																			\n"
     "	vec4 position = gl_Vertex;											    \n"
     "	vec4 lookup = texelFetchBuffer(displacementMap, (int)mapIndex);		    \n"
-    "   float val = float(lookup.w) / 100.0f                                    \n"
-    "	colour = vec4(val, 0.0, 0.0, 0.0);                              			\n"
+    "   //float val = float(lookup.w) / 100.0                                    \n"
+    "	colour = vec4(1.0-(lookup.w/100), 0.1, 0.1, 0.0);                              			\n"
     "																    		\n"
     "	lookup.w = 1.0;												    		\n"
     "	position += lookup;											    		\n"
@@ -273,7 +280,7 @@ void initVisualisation()
 	if( !initGL()) {
 			return;
 	}
-	initFibroblastShader();
+
 
 	// register callbacks
 	glutReshapeFunc( reshape);
@@ -305,12 +312,15 @@ void initVisualisation()
 	createTBO(&Fibroblast_Proliferating_cgr, &Fibroblast_Proliferating_tbo, &Fibroblast_Proliferating_displacementTex, xmachine_memory_Fibroblast_MAX * sizeof( glm::vec4));
 	
 	createTBO(&Fibroblast_Repair_cgr, &Fibroblast_Repair_tbo, &Fibroblast_Repair_displacementTex, xmachine_memory_Fibroblast_MAX * sizeof( glm::vec4));
-	
 
-	//set shader uniforms
-	glUseProgram(shaderProgram);
+    //set shader uniforms
+//    initFibroblastShader();
+//    glUseProgram(fibroblastShaderProgram);
+//
+    initTissueShader();
+    glUseProgram(tissueShaderProgram);
 
-	//create a events for timer
+    //create a events for timer
 	cudaEventCreate(&start);
 	cudaEventCreate(&stop);
 }
@@ -513,7 +523,6 @@ int initGL()
 void initFibroblastShader()
 {
 	const char* vf = fibroblastVertexShaderSource;
-	const char* vt = tissueVertexShaderSource;
 	const char* f = fragmentShaderSource;
 
 	/// fibroblast vertex shader
@@ -521,22 +530,16 @@ void initFibroblastShader()
 	glShaderSource(fibroblastVertexShader, 1, &vf, 0);
 	glCompileShader(fibroblastVertexShader);
 
-	/// tissue vertex shader
-    GLuint tissueVertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(tissueVertexShader, 1, &vt, 0);
-	glCompileShader(tissueVertexShader);
-
 	//fragment shader
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &f, 0);
-	glCompileShader(fragmentShader);
+	fibroblastFragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fibroblastFragmentShader, 1, &f, 0);
+	glCompileShader(fibroblastFragmentShader);
 
 	//program
-	shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, tissueVertexShader);
-    glAttachShader(shaderProgram, fibroblastVertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
+	fibroblastShaderProgram = glCreateProgram();
+    glAttachShader(fibroblastShaderProgram, fibroblastVertexShader);
+    glAttachShader(fibroblastShaderProgram, fibroblastFragmentShader);
+	glLinkProgram(fibroblastShaderProgram);
 
 	/// check for errors
 	GLint status;
@@ -549,32 +552,73 @@ void initFibroblastShader()
 		printf("%s", data);
 	}
 
-	glGetShaderiv(tissueVertexShader, GL_COMPILE_STATUS, &status);
+	glGetShaderiv(fibroblastFragmentShader, GL_COMPILE_STATUS, &status);
 	if (status == GL_FALSE){
 		printf("ERROR: Shader Compilation Error\n");
 		char data[262144];
 		int len;
-		glGetShaderInfoLog(fibroblastVertexShader, 262144, &len, data);
+		glGetShaderInfoLog(fibroblastFragmentShader, 262144, &len, data);
 		printf("%s", data);
 	}
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &status);
-	if (status == GL_FALSE){
-		printf("ERROR: Shader Compilation Error\n");
-		char data[262144];
-		int len;
-		glGetShaderInfoLog(fragmentShader, 262144, &len, data); 
-		printf("%s", data);
-	}
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &status);
+	glGetProgramiv(fibroblastShaderProgram, GL_LINK_STATUS, &status);
 	if (status == GL_FALSE){
 		printf("ERROR: Shader Program Link Error\n");
 	}
 
 	// get shader variables
-	vs_displacementMap = glGetUniformLocation(shaderProgram, "displacementMap");
-	vs_mapIndex = glGetAttribLocation(shaderProgram, "mapIndex"); 
+	vs_displacementMap = glGetUniformLocation(fibroblastShaderProgram, "displacementMap");
+	vs_mapIndex = glGetAttribLocation(fibroblastShaderProgram, "mapIndex");
 }
 
+void initTissueShader()
+{
+    const char* vt = tissueVertexShaderSource;
+    const char* f = fragmentShaderSource;
+
+    /// tissue vertex shader
+    GLuint tissueVertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(tissueVertexShader, 1, &vt, 0);
+    glCompileShader(tissueVertexShader);
+
+    //fragment shader
+    tissueFragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(tissueFragmentShader, 1, &f, 0);
+    glCompileShader(tissueFragmentShader);
+
+    //program
+    tissueShaderProgram = glCreateProgram();
+    glAttachShader(tissueShaderProgram, tissueVertexShader);
+    glAttachShader(tissueShaderProgram, tissueFragmentShader);
+    glLinkProgram(tissueShaderProgram);
+
+    /// check for errors
+    GLint status;
+
+    glGetShaderiv(tissueVertexShader, GL_COMPILE_STATUS, &status);
+    if (status == GL_FALSE){
+        printf("ERROR: Shader Compilation Error\n");
+        char data[262144];
+        int len;
+        glGetShaderInfoLog(tissueVertexShader, 262144, &len, data);
+        printf("%s", data);
+    }
+    glGetShaderiv(tissueFragmentShader, GL_COMPILE_STATUS, &status);
+    if (status == GL_FALSE){
+        printf("ERROR: Shader Compilation Error\n");
+        char data[262144];
+        int len;
+        glGetShaderInfoLog(tissueFragmentShader, 262144, &len, data);
+        printf("%s", data);
+    }
+    glGetProgramiv(tissueShaderProgram, GL_LINK_STATUS, &status);
+    if (status == GL_FALSE){
+        printf("ERROR: Shader Program Link Error\n");
+    }
+
+    // get shader variables
+    vs_displacementMap = glGetUniformLocation(tissueShaderProgram, "displacementMap");
+    vs_mapIndex = glGetAttribLocation(tissueShaderProgram, "mapIndex");
+}
 ////////////////////////////////////////////////////////////////////////////////
 //! Create VBO
 ////////////////////////////////////////////////////////////////////////////////
