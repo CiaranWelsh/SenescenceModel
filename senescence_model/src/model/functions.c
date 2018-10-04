@@ -76,10 +76,10 @@ __FLAME_GPU_INIT_FUNC__ void setConstants() {
     int EXCESSIVE_DAMAGE_AMOUNT = 100;
     float EXCESSIVE_DAMAGE_PROB = 0.1f;
 
-    int REPLICATIVE_SEN_AGE = 2500;
+    int REPLICATIVE_SEN_AGE = 100000;
     float REPLICATIVE_SEN_PROB = 0.1f;
 
-    int EARLY_SENESCENT_MATURATION_TIME = 10;
+    int EARLY_SENESCENT_MATURATION_TIME = 10000;
 
     float TRANSITION_TO_FULL_SENESCENCE_PROB = 0.1f;
 
@@ -737,7 +737,7 @@ __FLAME_GPU_FUNC__ int TransitionToProliferating(
     float random_number = rnd<CONTINUOUS>(rand48);
     if (random_number < PROLIFERATION_PROB) {
         agent->current_state = 4;
-        agent->colour = 4;
+//        agent->colour = 4;
     }
 
     return 0;
@@ -750,11 +750,12 @@ __FLAME_GPU_FUNC__ int TransitionToProliferating(
  * @param Fibroblast_agents Pointer to agent list of type xmachine_memory_Fibroblast_list. This must be passed as an argument to the add_Fibroblast_agent function to add a new agent.
  */
 __FLAME_GPU_FUNC__ int Proliferation(
-        xmachine_memory_Fibroblast *agent,
-        xmachine_memory_Fibroblast_list *Fibroblast_agents) {
+        xmachine_memory_Fibroblast* agent,
+        xmachine_memory_Fibroblast_list* Fibroblast_agents){
 
-    // When spawning new agent from existing, how do you ensure unique IDs?
-    int id=agent->id;
+
+    //Template for agent output functions
+    int id = agent->id+1000;
     float x = agent->x;
     float y = agent->y;
     float z = agent->z;
@@ -762,22 +763,20 @@ __FLAME_GPU_FUNC__ int Proliferation(
     int damage = 0;
     int early_sen_time_counter = 0;
     int current_state = 0;
-    int colour = 0;
 
     add_Fibroblast_agent(
             Fibroblast_agents,
-            id, x, y, z,
+            id,
+            x,
+            y,
+            z,
             doublings,
             damage,
             early_sen_time_counter,
-            current_state,
-            colour);
-
-    agent->current_state = 0;
-    agent->colour = 0;
-    agent->doublings += 1;
-    return 0;
+            current_state);
+      return 0;
 }
+
 
 
 /**
@@ -909,51 +908,51 @@ __FLAME_GPU_FUNC__ int TransitionToFullSenescence(
     float random_number = rnd<CONTINUOUS>(rand48);
     if (random_number < TRANSITION_TO_FULL_SENESCENCE_PROB) {
         agent->current_state = 2;
-        agent->colour = 2;
+//        agent->colour = 2;
     }
 
     return 0;
 }
 
 
-/**
- * ClearanceOfEarlySenescent FLAMEGPU Agent Function
- * Automatically generated using functions.xslt
- * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- * @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
-
-     0: quiescent
-    1: early senescent
-    2: senescent
-    4: proliferating
-    5: repairing
- */
-__FLAME_GPU_FUNC__ int ClearanceOfEarlySenescent(xmachine_memory_Fibroblast* agent, RNG_rand48* rand48){
-    if (agent->current_state == 1){
-        if (rnd<CONTINUOUS>(rand48) < CLEARANCE_EARLY_SEN_PROB){
-            return 1; /// non 0 exit status marks agent for removal
-        }
-    }
-    return 0;
-}
-
-
-
-/**
- * ClearanceOfSenescent FLAMEGPU Agent Function
- * Automatically generated using functions.xslt
- * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
- * @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
- */
-__FLAME_GPU_FUNC__ int ClearanceOfSenescent(xmachine_memory_Fibroblast* agent, RNG_rand48* rand48){
-
-    if (agent->current_state == 1){
-        if (rnd<CONTINUOUS>(rand48) < CLEARANCE_SEN_PROB){
-            return 1; /// non 0 exit status marks agent for removal
-        }
-    }
-    return 0;
-}
+///**
+// * ClearanceOfEarlySenescent FLAMEGPU Agent Function
+// * Automatically generated using functions.xslt
+// * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
+// * @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
+//
+//     0: quiescent
+//    1: early senescent
+//    2: senescent
+//    4: proliferating
+//    5: repairing
+// */
+//__FLAME_GPU_FUNC__ int ClearanceOfEarlySenescent(xmachine_memory_Fibroblast* agent, RNG_rand48* rand48){
+//    if (agent->current_state == 1){
+//        if (rnd<CONTINUOUS>(rand48) < CLEARANCE_EARLY_SEN_PROB){
+//            return 1; /// non 0 exit status marks agent for removal
+//        }
+//    }
+//    return 0;
+//}
+//
+//
+//
+///**
+// * ClearanceOfSenescent FLAMEGPU Agent Function
+// * Automatically generated using functions.xslt
+// * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
+// * @param rand48 Pointer to the seed list of type RNG_rand48. Must be passed as an argument to the rand48 function for generating random numbers on the GPU.
+// */
+//__FLAME_GPU_FUNC__ int ClearanceOfSenescent(xmachine_memory_Fibroblast* agent, RNG_rand48* rand48){
+//
+//    if (agent->current_state == 1){
+//        if (rnd<CONTINUOUS>(rand48) < CLEARANCE_SEN_PROB){
+//            return 1; /// non 0 exit status marks agent for removal
+//        }
+//    }
+//    return 0;
+//}
 
 /**
  * DetectDamage FLAMEGPU Agent Function
@@ -988,7 +987,7 @@ __FLAME_GPU_FUNC__ int DetectDamage(
 
         if (separation < REPAIR_RADIUS){
             agent->current_state = 5;
-            agent->colour = 5;
+//            agent->colour = 5;
         }
 
         current_message = get_next_tissue_damage_report_message(
