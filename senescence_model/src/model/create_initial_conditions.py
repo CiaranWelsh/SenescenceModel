@@ -49,7 +49,7 @@ def add_fibroblast_agents(n, root, lower_bound=0, upper_bound=1):
         x, y, z = numpy.random.uniform(lower_bound, upper_bound, 3)
         doublings = 0
         damage = 0
-        current_state = 0
+        current_state = 2
         early_sen_time_counter = 0
         agent_args = {
             'id': id,
@@ -127,29 +127,29 @@ if __name__ == '__main__':
     parameters = {
         'TISSUE_DAMAGE_PROB': 0.1,
 
-        'EARLY_SENESCENT_MIGRATION_SCALE':      0.001,
-        'SENESCENT_MIGRATION_SCALE':            0.001,
-        'QUIESCENT_MIGRATION_SCALE':            0.001,
+        'EARLY_SENESCENT_MIGRATION_SCALE':      0.00001,
+        'SENESCENT_MIGRATION_SCALE':            0.00001,
+        'QUIESCENT_MIGRATION_SCALE':            0.00001,
 
         'PROLIFERATION_PROB':                   0.0001,
 
-        'BYSTANDER_DISTANCE':                   0.01,
-        'BYSTANDER_PROB':                       0.01,
+        'BYSTANDER_DISTANCE':                   0.001,
+        'BYSTANDER_PROB':                       0.000001,
 
         'EXCESSIVE_DAMAGE_AMOUNT':              100,
-        'EXCESSIVE_DAMAGE_PROB':                0.1,
+        'EXCESSIVE_DAMAGE_PROB':                0.000001,
 
         'REPLICATIVE_SEN_AGE':                  100000,
-        'REPLICATIVE_SEN_PROB':                 0.1,
+        'REPLICATIVE_SEN_PROB':                 0.000001,
 
         'EARLY_SENESCENT_MATURATION_TIME':      10000,
 
-        'TRANSITION_TO_FULL_SENESCENCE_PROB':   0.01,
+        'TRANSITION_TO_FULL_SENESCENCE_PROB':   0.0000001,
 
         'CLEARANCE_EARLY_SEN_PROB': 0.1,
         'CLEARANCE_SEN_PROB': 0.1,
 
-        'REPAIR_RADIUS': 0.001,
+        'REPAIR_RADIUS': 0.01,
     }
 
     root = create_root(parameters)

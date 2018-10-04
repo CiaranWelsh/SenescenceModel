@@ -204,21 +204,22 @@ __FLAME_GPU_STEP_FUNC__ void FibroblastQuiescentlogs(){
 //        fprintf(stdout, "Outputting some agent data to %s\n", outputFilename.c_str());
 
         // Output a header row for the CSV
-        fprintf(fp, "ID, x, y, z, doublings, damage, early_sen_time_counter\n");
+        fprintf(fp, "ID, x, y, z, doublings, damage, early_sen_time_counter, current_state\n");
 
         // For each agent of a target type in a target state
         for(int index = 0; index < get_agent_Fibroblast_Quiescent_count(); index++){
             // Append a row to the CSV file.
             fprintf(
                     fp,
-                    "%u, %f, %f, %f, %f, %u, %u \n",
+                    "%u, %f, %f, %f, %f, %u, %u, %u \n",
                     get_Fibroblast_Quiescent_variable_id(index),
                     get_Fibroblast_Quiescent_variable_x(index),
                     get_Fibroblast_Quiescent_variable_y(index),
                     get_Fibroblast_Quiescent_variable_z(index),
                     get_Fibroblast_Quiescent_variable_doublings(index),
                     get_Fibroblast_Quiescent_variable_damage(index),
-                    get_Fibroblast_Quiescent_variable_early_sen_time_counter(index)
+                    get_Fibroblast_Quiescent_variable_early_sen_time_counter(index),
+                    get_Fibroblast_Quiescent_variable_current_state(index)
             );
         }
         // Flush the file handle
@@ -258,21 +259,23 @@ __FLAME_GPU_STEP_FUNC__ void FibroblastEarlySenescentlogs(){
 //        fprintf(stdout, "Outputting some agent data to %s\n", outputFilename.c_str());
 
         // Output a header row for the CSV
-        fprintf(fp, "ID, x, y, z, doublings, damage, early_sen_time_counter\n");
+        fprintf(fp, "ID, x, y, z, doublings, damage, early_sen_time_counter, current_state\n");
 
         // For each agent of a target type in a target state
         for(int index = 0; index < get_agent_Fibroblast_EarlySenescent_count(); index++){
             // Append a row to the CSV file.
             fprintf(
                     fp,
-                    "%u, %f, %f, %f, %f, %u, %u \n",
+                    "%u, %f, %f, %f, %f, %u, %u, %u \n",
                     get_Fibroblast_EarlySenescent_variable_id(index),
                     get_Fibroblast_EarlySenescent_variable_x(index),
                     get_Fibroblast_EarlySenescent_variable_y(index),
                     get_Fibroblast_EarlySenescent_variable_z(index),
                     get_Fibroblast_EarlySenescent_variable_doublings(index),
                     get_Fibroblast_EarlySenescent_variable_damage(index),
-                    get_Fibroblast_EarlySenescent_variable_early_sen_time_counter(index)
+                    get_Fibroblast_EarlySenescent_variable_early_sen_time_counter(index),
+                    get_Fibroblast_Quiescent_variable_current_state(index)
+
             );
         }
         // Flush the file handle
@@ -312,21 +315,22 @@ __FLAME_GPU_STEP_FUNC__ void FibroblastSenescentlogs(){
 //        fprintf(stdout, "Outputting some agent data to %s\n", outputFilename.c_str());
 
         // Output a header row for the CSV
-        fprintf(fp, "ID, x, y, z, doublings, damage, early_sen_time_counter\n");
+        fprintf(fp, "ID, x, y, z, doublings, damage, early_sen_time_counter, current_state\n");
 
         // For each agent of a target type in a target state
         for(int index = 0; index < get_agent_Fibroblast_Senescent_count(); index++){
             // Append a row to the CSV file.
             fprintf(
                     fp,
-                    "%u, %f, %f, %f, %f, %u, %u \n",
+                    "%u, %f, %f, %f, %f, %u, %u, %u \n",
                     get_Fibroblast_Senescent_variable_id(index),
                     get_Fibroblast_Senescent_variable_x(index),
                     get_Fibroblast_Senescent_variable_y(index),
                     get_Fibroblast_Senescent_variable_z(index),
                     get_Fibroblast_Senescent_variable_doublings(index),
                     get_Fibroblast_Senescent_variable_damage(index),
-                    get_Fibroblast_Senescent_variable_early_sen_time_counter(index)
+                    get_Fibroblast_Senescent_variable_early_sen_time_counter(index),
+                    get_Fibroblast_Quiescent_variable_current_state(index)
             );
         }
         // Flush the file handle
@@ -366,21 +370,22 @@ __FLAME_GPU_STEP_FUNC__ void FibroblastProliferatinglogs(){
 //        fprintf(stdout, "Outputting some agent data to %s\n", outputFilename.c_str());
 
         // Output a header row for the CSV
-        fprintf(fp, "ID, x, y, z, doublings, damage, early_sen_time_counter\n");
+        fprintf(fp, "ID, x, y, z, doublings, damage, early_sen_time_counter, current_state\n");
 
         // For each agent of a target type in a target state
         for(int index = 0; index < get_agent_Fibroblast_Proliferating_count(); index++){
             // Append a row to the CSV file.
             fprintf(
                     fp,
-                    "%u, %f, %f, %f, %f, %u, %u \n",
+                    "%u, %f, %f, %f, %f, %u, %u, %u \n",
                     get_Fibroblast_Proliferating_variable_id(index),
                     get_Fibroblast_Proliferating_variable_x(index),
                     get_Fibroblast_Proliferating_variable_y(index),
                     get_Fibroblast_Proliferating_variable_z(index),
                     get_Fibroblast_Proliferating_variable_doublings(index),
             get_Fibroblast_Proliferating_variable_damage(index),
-            get_Fibroblast_Proliferating_variable_early_sen_time_counter(index)
+            get_Fibroblast_Proliferating_variable_early_sen_time_counter(index),
+            get_Fibroblast_Quiescent_variable_current_state(index)
             );
         }
         // Flush the file handle
@@ -420,21 +425,22 @@ __FLAME_GPU_STEP_FUNC__ void FibroblastRepairlogs(){
 //        fprintf(stdout, "Outputting some agent data to %s\n", outputFilename.c_str());
 
         // Output a header row for the CSV
-        fprintf(fp, "ID, x, y, z, doublings, damage, early_sen_time_counter\n");
+        fprintf(fp, "ID, x, y, z, doublings, damage, early_sen_time_counter, current_state\n");
 
         // For each agent of a target type in a target state
         for(int index = 0; index < get_agent_Fibroblast_Repair_count(); index++){
             // Append a row to the CSV file.
             fprintf(
                     fp,
-                    "%u, %f, %f, %f, %f, %u, %u \n",
+                    "%u, %f, %f, %f, %f, %u, %u, %u \n",
                     get_Fibroblast_Repair_variable_id(index),
                     get_Fibroblast_Repair_variable_x(index),
                     get_Fibroblast_Repair_variable_y(index),
                     get_Fibroblast_Repair_variable_z(index),
                     get_Fibroblast_Repair_variable_doublings(index),
             get_Fibroblast_Repair_variable_damage(index),
-            get_Fibroblast_Repair_variable_early_sen_time_counter(index)
+            get_Fibroblast_Repair_variable_early_sen_time_counter(index),
+            get_Fibroblast_Quiescent_variable_current_state(index)
             );
         }
         // Flush the file handle

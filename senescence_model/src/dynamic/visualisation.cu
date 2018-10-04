@@ -1,4 +1,4 @@
-/// if I write stiuff where does it get deleted?
+/// modified by ciaran welsh
 /*
  * FLAME GPU v 1.5.X for CUDA 9
  * Copyright University of Sheffield.
@@ -137,49 +137,8 @@ inline void gpuLaunchAssert(const char *file, int line, bool abort=true)
    
 }
 
-///
-
-//const char vertexShaderSource[] =
-//{
-//	"#extension GL_EXT_gpu_shader4 : enable										\n"
-//	"uniform samplerBuffer displacementMap;										\n"
-//	"attribute in float mapIndex;												\n"
-//	"varying vec3 normal, lightDir;												\n"
-//	"varying vec4 colour;														\n"
-//    "void main()																\n"
-//    "{																			\n"
-//	"	vec4 position = gl_Vertex;											    \n"
-//	"	vec4 lookup = texelFetchBuffer(displacementMap, (int)mapIndex);		    \n"
-//    "	if (lookup.w > 7.5)	                								\n"
-//	"		colour = vec4(0.518, 0.353, 0.02, 0.0);						    	\n"
-//    "	else if (lookup.w > 6.5)	               								\n"
-//	"		colour = vec4(1.0, 1.0, 1.0, 0.0);								    \n"
-//    "	else if (lookup.w > 5.5)	                							\n"
-//	"		colour = vec4(1.0, 0.0, 1.0, 0.0);								    \n"
-//	"	else if (lookup.w > 4.5)	                							\n"
-//	"		colour = vec4(0.0, 1.0, 1.0, 0.0);								    \n"
-//    "	else if (lookup.w > 3.5)	                							\n"
-//	"		colour = vec4(1.0, 1.0, 0.0, 0.0);								    \n"
-//	"	else if (lookup.w > 2.5)	                							\n"
-//	"		colour = vec4(0.0, 0.0, 1.0, 0.0);								    \n"
-//	"	else if (lookup.w > 1.5)	                							\n"
-//	"		colour = vec4(0.0, 1.0, 0.0, 0.0);								    \n"
-//    "	else if (lookup.w > 0.5)	                							\n"
-//	"		colour = vec4(1.0, 0.0, 0.0, 0.0);								    \n"
-//    "	else                      	                							\n"
-//	"		colour = vec4(0.0, 0.0, 0.0, 0.0);								    \n"
-//	"																    		\n"
-//	"	lookup.w = 1.0;												    		\n"
-//	"	position += lookup;											    		\n"
-//	"   gl_Position = gl_ModelViewProjectionMatrix * position;		    		\n"
-//	"																			\n"
-//	"	vec3 mvVertex = vec3(gl_ModelViewMatrix * position);			    	\n"
-//	"	lightDir = vec3(gl_LightSource[0].position.xyz - mvVertex);				\n"
-//	"	normal = gl_NormalMatrix * gl_Normal;									\n"
-//    "}																			\n"
-//};
-const char vertexShaderSource[] =
-{
+const char vertexShaderSource[] = 
+{  
 	"#extension GL_EXT_gpu_shader4 : enable										\n"
 	"uniform samplerBuffer displacementMap;										\n"
 	"attribute in float mapIndex;												\n"
@@ -189,7 +148,24 @@ const char vertexShaderSource[] =
     "{																			\n"
 	"	vec4 position = gl_Vertex;											    \n"
 	"	vec4 lookup = texelFetchBuffer(displacementMap, (int)mapIndex);		    \n"
-	"	colour = vec4(1 - lookup.w/100.0, 0.25, 0.25, 0.00);								    \n"
+    "	if (lookup.w > 7.5)	                								\n"
+	"		colour = vec4(0.518, 0.353, 0.02, 0.0);						    	\n"
+    "	else if (lookup.w > 6.5)	               								\n"
+	"		colour = vec4(1.0, 1.0, 1.0, 0.0);								    \n"
+    "	else if (lookup.w > 5.5)	                							\n"
+	"		colour = vec4(1.0, 0.0, 1.0, 0.0);								    \n"
+	"	else if (lookup.w > 4.5)	                							\n"
+	"		colour = vec4(0.0, 1.0, 1.0, 0.0);								    \n"
+    "	else if (lookup.w > 3.5)	                							\n"
+	"		colour = vec4(1.0, 1.0, 0.0, 0.0);								    \n"
+	"	else if (lookup.w > 2.5)	                							\n"
+	"		colour = vec4(0.0, 0.0, 1.0, 0.0);								    \n"
+	"	else if (lookup.w > 1.5)	                							\n"
+	"		colour = vec4(0.0, 1.0, 0.0, 0.0);								    \n"
+    "	else if (lookup.w > 1.0)	                							\n"
+	"		colour = vec4(1.0, 1.0, 1.0, 0.0);								    \n"
+    "	else                      	                							\n"
+	"		colour = vec4(1 - (lookup.w / 100.0), 0.25, 0.85, 0.0);								    \n"
 	"																    		\n"
 	"	lookup.w = 1.0;												    		\n"
 	"	position += lookup;											    		\n"
@@ -253,8 +229,7 @@ __global__ void output_Fibroblast_agent_to_VBO(xmachine_memory_Fibroblast_list* 
     vbo[index].x = agents->x[index] - centralise.x;
     vbo[index].y = agents->y[index] - centralise.y;
     vbo[index].z = agents->z[index] - centralise.z;
-	vbo[index].w = agents->current_state[index];
-
+    vbo[index].w = agents->current_state[index];
 }
 
 

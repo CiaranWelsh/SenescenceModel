@@ -2,1219 +2,1219 @@
   <itono>0</itono>
   <environment>
     <TISSUE_DAMAGE_PROB>0.1</TISSUE_DAMAGE_PROB>
-    <EARLY_SENESCENT_MIGRATION_SCALE>0.001</EARLY_SENESCENT_MIGRATION_SCALE>
-    <SENESCENT_MIGRATION_SCALE>0.001</SENESCENT_MIGRATION_SCALE>
-    <QUIESCENT_MIGRATION_SCALE>0.001</QUIESCENT_MIGRATION_SCALE>
+    <EARLY_SENESCENT_MIGRATION_SCALE>1e-05</EARLY_SENESCENT_MIGRATION_SCALE>
+    <SENESCENT_MIGRATION_SCALE>1e-05</SENESCENT_MIGRATION_SCALE>
+    <QUIESCENT_MIGRATION_SCALE>1e-05</QUIESCENT_MIGRATION_SCALE>
     <PROLIFERATION_PROB>0.0001</PROLIFERATION_PROB>
-    <BYSTANDER_DISTANCE>0.01</BYSTANDER_DISTANCE>
-    <BYSTANDER_PROB>0.01</BYSTANDER_PROB>
+    <BYSTANDER_DISTANCE>0.001</BYSTANDER_DISTANCE>
+    <BYSTANDER_PROB>1e-06</BYSTANDER_PROB>
     <EXCESSIVE_DAMAGE_AMOUNT>100</EXCESSIVE_DAMAGE_AMOUNT>
-    <EXCESSIVE_DAMAGE_PROB>0.1</EXCESSIVE_DAMAGE_PROB>
+    <EXCESSIVE_DAMAGE_PROB>1e-06</EXCESSIVE_DAMAGE_PROB>
     <REPLICATIVE_SEN_AGE>100000</REPLICATIVE_SEN_AGE>
-    <REPLICATIVE_SEN_PROB>0.1</REPLICATIVE_SEN_PROB>
+    <REPLICATIVE_SEN_PROB>1e-06</REPLICATIVE_SEN_PROB>
     <EARLY_SENESCENT_MATURATION_TIME>10000</EARLY_SENESCENT_MATURATION_TIME>
-    <TRANSITION_TO_FULL_SENESCENCE_PROB>0.01</TRANSITION_TO_FULL_SENESCENCE_PROB>
+    <TRANSITION_TO_FULL_SENESCENCE_PROB>1e-07</TRANSITION_TO_FULL_SENESCENCE_PROB>
     <CLEARANCE_EARLY_SEN_PROB>0.1</CLEARANCE_EARLY_SEN_PROB>
     <CLEARANCE_SEN_PROB>0.1</CLEARANCE_SEN_PROB>
-    <REPAIR_RADIUS>0.001</REPAIR_RADIUS>
+    <REPAIR_RADIUS>0.01</REPAIR_RADIUS>
   </environment>
   <xagent>
     <id>0</id>
     <name>Fibroblast</name>
-    <x>1.0933209775807966</x>
-    <y>1.2155647534691223</y>
-    <z>0.8331485644539345</z>
+    <x>1.4338305366771138</x>
+    <y>0.9350331235638465</y>
+    <z>1.1623474317817306</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>1</id>
     <name>Fibroblast</name>
-    <x>1.1155370113517913</x>
-    <y>1.3361250901982458</y>
-    <z>1.084284735506702</z>
+    <x>1.039780755381079</x>
+    <y>1.2358164867712091</y>
+    <z>0.6411270145140364</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>2</id>
     <name>Fibroblast</name>
-    <x>1.0988960199959585</x>
-    <y>1.1793870462350107</y>
-    <z>1.2925561402843293</z>
+    <x>0.8712822425761464</x>
+    <y>0.8951452604428239</y>
+    <z>1.1495447674088193</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>3</id>
     <name>Fibroblast</name>
-    <x>1.4961108711902888</x>
-    <y>0.6199426277804251</y>
-    <z>1.2312448564264349</z>
+    <x>1.4965753817426717</x>
+    <y>0.9820121359072622</y>
+    <z>0.975146249181153</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>4</id>
     <name>Fibroblast</name>
-    <x>0.969263734552184</x>
-    <y>1.45497059958308</y>
-    <z>0.8119255368472638</z>
+    <x>0.9941745176094962</x>
+    <y>0.861699379421121</y>
+    <z>1.3931967650538626</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>5</id>
     <name>Fibroblast</name>
-    <x>0.8383024296380679</x>
-    <y>1.1610599829531978</y>
-    <z>0.5886827295236036</z>
+    <x>0.813957472147327</x>
+    <y>1.013330413099284</y>
+    <z>1.3953422905332757</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>6</id>
     <name>Fibroblast</name>
-    <x>0.6295939809581635</x>
-    <y>0.987909181100192</y>
-    <z>1.3834305996784508</z>
+    <x>1.2873231514273509</x>
+    <y>0.6669816561317627</y>
+    <z>0.7275524071605212</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>7</id>
     <name>Fibroblast</name>
-    <x>1.3735351399203286</x>
-    <y>1.2880241635640268</y>
-    <z>0.5642049684448031</z>
+    <x>1.4418932755283929</x>
+    <y>1.3155003710574502</y>
+    <z>1.400757936621304</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>8</id>
     <name>Fibroblast</name>
-    <x>1.4667674161640916</x>
-    <y>1.215498236798099</y>
-    <z>0.8090630244578</z>
+    <x>0.8876383910365704</x>
+    <y>1.1188342416186352</y>
+    <z>1.149398442181222</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>9</id>
     <name>Fibroblast</name>
-    <x>1.200667382345649</x>
-    <y>0.9045600791828367</y>
-    <z>0.6242244429500182</z>
+    <x>1.4185726326322794</x>
+    <y>1.0888646124372934</y>
+    <z>0.5039054003961777</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>10</id>
     <name>Fibroblast</name>
-    <x>1.3656217784692668</x>
-    <y>1.3452363114984744</y>
-    <z>1.2895716910010941</z>
+    <x>1.0771605842408878</x>
+    <y>0.9168338711762095</y>
+    <z>0.9504626569909345</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>11</id>
     <name>Fibroblast</name>
-    <x>1.4828780561941324</x>
-    <y>0.9303978512633022</y>
-    <z>0.9209885166140739</z>
+    <x>0.9161668163821133</x>
+    <y>0.6045803773744518</y>
+    <z>1.2653537191643347</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>12</id>
     <name>Fibroblast</name>
-    <x>1.3810078902220688</x>
-    <y>0.6406665232664128</y>
-    <z>1.2679578279801813</z>
+    <x>0.6847732526892336</x>
+    <y>1.2791719567870325</y>
+    <z>0.7618157846979108</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>13</id>
     <name>Fibroblast</name>
-    <x>1.2185804546221048</x>
-    <y>1.2552354353077353</y>
-    <z>1.055772254987361</z>
+    <x>1.4974576078557116</x>
+    <y>1.1053906757684397</y>
+    <z>1.3998004189878293</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>14</id>
     <name>Fibroblast</name>
-    <x>1.0661230642412942</x>
-    <y>1.3755651110285072</y>
-    <z>1.0496511649911664</z>
+    <x>1.3452373513614257</x>
+    <y>1.4574145555430817</y>
+    <z>0.577537573069466</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>15</id>
     <name>Fibroblast</name>
-    <x>1.4906163405616313</x>
-    <y>0.5637744991650739</y>
-    <z>0.668381052772041</z>
+    <x>0.9194212331211189</x>
+    <y>0.8943639155656098</y>
+    <z>1.0867206008087438</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>16</id>
     <name>Fibroblast</name>
-    <x>1.228656174183738</x>
-    <y>0.934449239145476</y>
-    <z>0.7288424276858808</z>
+    <x>0.9565480350684177</x>
+    <y>0.8817171563565417</y>
+    <z>0.9677678143648797</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>17</id>
     <name>Fibroblast</name>
-    <x>0.7421531370213558</x>
-    <y>1.0284736766132734</y>
-    <z>1.266920105131483</z>
+    <x>1.2095097437058198</x>
+    <y>0.637087041894109</y>
+    <z>1.4240249293018965</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>18</id>
     <name>Fibroblast</name>
-    <x>0.6289965996527048</x>
-    <y>1.4872534048242914</y>
-    <z>0.9183736384438647</z>
+    <x>1.1574092778772294</x>
+    <y>0.8782784019077695</y>
+    <z>1.2686774764557067</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>19</id>
     <name>Fibroblast</name>
-    <x>1.2403023511910225</x>
-    <y>0.8938579087263013</y>
-    <z>1.148095284795147</z>
+    <x>1.4074761133149942</x>
+    <y>1.019553674728391</y>
+    <z>1.2027819448886525</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>20</id>
     <name>Fibroblast</name>
-    <x>0.5003040510229414</x>
-    <y>1.3739554381473722</y>
-    <z>1.1435769033222813</z>
+    <x>1.1623715396264838</x>
+    <y>0.5993077721367227</y>
+    <z>0.8223901354574261</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>21</id>
     <name>Fibroblast</name>
-    <x>1.3036277399820801</x>
-    <y>1.45554927625584</y>
-    <z>1.432096532816998</z>
+    <x>1.3673714740296234</x>
+    <y>1.1518413220904824</y>
+    <z>0.6905546485778324</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>22</id>
     <name>Fibroblast</name>
-    <x>1.3119213636659348</x>
-    <y>0.6480175728373209</y>
-    <z>1.3714998212296958</z>
+    <x>1.3226421697138995</x>
+    <y>0.8227886575081454</y>
+    <z>1.0116581737841144</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>23</id>
     <name>Fibroblast</name>
-    <x>0.5623295059375611</x>
-    <y>0.7620789271829483</y>
-    <z>0.7485040244919501</z>
+    <x>0.8717972028740133</x>
+    <y>0.6451616995795371</y>
+    <z>1.3892275077901566</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>24</id>
     <name>Fibroblast</name>
-    <x>1.0085518141404635</x>
-    <y>0.6702471436307759</y>
-    <z>1.1489457517374817</z>
+    <x>0.5005488105887463</x>
+    <y>0.8155542195994637</y>
+    <z>0.7056569891247879</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>25</id>
     <name>Fibroblast</name>
-    <x>0.7711532243394078</x>
-    <y>0.6031223633000988</y>
-    <z>1.1528698279455822</z>
+    <x>0.7009076463860986</x>
+    <y>0.9833952794647558</y>
+    <z>0.5305271580502177</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>26</id>
     <name>Fibroblast</name>
-    <x>0.6013381374169825</x>
-    <y>1.4069549275198376</y>
-    <z>0.8310953659537792</z>
+    <x>1.4025619069204527</x>
+    <y>1.2087438649859408</y>
+    <z>1.31158354336246</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>27</id>
     <name>Fibroblast</name>
-    <x>0.8342574543397785</x>
-    <y>1.0074573897488146</y>
-    <z>0.5796350057729618</z>
+    <x>0.5204068207983995</x>
+    <y>0.5158276064694899</y>
+    <z>0.543323818547342</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>28</id>
     <name>Fibroblast</name>
-    <x>0.7223713970193911</x>
-    <y>1.2155975706139808</y>
-    <z>0.7545133490446219</z>
+    <x>0.8458322320397423</x>
+    <y>0.8028381373079301</y>
+    <z>0.7516714486206115</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>29</id>
     <name>Fibroblast</name>
-    <x>0.8348566582979159</x>
-    <y>1.3440530516985412</y>
-    <z>0.9629086617136777</z>
+    <x>0.7843066476372048</x>
+    <y>1.0774893947354394</y>
+    <z>0.6655597413501317</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>30</id>
     <name>Fibroblast</name>
-    <x>0.8011802668956233</x>
-    <y>0.6113248731892367</y>
-    <z>0.7114062537129924</z>
+    <x>1.4433632506861014</x>
+    <y>1.0229462740414856</y>
+    <z>0.7510643509849507</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>31</id>
     <name>Fibroblast</name>
-    <x>0.9891204958217819</x>
-    <y>0.9033781683587924</y>
-    <z>1.1444712795323237</z>
+    <x>1.0336987856982862</x>
+    <y>0.8125783192575895</y>
+    <z>1.2810959386184497</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>32</id>
     <name>Fibroblast</name>
-    <x>1.2577358041953963</x>
-    <y>1.0624995813786602</y>
-    <z>0.9668288195509082</z>
+    <x>0.637112288356438</x>
+    <y>1.235884130531077</y>
+    <z>0.9663980162504595</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>33</id>
     <name>Fibroblast</name>
-    <x>1.2958599268887603</x>
-    <y>0.5195655532617509</y>
-    <z>1.314053443671059</z>
+    <x>0.817444325137651</x>
+    <y>0.5547414175850296</y>
+    <z>0.6181710284029569</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>34</id>
     <name>Fibroblast</name>
-    <x>0.5333993240595913</x>
-    <y>0.5745609753465907</y>
-    <z>0.9457313422928982</z>
+    <x>0.9893214422034604</x>
+    <y>1.2274127496438465</y>
+    <z>1.2241939050460924</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>35</id>
     <name>Fibroblast</name>
-    <x>1.2796870914357363</x>
-    <y>0.696584454657988</y>
-    <z>1.2146149488745475</z>
+    <x>1.044865899987112</x>
+    <y>1.1284128451347364</y>
+    <z>0.7851310739753103</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>36</id>
     <name>Fibroblast</name>
-    <x>0.5326036490385659</x>
-    <y>1.2623703988110715</y>
-    <z>1.3458948225011311</z>
+    <x>0.7648933695344824</x>
+    <y>1.203437172075608</y>
+    <z>0.5377790202425791</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>37</id>
     <name>Fibroblast</name>
-    <x>1.0602900666172732</x>
-    <y>0.9036003032838446</y>
-    <z>1.3523752581583075</z>
+    <x>1.1159250664486584</x>
+    <y>0.5911547974773192</y>
+    <z>1.3534229451677509</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>38</id>
     <name>Fibroblast</name>
-    <x>0.7440368088909697</x>
-    <y>1.1339846301648393</y>
-    <z>1.1213535467056475</z>
+    <x>0.6634776362401579</x>
+    <y>0.5951084598922927</y>
+    <z>1.2824830231020212</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>39</id>
     <name>Fibroblast</name>
-    <x>0.959194156892701</x>
-    <y>1.4555440630571557</y>
-    <z>1.2674153654854687</z>
+    <x>1.0277843393157209</x>
+    <y>0.5783532355233403</y>
+    <z>0.5080704892302152</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>40</id>
     <name>Fibroblast</name>
-    <x>0.7873899299528452</x>
-    <y>0.5837294279563735</y>
-    <z>0.9964783778981087</z>
+    <x>0.7485001837968841</x>
+    <y>0.822564684635842</y>
+    <z>0.7985235029976876</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>41</id>
     <name>Fibroblast</name>
-    <x>0.5530605349713695</x>
-    <y>1.3597509920818376</y>
-    <z>1.1053562160941648</z>
+    <x>0.653402668216963</x>
+    <y>0.7606231493632839</y>
+    <z>0.6511889005140915</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>42</id>
     <name>Fibroblast</name>
-    <x>0.9789111480366139</x>
-    <y>1.450771684873055</y>
-    <z>1.2044778183431863</z>
+    <x>0.7703620902682455</x>
+    <y>1.025625250827476</y>
+    <z>0.6712394754335348</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>43</id>
     <name>Fibroblast</name>
-    <x>1.1158170842996094</x>
-    <y>0.5437312403829273</y>
-    <z>1.2928574907199448</z>
+    <x>1.493417073286392</x>
+    <y>1.4285092834533621</y>
+    <z>0.5777978327096729</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>44</id>
     <name>Fibroblast</name>
-    <x>0.8832071014221444</x>
-    <y>1.0058269303136407</y>
-    <z>0.874212677905408</z>
+    <x>1.4719866864944793</x>
+    <y>0.9298205831594321</y>
+    <z>0.5978851916779571</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>45</id>
     <name>Fibroblast</name>
-    <x>1.1155896824360487</x>
-    <y>1.4360800214781797</y>
-    <z>0.60209895575826</z>
+    <x>1.1191277275223763</x>
+    <y>1.4394547235110227</y>
+    <z>0.7272885683472611</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>46</id>
     <name>Fibroblast</name>
-    <x>0.7684700613138253</x>
-    <y>1.1806044123698392</y>
-    <z>1.2437281020935869</z>
+    <x>1.441385276807295</x>
+    <y>0.9118823970717113</y>
+    <z>1.212214389843996</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>47</id>
     <name>Fibroblast</name>
-    <x>0.9138312297130308</x>
-    <y>0.6572632607660689</y>
-    <z>1.1935936204630861</z>
+    <x>1.0689626267780021</x>
+    <y>1.3252120193582453</y>
+    <z>1.3860859594807877</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>48</id>
     <name>Fibroblast</name>
-    <x>0.6179821877944882</x>
-    <y>1.2724097612645715</y>
-    <z>0.6761016129520299</z>
+    <x>0.8720241368333878</x>
+    <y>1.4585996657068292</y>
+    <z>1.2507285693467314</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>49</id>
     <name>Fibroblast</name>
-    <x>0.8878931169118537</x>
-    <y>1.0493210849380152</y>
-    <z>0.7293787153525396</z>
+    <x>1.430630295826239</x>
+    <y>1.0319835519784974</y>
+    <z>1.0262418525539094</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>50</id>
     <name>Fibroblast</name>
-    <x>1.391738452023921</x>
-    <y>1.2040800245038237</y>
-    <z>1.4071964605887484</z>
+    <x>0.9643097946004084</x>
+    <y>0.6813100073779139</y>
+    <z>0.638704570812166</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>51</id>
     <name>Fibroblast</name>
-    <x>1.104321172081801</x>
-    <y>1.3459299064348271</y>
-    <z>1.3634977942392914</z>
+    <x>0.9836180360853498</x>
+    <y>0.8129133870500638</y>
+    <z>1.053712511331951</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>52</id>
     <name>Fibroblast</name>
-    <x>1.2915126018695373</x>
-    <y>1.1294500860468726</y>
-    <z>1.1672086240993085</z>
+    <x>1.3858498283781997</x>
+    <y>0.9930518400566904</y>
+    <z>1.2870546369303906</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>53</id>
     <name>Fibroblast</name>
-    <x>1.2388079232047797</x>
-    <y>0.9909493229640702</y>
-    <z>1.0632933691070257</z>
+    <x>0.7557397127040163</x>
+    <y>0.5800187442860038</y>
+    <z>1.4096895103196203</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>54</id>
     <name>Fibroblast</name>
-    <x>0.8820196997021424</x>
-    <y>0.6073709048820163</y>
-    <z>1.0345100851069515</z>
+    <x>0.561825723199131</x>
+    <y>1.046999096392526</y>
+    <z>0.7852845987841098</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>55</id>
     <name>Fibroblast</name>
-    <x>0.9209333359441003</x>
-    <y>0.5254642866558569</y>
-    <z>0.8380939330471846</z>
+    <x>0.5791004708272508</x>
+    <y>0.7238268475366789</y>
+    <z>1.4458812907550462</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>56</id>
     <name>Fibroblast</name>
-    <x>0.9446980246747286</x>
-    <y>1.1414375550852371</y>
-    <z>1.483704961202546</z>
+    <x>0.5752929362301177</x>
+    <y>1.0562737228813353</y>
+    <z>0.7880796249529227</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>57</id>
     <name>Fibroblast</name>
-    <x>1.2175246967149103</x>
-    <y>0.7363178782861167</y>
-    <z>1.4628405752359837</z>
+    <x>0.7688668259210927</x>
+    <y>1.14629230659224</y>
+    <z>1.2109564509795012</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>58</id>
     <name>Fibroblast</name>
-    <x>0.6618088658085736</x>
-    <y>1.0679207445807413</y>
-    <z>1.325061681104375</z>
+    <x>0.6443026042557426</x>
+    <y>1.460469468963066</y>
+    <z>0.5169771835072755</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>59</id>
     <name>Fibroblast</name>
-    <x>0.7929539749777708</x>
-    <y>0.5577831101966542</y>
-    <z>0.5723766644147426</z>
+    <x>0.6852116102073542</x>
+    <y>1.0986129552005295</y>
+    <z>0.8587052666020775</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>60</id>
     <name>Fibroblast</name>
-    <x>1.3701558292132014</x>
-    <y>1.0376019519401365</y>
-    <z>0.8198547923060849</z>
+    <x>1.2612852880410186</x>
+    <y>1.3859910564025468</y>
+    <z>0.7965650722804526</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>61</id>
     <name>Fibroblast</name>
-    <x>0.726640254860713</x>
-    <y>1.0040071043657268</y>
-    <z>0.6675994545348188</z>
+    <x>0.6136190645178744</x>
+    <y>0.566547577745425</y>
+    <z>1.4771170780823797</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>62</id>
     <name>Fibroblast</name>
-    <x>1.389640295089979</x>
-    <y>0.9328742583643842</y>
-    <z>0.841033195439429</z>
+    <x>1.145568219689086</x>
+    <y>1.2936694540953115</y>
+    <z>1.1350234167014395</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>63</id>
     <name>Fibroblast</name>
-    <x>0.9363268584611089</x>
-    <y>1.1590812978262968</y>
-    <z>1.2163166524006366</z>
+    <x>1.0791712173393364</x>
+    <y>1.2480537970404182</y>
+    <z>1.2259942665593275</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>64</id>
     <name>Fibroblast</name>
-    <x>1.3681438305836189</x>
-    <y>1.0486146223661268</y>
-    <z>0.9435509168932261</z>
+    <x>1.0478377575455333</x>
+    <y>1.0413552482164619</y>
+    <z>0.8997745165410695</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>65</id>
     <name>Fibroblast</name>
-    <x>0.8195450678490608</x>
-    <y>0.652206433602948</y>
-    <z>1.1605736925442738</z>
+    <x>1.2475427144264981</x>
+    <y>0.5217211744623205</y>
+    <z>1.287003282902822</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>66</id>
     <name>Fibroblast</name>
-    <x>0.6877352730068006</x>
-    <y>0.7877550040125275</y>
-    <z>1.0580784655096456</z>
+    <x>1.3790155540527027</x>
+    <y>0.8963381024953999</y>
+    <z>0.9549439165904148</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>67</id>
     <name>Fibroblast</name>
-    <x>1.3617994611410524</x>
-    <y>1.4427269557224265</y>
-    <z>1.0351768882603691</z>
+    <x>1.1435178446397611</x>
+    <y>1.1560075418356481</y>
+    <z>0.6610382172417081</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>68</id>
     <name>Fibroblast</name>
-    <x>1.473172234029436</x>
-    <y>1.009724657482161</y>
-    <z>0.559484580331556</z>
+    <x>1.0284758664034765</x>
+    <y>0.871984102537841</y>
+    <z>1.3781958859657453</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>69</id>
     <name>Fibroblast</name>
-    <x>0.8196455277982383</x>
-    <y>1.3133377010437133</y>
-    <z>0.6412563592090843</z>
+    <x>0.6831146201366672</x>
+    <y>1.3879060150313502</y>
+    <z>0.881109282867629</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>70</id>
     <name>Fibroblast</name>
-    <x>1.3542147165259695</x>
-    <y>1.4116705765147284</y>
-    <z>1.3789839169957907</z>
+    <x>1.454444411682525</x>
+    <y>1.4803392409255767</y>
+    <z>1.411846627940672</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>71</id>
     <name>Fibroblast</name>
-    <x>1.030240099157</x>
-    <y>0.7503656342344242</y>
-    <z>1.1445308724448604</z>
+    <x>1.1467020603746882</x>
+    <y>1.3003549207814142</y>
+    <z>1.4629737926819057</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>72</id>
     <name>Fibroblast</name>
-    <x>0.9071621862487579</x>
-    <y>1.1374993430456846</y>
-    <z>1.2910671699094989</z>
+    <x>1.3765172520263742</x>
+    <y>0.6661776115207213</y>
+    <z>0.7179163327456303</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>73</id>
     <name>Fibroblast</name>
-    <x>1.2831714916807355</x>
-    <y>0.6158011824659043</y>
-    <z>1.4260628169199212</z>
+    <x>1.067310339139421</x>
+    <y>1.379787562868061</y>
+    <z>1.0542870326862404</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>74</id>
     <name>Fibroblast</name>
-    <x>0.8256406724623682</x>
-    <y>1.4063978017192018</y>
-    <z>0.9907844028031184</z>
+    <x>1.0460163636522313</x>
+    <y>0.841571512863481</y>
+    <z>0.7163429755959104</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>75</id>
     <name>Fibroblast</name>
-    <x>1.156155082027911</x>
-    <y>1.2760474548641176</y>
-    <z>0.8080041898621315</z>
+    <x>0.8154421448033932</x>
+    <y>0.9296065024845094</y>
+    <z>0.5462272212793997</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>76</id>
     <name>Fibroblast</name>
-    <x>0.5875946058910145</x>
-    <y>1.0136336075186194</y>
-    <z>1.1566627842496582</z>
+    <x>1.075174144078991</x>
+    <y>0.8201324680188575</y>
+    <z>1.2028377104173817</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>77</id>
     <name>Fibroblast</name>
-    <x>1.3451099264839836</x>
-    <y>0.5206254992843826</y>
-    <z>0.9053722743918615</z>
+    <x>0.7414799521022758</x>
+    <y>0.5746015213411936</y>
+    <z>1.176383456663698</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>78</id>
     <name>Fibroblast</name>
-    <x>1.0042720681681425</x>
-    <y>1.4838098723696989</y>
-    <z>0.8109962780971182</z>
+    <x>0.5342989590026759</x>
+    <y>0.7880299230726852</y>
+    <z>1.0789942838541164</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>79</id>
     <name>Fibroblast</name>
-    <x>1.4515937042027338</x>
-    <y>1.243062371876539</y>
-    <z>0.9446951740000299</z>
+    <x>0.5762836832031596</x>
+    <y>0.6839621171568283</y>
+    <z>1.3937949960029683</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>80</id>
     <name>Fibroblast</name>
-    <x>1.1020727234668213</x>
-    <y>1.4659783772611328</y>
-    <z>1.4862139203568838</z>
+    <x>0.7219545750463353</x>
+    <y>1.0441019029586407</y>
+    <z>0.9799300435165046</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>81</id>
     <name>Fibroblast</name>
-    <x>1.0521632461347135</x>
-    <y>1.197078007371176</y>
-    <z>1.038779256896524</z>
+    <x>0.7751630609027162</x>
+    <y>1.4619968968950996</y>
+    <z>1.3389355543736234</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>82</id>
     <name>Fibroblast</name>
-    <x>1.3955893553044632</x>
-    <y>0.6223127470164429</y>
-    <z>1.3053902561705537</z>
+    <x>1.0151513954148363</x>
+    <y>0.9228063783938484</y>
+    <z>1.499356299656279</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>83</id>
     <name>Fibroblast</name>
-    <x>0.7361279592462143</x>
-    <y>0.7766745848793338</y>
-    <z>1.2337036037653692</z>
+    <x>1.0501753373045752</x>
+    <y>1.1252610177754143</y>
+    <z>1.0416986049602246</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>84</id>
     <name>Fibroblast</name>
-    <x>0.6938184985979486</x>
-    <y>1.2451860636418377</y>
-    <z>0.9794963651400751</z>
+    <x>0.590087433782924</x>
+    <y>0.639784416654607</y>
+    <z>1.064556873198529</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>85</id>
     <name>Fibroblast</name>
-    <x>0.6469378362365746</x>
-    <y>0.7257752555541227</y>
-    <z>1.3884193409642005</z>
+    <x>1.2242025584862521</x>
+    <y>0.8342002746431743</y>
+    <z>0.7269151587307021</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>86</id>
     <name>Fibroblast</name>
-    <x>0.9494389658690847</x>
-    <y>0.5806445505184674</y>
-    <z>0.7623511548309445</z>
+    <x>1.2041596561230823</x>
+    <y>1.0845722070724446</y>
+    <z>1.4736377168820383</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>87</id>
     <name>Fibroblast</name>
-    <x>1.259479350680792</x>
-    <y>1.034540005669406</y>
-    <z>0.9141128935198765</z>
+    <x>0.724002481838102</x>
+    <y>1.38482394975824</y>
+    <z>1.2756605675959054</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>88</id>
     <name>Fibroblast</name>
-    <x>0.8216829811959678</x>
-    <y>0.7236696606332627</y>
-    <z>0.5841154315944906</z>
+    <x>1.1173846658203666</x>
+    <y>0.6202078532190999</y>
+    <z>0.6030903371965087</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>89</id>
     <name>Fibroblast</name>
-    <x>1.466739942041973</x>
-    <y>1.2209553897778573</y>
-    <z>0.9833975572866227</z>
+    <x>1.2366822184901691</x>
+    <y>1.2380525253508967</y>
+    <z>1.2022821801387447</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>90</id>
     <name>Fibroblast</name>
-    <x>0.5859821844187678</x>
-    <y>1.4589743602470593</y>
-    <z>1.071146577765289</z>
+    <x>1.2504022626304603</x>
+    <y>0.5140221782797243</y>
+    <z>1.2488554072463023</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>91</id>
     <name>Fibroblast</name>
-    <x>0.6624282356533092</x>
-    <y>0.917668655667388</y>
-    <z>1.112654521651732</z>
+    <x>1.2202722171244842</x>
+    <y>1.2056629078039967</y>
+    <z>0.6012030776872126</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>92</id>
     <name>Fibroblast</name>
-    <x>1.068443540860872</x>
-    <y>1.0095829078086567</y>
-    <z>1.0674786374047347</z>
+    <x>0.6300760986647745</x>
+    <y>0.8970286586117859</y>
+    <z>1.0483340916245139</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>93</id>
     <name>Fibroblast</name>
-    <x>1.286338635873167</x>
-    <y>1.1421247344865693</y>
-    <z>1.0593471037735243</z>
+    <x>1.3742750753690953</x>
+    <y>0.8250541621774952</y>
+    <z>1.0370728549501376</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>94</id>
     <name>Fibroblast</name>
-    <x>0.9080368483354951</x>
-    <y>0.9542488821373597</y>
-    <z>1.4545145773033248</z>
+    <x>0.7030845522664219</x>
+    <y>1.0996493885504792</y>
+    <z>1.3607334791507886</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>95</id>
     <name>Fibroblast</name>
-    <x>0.5680612881490736</x>
-    <y>0.8577940800228308</y>
-    <z>1.2050529390509956</z>
+    <x>1.0609705368763083</x>
+    <y>0.7832827038422019</y>
+    <z>1.0384416810718249</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>96</id>
     <name>Fibroblast</name>
-    <x>0.6926501220459566</x>
-    <y>1.2275618143435683</y>
-    <z>1.3822292030068564</z>
+    <x>1.0847601950648829</x>
+    <y>1.1841226693699434</y>
+    <z>1.2857869862320395</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>97</id>
     <name>Fibroblast</name>
-    <x>0.5764570366747438</x>
-    <y>0.7452652443838672</y>
-    <z>0.7676744605533105</z>
+    <x>0.702665474295235</x>
+    <y>0.5410578167024275</y>
+    <z>0.9064614009288801</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>98</id>
     <name>Fibroblast</name>
-    <x>1.4238187489301142</x>
-    <y>1.1038304947100024</y>
-    <z>0.8942491896556998</z>
+    <x>1.062766978508028</x>
+    <y>1.2652838185661799</y>
+    <z>0.7548287633333625</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>
   <xagent>
     <id>99</id>
     <name>Fibroblast</name>
-    <x>0.6101479722547721</x>
-    <y>1.3825838453977064</y>
-    <z>0.8240942305289931</z>
+    <x>0.6845544779701026</x>
+    <y>0.7348556010925846</y>
+    <z>1.2206551932768714</z>
     <doublings>0</doublings>
     <damage>0</damage>
-    <currentState>0</currentState>
+    <currentState>2</currentState>
     <early_sen_time_counter>0</early_sen_time_counter>
     <colour>0</colour>
   </xagent>

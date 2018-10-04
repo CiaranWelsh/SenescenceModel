@@ -556,7 +556,7 @@ void initialise(char * inputfile){
 	
 
 	//read initial states
-	readInitialStates(inputfile, h_TissueBlocks_default, &h_xmachine_memory_TissueBlock_default_count, h_Fibroblasts_Quiescent, &h_xmachine_memory_Fibroblast_Quiescent_count);
+	readInitialStates(inputfile, h_TissueBlocks_default, &h_xmachine_memory_TissueBlock_default_count, h_Fibroblasts_Senescent, &h_xmachine_memory_Fibroblast_Senescent_count);
 
   // Read graphs from disk
   
