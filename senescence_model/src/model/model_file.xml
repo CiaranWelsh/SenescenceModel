@@ -407,7 +407,7 @@
                     <name>Repair</name>
                     <description>Cell actively repairing a damaged tissue block</description>
                 </gpu:state>
-                <initialState>Senescent</initialState>
+                <initialState>Quiescent</initialState>
             </states>
             <gpu:type>continuous</gpu:type>
             <gpu:bufferSize>1024</gpu:bufferSize>
