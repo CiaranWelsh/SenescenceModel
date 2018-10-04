@@ -7,76 +7,92 @@
             <gpu:variable>
                 <type>float</type>
                 <name>TISSUE_DAMAGE_PROB</name>
+                <defaultValue>0.001</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>EARLY_SENESCENT_MIGRATION_SCALE</name>
+                <defaultValue>0.001</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>SENESCENT_MIGRATION_SCALE</name>
+                <defaultValue>0.001</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>QUIESCENT_MIGRATION_SCALE</name>
+                <defaultValue>0.001</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>PROLIFERATION_PROB</name>
+                <defaultValue>0.001</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>BYSTANDER_DISTANCE</name>
+                <defaultValue>0.001</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>BYSTANDER_PROB</name>
+                <defaultValue>0.001</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>int</type>
                 <name>EXCESSIVE_DAMAGE_AMOUNT</name>
+                <defaultValue>100</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>EXCESSIVE_DAMAGE_PROB</name>
+                <defaultValue>0.001</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>int</type>
                 <name>REPLICATIVE_SEN_AGE</name>
+                <defaultValue>10000</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>REPLICATIVE_SEN_PROB</name>
+                <defaultValue>0.001</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>int</type>
                 <name>EARLY_SENESCENT_MATURATION_TIME</name>
+                <defaultValue>0.001</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>TRANSITION_TO_FULL_SENESCENCE_PROB</name>
+                <defaultValue>0.001</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>CLEARANCE_EARLY_SEN_PROB</name>
+                <defaultValue>1</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>CLEARANCE_SEN_PROB</name>
+                <defaultValue>1</defaultValue>
             </gpu:variable>
             <gpu:variable>
                 <type>float</type>
                 <name>REPAIR_RADIUS</name>
+                <defaultValue>0.001</defaultValue>
             </gpu:variable>
         </gpu:constants>
         <gpu:functionFiles>
             <file>functions.c</file>
         </gpu:functionFiles>
-        <gpu:initFunctions>
-            <gpu:initFunction>
-                <gpu:name>setConstants</gpu:name>
-            </gpu:initFunction>
-        </gpu:initFunctions>
+        <!--<gpu:initFunctions>-->
+            <!--<gpu:initFunction>-->
+                <!--<gpu:name>setConstants</gpu:name>-->
+            <!--</gpu:initFunction>-->
+        <!--</gpu:initFunctions>-->
         <gpu:stepFunctions>
             <gpu:stepFunction>
                 <gpu:name>Tissuelogs</gpu:name>
@@ -147,7 +163,7 @@
                     <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
                 <gpu:function>
-                    <name>ReapirDamage</name>
+                    <name>RepairDamage</name>
                     <description>Repair some of the damage if reparing fibroblast is near</description>
                     <currentState>default</currentState>
                     <nextState>default</nextState>

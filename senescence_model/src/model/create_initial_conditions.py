@@ -17,11 +17,17 @@ import os, glob
     </xagent>'''
 
 
-def create_root():
+def create_root(kwargs=None):
     root = etree.Element('states')
     itno = etree.SubElement(root, 'itono')
     itno.text = '0'
-    etree.SubElement(root, 'environment')
+    if kwargs is not None:
+        env = etree.SubElement(root, 'environment')
+        for k, v in kwargs.items():
+            var = etree.SubElement(env, k)
+            var.text = str(v)
+
+    # etree.SubElement(root, 'environment')
     return root
 
 
@@ -117,7 +123,36 @@ def to_file(root, fname):
 
 
 if __name__ == '__main__':
-    root = create_root()
+
+    parameters = {
+        'TISSUE_DAMAGE_PROB': 0.1,
+
+        'EARLY_SENESCENT_MIGRATION_SCALE':      0.001,
+        'SENESCENT_MIGRATION_SCALE':            0.001,
+        'QUIESCENT_MIGRATION_SCALE':            0.001,
+
+        'PROLIFERATION_PROB':                   0.0001,
+
+        'BYSTANDER_DISTANCE':                   0.01,
+        'BYSTANDER_PROB':                       0.01,
+
+        'EXCESSIVE_DAMAGE_AMOUNT':              100,
+        'EXCESSIVE_DAMAGE_PROB':                0.1,
+
+        'REPLICATIVE_SEN_AGE':                  100000,
+        'REPLICATIVE_SEN_PROB':                 0.1,
+
+        'EARLY_SENESCENT_MATURATION_TIME':      10000,
+
+        'TRANSITION_TO_FULL_SENESCENCE_PROB':   0.01,
+
+        'CLEARANCE_EARLY_SEN_PROB': 0.1,
+        'CLEARANCE_SEN_PROB': 0.1,
+
+        'REPAIR_RADIUS': 0.001,
+    }
+
+    root = create_root(parameters)
     root = add_fibroblast_agents(100, root, lower_bound=0.5, upper_bound=1.5)
     root = add_tissue_agents(scale=1, grid_size=10)
 
