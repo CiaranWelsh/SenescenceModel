@@ -65,7 +65,8 @@ def add_fibroblast_agents(n, root, lower_bound=0, upper_bound=1):
 
 def add_tissue_agents(scale=0.1, grid_size=1):
     centers = []
-    resolution = grid_size / float(scale)
+    ## minus 1 makes numbers by accounting for 0!
+    resolution = grid_size-1 / float(scale)
     for x in numpy.linspace(0, 1, resolution):
         for y in numpy.linspace(0, 1, resolution):
             for z in numpy.linspace(0, 1, resolution):
@@ -117,7 +118,7 @@ def to_file(root, fname):
 
 if __name__ == '__main__':
     root = create_root()
-    root = add_fibroblast_agents(100, root, lower_bound=0, upper_bound=1)
+    root = add_fibroblast_agents(100, root, lower_bound=0.5, upper_bound=1.5)
     root = add_tissue_agents(scale=1, grid_size=10)
 
     fname = os.path.join(os.path.dirname(__file__), 'init10.xml')
