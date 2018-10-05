@@ -8,7 +8,8 @@ List of things to do within the agent based senescent model
 	- Convert Tissue agent to a cube shape
 	- See if I can use cuda for getting unique IDs for each new fibroblast generated
 	- build in mechanism for modifying parameters and restarting simulation during the visualisation
-
+- Add boundaries to where the fibroblasts can move
+- put all starting fibroblasts within the cube
 
 
 

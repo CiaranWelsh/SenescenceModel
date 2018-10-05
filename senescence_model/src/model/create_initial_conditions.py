@@ -17,11 +17,17 @@ import os, glob
     </xagent>'''
 
 
-def create_root():
+def create_root(kwargs=None):
     root = etree.Element('states')
     itno = etree.SubElement(root, 'itono')
     itno.text = '0'
-    etree.SubElement(root, 'environment')
+    if kwargs is not None:
+        env = etree.SubElement(root, 'environment')
+        for k, v in kwargs.items():
+            var = etree.SubElement(env, k)
+            var.text = str(v)
+
+    # etree.SubElement(root, 'environment')
     return root
 
 
@@ -43,7 +49,7 @@ def add_fibroblast_agents(n, root, lower_bound=0, upper_bound=1):
         x, y, z = numpy.random.uniform(lower_bound, upper_bound, 3)
         doublings = 0
         damage = 0
-        current_state = 0
+        current_state = 2
         early_sen_time_counter = 0
         agent_args = {
             'id': id,
@@ -53,7 +59,7 @@ def add_fibroblast_agents(n, root, lower_bound=0, upper_bound=1):
             'z': z,
             'doublings': doublings,
             'damage': damage,
-            'current_State': current_state,
+            'currentState': current_state,
             'early_sen_time_counter': early_sen_time_counter,
             'colour': 0
         }
@@ -65,7 +71,8 @@ def add_fibroblast_agents(n, root, lower_bound=0, upper_bound=1):
 
 def add_tissue_agents(scale=0.1, grid_size=1):
     centers = []
-    resolution = grid_size / float(scale)
+    ## minus 1 makes numbers by accounting for 0!
+    resolution = grid_size-1 / float(scale)
     for x in numpy.linspace(0, 1, resolution):
         for y in numpy.linspace(0, 1, resolution):
             for z in numpy.linspace(0, 1, resolution):
@@ -116,8 +123,37 @@ def to_file(root, fname):
 
 
 if __name__ == '__main__':
-    root = create_root()
-    root = add_fibroblast_agents(100, root, lower_bound=0, upper_bound=1)
+
+    parameters = {
+        'TISSUE_DAMAGE_PROB': 0.1,
+
+        'EARLY_SENESCENT_MIGRATION_SCALE':      0.00001,
+        'SENESCENT_MIGRATION_SCALE':            0.00001,
+        'QUIESCENT_MIGRATION_SCALE':            0.00001,
+
+        'PROLIFERATION_PROB':                   0.0001,
+
+        'BYSTANDER_DISTANCE':                   0.001,
+        'BYSTANDER_PROB':                       0.000001,
+
+        'EXCESSIVE_DAMAGE_AMOUNT':              100,
+        'EXCESSIVE_DAMAGE_PROB':                0.000001,
+
+        'REPLICATIVE_SEN_AGE':                  100000,
+        'REPLICATIVE_SEN_PROB':                 0.000001,
+
+        'EARLY_SENESCENT_MATURATION_TIME':      10000,
+
+        'TRANSITION_TO_FULL_SENESCENCE_PROB':   0.0000001,
+
+        'CLEARANCE_EARLY_SEN_PROB': 0.1,
+        'CLEARANCE_SEN_PROB': 0.1,
+
+        'REPAIR_RADIUS': 0.01,
+    }
+
+    root = create_root(parameters)
+    root = add_fibroblast_agents(100, root, lower_bound=0.5, upper_bound=1.5)
     root = add_tissue_agents(scale=1, grid_size=10)
 
     fname = os.path.join(os.path.dirname(__file__), 'init10.xml')

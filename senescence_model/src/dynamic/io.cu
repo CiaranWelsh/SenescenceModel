@@ -521,6 +521,44 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
 
 }
 
+void initEnvVars()
+{
+PROFILE_SCOPED_RANGE("initEnvVars");
+
+    float t_TISSUE_DAMAGE_PROB = (float)0.001;
+    set_TISSUE_DAMAGE_PROB(&t_TISSUE_DAMAGE_PROB);
+    float t_EARLY_SENESCENT_MIGRATION_SCALE = (float)0.001;
+    set_EARLY_SENESCENT_MIGRATION_SCALE(&t_EARLY_SENESCENT_MIGRATION_SCALE);
+    float t_SENESCENT_MIGRATION_SCALE = (float)0.001;
+    set_SENESCENT_MIGRATION_SCALE(&t_SENESCENT_MIGRATION_SCALE);
+    float t_QUIESCENT_MIGRATION_SCALE = (float)0.001;
+    set_QUIESCENT_MIGRATION_SCALE(&t_QUIESCENT_MIGRATION_SCALE);
+    float t_PROLIFERATION_PROB = (float)0.001;
+    set_PROLIFERATION_PROB(&t_PROLIFERATION_PROB);
+    float t_BYSTANDER_DISTANCE = (float)0.001;
+    set_BYSTANDER_DISTANCE(&t_BYSTANDER_DISTANCE);
+    float t_BYSTANDER_PROB = (float)0.001;
+    set_BYSTANDER_PROB(&t_BYSTANDER_PROB);
+    int t_EXCESSIVE_DAMAGE_AMOUNT = (int)100;
+    set_EXCESSIVE_DAMAGE_AMOUNT(&t_EXCESSIVE_DAMAGE_AMOUNT);
+    float t_EXCESSIVE_DAMAGE_PROB = (float)0.001;
+    set_EXCESSIVE_DAMAGE_PROB(&t_EXCESSIVE_DAMAGE_PROB);
+    int t_REPLICATIVE_SEN_AGE = (int)10000;
+    set_REPLICATIVE_SEN_AGE(&t_REPLICATIVE_SEN_AGE);
+    float t_REPLICATIVE_SEN_PROB = (float)0.001;
+    set_REPLICATIVE_SEN_PROB(&t_REPLICATIVE_SEN_PROB);
+    int t_EARLY_SENESCENT_MATURATION_TIME = (int)0.001;
+    set_EARLY_SENESCENT_MATURATION_TIME(&t_EARLY_SENESCENT_MATURATION_TIME);
+    float t_TRANSITION_TO_FULL_SENESCENCE_PROB = (float)0.001;
+    set_TRANSITION_TO_FULL_SENESCENCE_PROB(&t_TRANSITION_TO_FULL_SENESCENCE_PROB);
+    float t_CLEARANCE_EARLY_SEN_PROB = (float)1;
+    set_CLEARANCE_EARLY_SEN_PROB(&t_CLEARANCE_EARLY_SEN_PROB);
+    float t_CLEARANCE_SEN_PROB = (float)1;
+    set_CLEARANCE_SEN_PROB(&t_CLEARANCE_SEN_PROB);
+    float t_REPAIR_RADIUS = (float)0.001;
+    set_REPAIR_RADIUS(&t_REPAIR_RADIUS);
+}
+
 void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_TissueBlocks, int* h_xmachine_memory_TissueBlock_count,xmachine_memory_Fibroblast_list* h_Fibroblasts, int* h_xmachine_memory_Fibroblast_count)
 {
     PROFILE_SCOPED_RANGE("readInitialStates");
@@ -629,6 +667,7 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 
 
 	/* Initialise variables */
+    initEnvVars();
     agent_maximum.x = 0;
     agent_maximum.y = 0;
     agent_maximum.z = 0;
@@ -713,22 +752,22 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
     Fibroblast_current_state = 0;
 
     /* Default variables for environment variables */
-    env_TISSUE_DAMAGE_PROB = 0;
-    env_EARLY_SENESCENT_MIGRATION_SCALE = 0;
-    env_SENESCENT_MIGRATION_SCALE = 0;
-    env_QUIESCENT_MIGRATION_SCALE = 0;
-    env_PROLIFERATION_PROB = 0;
-    env_BYSTANDER_DISTANCE = 0;
-    env_BYSTANDER_PROB = 0;
-    env_EXCESSIVE_DAMAGE_AMOUNT = 0;
-    env_EXCESSIVE_DAMAGE_PROB = 0;
-    env_REPLICATIVE_SEN_AGE = 0;
-    env_REPLICATIVE_SEN_PROB = 0;
-    env_EARLY_SENESCENT_MATURATION_TIME = 0;
-    env_TRANSITION_TO_FULL_SENESCENCE_PROB = 0;
-    env_CLEARANCE_EARLY_SEN_PROB = 0;
-    env_CLEARANCE_SEN_PROB = 0;
-    env_REPAIR_RADIUS = 0;
+    env_TISSUE_DAMAGE_PROB = 0.001;
+    env_EARLY_SENESCENT_MIGRATION_SCALE = 0.001;
+    env_SENESCENT_MIGRATION_SCALE = 0.001;
+    env_QUIESCENT_MIGRATION_SCALE = 0.001;
+    env_PROLIFERATION_PROB = 0.001;
+    env_BYSTANDER_DISTANCE = 0.001;
+    env_BYSTANDER_PROB = 0.001;
+    env_EXCESSIVE_DAMAGE_AMOUNT = 100;
+    env_EXCESSIVE_DAMAGE_PROB = 0.001;
+    env_REPLICATIVE_SEN_AGE = 10000;
+    env_REPLICATIVE_SEN_PROB = 0.001;
+    env_EARLY_SENESCENT_MATURATION_TIME = 0.001;
+    env_TRANSITION_TO_FULL_SENESCENCE_PROB = 0.001;
+    env_CLEARANCE_EARLY_SEN_PROB = 1;
+    env_CLEARANCE_SEN_PROB = 1;
+    env_REPAIR_RADIUS = 0.001;
     
     
     // If no input path was specified, issue a message and return.

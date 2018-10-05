@@ -370,11 +370,11 @@ __FLAME_GPU_FUNC__ int TissueTakesDamage(xmachine_memory_TissueBlock* agent, RNG
 __FLAME_GPU_FUNC__ int TissueSendDamageReport(xmachine_memory_TissueBlock* agent, xmachine_message_tissue_damage_report_list* tissue_damage_report_messages);
 
 /**
- * ReapirDamage FLAMEGPU Agent Function
+ * RepairDamage FLAMEGPU Agent Function
  * @param agent Pointer to an agent structure of type xmachine_memory_TissueBlock. This represents a single agent instance and can be modified directly.
  * @param fibroblast_location_report_messages  fibroblast_location_report_messages Pointer to input message list of type xmachine_message__list. Must be passed as an argument to the get_first_fibroblast_location_report_message and get_next_fibroblast_location_report_message functions.* @param partition_matrix Pointer to the partition matrix of type xmachine_message_fibroblast_location_report_PBM. Used within the get_first__message and get_next__message functions for spatially partitioned message access.
  */
-__FLAME_GPU_FUNC__ int ReapirDamage(xmachine_memory_TissueBlock* agent, xmachine_message_fibroblast_location_report_list* fibroblast_location_report_messages, xmachine_message_fibroblast_location_report_PBM* partition_matrix);
+__FLAME_GPU_FUNC__ int RepairDamage(xmachine_memory_TissueBlock* agent, xmachine_message_fibroblast_location_report_list* fibroblast_location_report_messages, xmachine_message_fibroblast_location_report_PBM* partition_matrix);
 
 /**
  * QuiescentMigration FLAMEGPU Agent Function

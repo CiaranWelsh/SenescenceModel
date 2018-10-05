@@ -296,10 +296,10 @@ void TissueBlock_TissueTakesDamage(cudaStream_t &stream);
  */
 void TissueBlock_TissueSendDamageReport(cudaStream_t &stream);
 
-/** TissueBlock_ReapirDamage
- * Agent function prototype for ReapirDamage function of TissueBlock agent
+/** TissueBlock_RepairDamage
+ * Agent function prototype for RepairDamage function of TissueBlock agent
  */
-void TissueBlock_ReapirDamage(cudaStream_t &stream);
+void TissueBlock_RepairDamage(cudaStream_t &stream);
 
 /** Fibroblast_QuiescentMigration
  * Agent function prototype for QuiescentMigration function of Fibroblast agent
@@ -725,19 +725,6 @@ void initialise(char * inputfile){
 	cudaEventCreate(&instrument_stop);
 #endif
 
-	
-#if defined(INSTRUMENT_INIT_FUNCTIONS) && INSTRUMENT_INIT_FUNCTIONS
-	cudaEventRecord(instrument_start);
-#endif
-    setConstants();
-    PROFILE_PUSH_RANGE("setConstants");
-    PROFILE_POP_RANGE();
-#if defined(INSTRUMENT_INIT_FUNCTIONS) && INSTRUMENT_INIT_FUNCTIONS
-	cudaEventRecord(instrument_stop);
-	cudaEventSynchronize(instrument_stop);
-	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
-	printf("Instrumentation: setConstants = %f (ms)\n", instrument_milliseconds);
-#endif
 	
   
   /* Init CUDA Streams for function layers */
@@ -1270,20 +1257,6 @@ PROFILE_SCOPED_RANGE("singleIteration");
 	cudaDeviceSynchronize();
   
 	/* Layer 9*/
-	
-#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
-	cudaEventRecord(instrument_start);
-#endif
-	cudaDeviceSynchronize();
-  
-	/* Layer 10*/
-	
-#if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
-	cudaEventRecord(instrument_start);
-#endif
-	cudaDeviceSynchronize();
-  
-	/* Layer 11*/
 	
 #if defined(INSTRUMENT_AGENT_FUNCTIONS) && INSTRUMENT_AGENT_FUNCTIONS
 	cudaEventRecord(instrument_start);
@@ -5255,7 +5228,7 @@ void TissueBlock_TissueSendDamageReport(cudaStream_t &stream){
 
 	
 /* Shared memory size calculator for agent function */
-int TissueBlock_ReapirDamage_sm_size(int blockSize){
+int TissueBlock_RepairDamage_sm_size(int blockSize){
 	int sm_size;
 	sm_size = SM_START;
   //Continuous agent and message input is spatially partitioned
@@ -5267,10 +5240,10 @@ int TissueBlock_ReapirDamage_sm_size(int blockSize){
 	return sm_size;
 }
 
-/** TissueBlock_ReapirDamage
- * Agent function prototype for ReapirDamage function of TissueBlock agent
+/** TissueBlock_RepairDamage
+ * Agent function prototype for RepairDamage function of TissueBlock agent
  */
-void TissueBlock_ReapirDamage(cudaStream_t &stream){
+void TissueBlock_RepairDamage(cudaStream_t &stream){
 
     int sm_size;
     int blockSize;
@@ -5315,12 +5288,12 @@ void TissueBlock_ReapirDamage(cudaStream_t &stream){
 	
 	
 	//calculate the grid block size for main agent function
-	cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, GPUFLAME_ReapirDamage, TissueBlock_ReapirDamage_sm_size, state_list_size);
+	cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, GPUFLAME_RepairDamage, TissueBlock_RepairDamage_sm_size, state_list_size);
 	gridSize = (state_list_size + blockSize - 1) / blockSize;
 	b.x = blockSize;
 	g.x = gridSize;
 	
-	sm_size = TissueBlock_ReapirDamage_sm_size(blockSize);
+	sm_size = TissueBlock_RepairDamage_sm_size(blockSize);
 	
 	
 	
@@ -5358,12 +5331,12 @@ void TissueBlock_ReapirDamage(cudaStream_t &stream){
 
 	
 	
-	//MAIN XMACHINE FUNCTION CALL (ReapirDamage)
+	//MAIN XMACHINE FUNCTION CALL (RepairDamage)
 	//Reallocate   : false
 	//Input        : fibroblast_location_report
 	//Output       : 
 	//Agent Output : 
-	GPUFLAME_ReapirDamage<<<g, b, sm_size, stream>>>(d_TissueBlocks, d_fibroblast_location_reports, d_fibroblast_location_report_partition_matrix);
+	GPUFLAME_RepairDamage<<<g, b, sm_size, stream>>>(d_TissueBlocks, d_fibroblast_location_reports, d_fibroblast_location_report_partition_matrix);
 	gpuErrchkLaunch();
 	
 	
@@ -5383,7 +5356,7 @@ void TissueBlock_ReapirDamage(cudaStream_t &stream){
     
 	//check the working agents wont exceed the buffer size in the new state list
 	if (h_xmachine_memory_TissueBlock_default_count+h_xmachine_memory_TissueBlock_count > xmachine_memory_TissueBlock_MAX){
-		printf("Error: Buffer size of ReapirDamage agents in state default will be exceeded moving working agents to next state in function ReapirDamage\n");
+		printf("Error: Buffer size of RepairDamage agents in state default will be exceeded moving working agents to next state in function RepairDamage\n");
       exit(EXIT_FAILURE);
       }
       

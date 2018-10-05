@@ -1332,7 +1332,7 @@ __global__ void GPUFLAME_TissueSendDamageReport(xmachine_memory_TissueBlock_list
 /**
  *
  */
-__global__ void GPUFLAME_ReapirDamage(xmachine_memory_TissueBlock_list* agents, xmachine_message_fibroblast_location_report_list* fibroblast_location_report_messages, xmachine_message_fibroblast_location_report_PBM* partition_matrix){
+__global__ void GPUFLAME_RepairDamage(xmachine_memory_TissueBlock_list* agents, xmachine_message_fibroblast_location_report_list* fibroblast_location_report_messages, xmachine_message_fibroblast_location_report_PBM* partition_matrix){
 	
 	//continuous agent: index is agent position in 1D agent list
 	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
@@ -1342,7 +1342,7 @@ __global__ void GPUFLAME_ReapirDamage(xmachine_memory_TissueBlock_list* agents, 
         return;
     
 
-	//SoA to AoS - xmachine_memory_ReapirDamage Coalesced memory read (arrays point to first item for agent index)
+	//SoA to AoS - xmachine_memory_RepairDamage Coalesced memory read (arrays point to first item for agent index)
 	xmachine_memory_TissueBlock agent;
     
     // Thread bounds already checked, but the agent function will still execute. load default values?
@@ -1354,13 +1354,13 @@ __global__ void GPUFLAME_ReapirDamage(xmachine_memory_TissueBlock_list* agents, 
 	agent.damage = agents->damage[index];
 
 	//FLAME function call
-	int dead = !ReapirDamage(&agent, fibroblast_location_report_messages, partition_matrix);
+	int dead = !RepairDamage(&agent, fibroblast_location_report_messages, partition_matrix);
 	
 
 	//continuous agent: set reallocation flag
 	agents->_scan_input[index]  = dead; 
 
-	//AoS to SoA - xmachine_memory_ReapirDamage Coalesced memory write (ignore arrays)
+	//AoS to SoA - xmachine_memory_RepairDamage Coalesced memory write (ignore arrays)
 	agents->id[index] = agent.id;
 	agents->x[index] = agent.x;
 	agents->y[index] = agent.y;
