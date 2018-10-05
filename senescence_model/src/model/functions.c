@@ -246,7 +246,6 @@ __FLAME_GPU_FUNC__ int QuiescentMigration(
     }
 
     /// get position of
-
     glm::vec3 most_damaged_tissue_location = glm::vec3(
         message_with_max_damage->x,
         message_with_max_damage->y,
