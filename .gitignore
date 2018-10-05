@@ -4,3 +4,4 @@
 *.pyc
 *.csv
 [0-9]*.xml
+ senescence_model/src/model/results/xml_output/1.xml
