@@ -364,7 +364,7 @@ void runConsoleWithXMLOutput(int iterations, int outputFrequency){
 		singleIteration();
 		// Save the iteration data to disk
 		if((i+1) % outputFrequency == 0){
-			saveIterationData(outputpath, i+1, get_host_TissueBlock_default_agents(), get_device_TissueBlock_default_agents(), get_agent_TissueBlock_default_count(),get_host_Fibroblast_Quiescent_agents(), get_device_Fibroblast_Quiescent_agents(), get_agent_Fibroblast_Quiescent_count(),get_host_Fibroblast_EarlySenescent_agents(), get_device_Fibroblast_EarlySenescent_agents(), get_agent_Fibroblast_EarlySenescent_count(),get_host_Fibroblast_Senescent_agents(), get_device_Fibroblast_Senescent_agents(), get_agent_Fibroblast_Senescent_count(),get_host_Fibroblast_Proliferating_agents(), get_device_Fibroblast_Proliferating_agents(), get_agent_Fibroblast_Proliferating_count(),get_host_Fibroblast_Repair_agents(), get_device_Fibroblast_Repair_agents(), get_agent_Fibroblast_Repair_count());
+			saveIterationData(outputpath, i+1, get_host_TissueBlock_default_agents(), get_device_TissueBlock_default_agents(), get_agent_TissueBlock_default_count(),get_host_Fibroblast_Quiescent_agents(), get_device_Fibroblast_Quiescent_agents(), get_agent_Fibroblast_Quiescent_count(),get_host_Fibroblast_Repair_agents(), get_device_Fibroblast_Repair_agents(), get_agent_Fibroblast_Repair_count());
 			printf("Iteration %i Saved to XML\n", i+1);
 		}
 		
@@ -373,7 +373,7 @@ void runConsoleWithXMLOutput(int iterations, int outputFrequency){
 
 	// If we did not yet output the final iteration, output the final iteration.
 	if(iterations % outputFrequency != 0){
-		saveIterationData(outputpath, iterations, get_host_TissueBlock_default_agents(), get_device_TissueBlock_default_agents(), get_agent_TissueBlock_default_count(),get_host_Fibroblast_Quiescent_agents(), get_device_Fibroblast_Quiescent_agents(), get_agent_Fibroblast_Quiescent_count(),get_host_Fibroblast_EarlySenescent_agents(), get_device_Fibroblast_EarlySenescent_agents(), get_agent_Fibroblast_EarlySenescent_count(),get_host_Fibroblast_Senescent_agents(), get_device_Fibroblast_Senescent_agents(), get_agent_Fibroblast_Senescent_count(),get_host_Fibroblast_Proliferating_agents(), get_device_Fibroblast_Proliferating_agents(), get_agent_Fibroblast_Proliferating_count(),get_host_Fibroblast_Repair_agents(), get_device_Fibroblast_Repair_agents(), get_agent_Fibroblast_Repair_count());
+		saveIterationData(outputpath, iterations, get_host_TissueBlock_default_agents(), get_device_TissueBlock_default_agents(), get_agent_TissueBlock_default_count(),get_host_Fibroblast_Quiescent_agents(), get_device_Fibroblast_Quiescent_agents(), get_agent_Fibroblast_Quiescent_count(),get_host_Fibroblast_Repair_agents(), get_device_Fibroblast_Repair_agents(), get_agent_Fibroblast_Repair_count());
 		printf("Iteration %i Saved to XML\n", iterations);
 	}
 
