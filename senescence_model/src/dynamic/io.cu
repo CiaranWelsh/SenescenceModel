@@ -117,7 +117,7 @@ void readArrayInputVectorType( BASE_T (*parseFunc)(const char*), char* buffer, T
     }
 }
 
-void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_TissueBlock_list* h_TissueBlocks_default, xmachine_memory_TissueBlock_list* d_TissueBlocks_default, int h_xmachine_memory_TissueBlock_default_count,xmachine_memory_Fibroblast_list* h_Fibroblasts_Quiescent, xmachine_memory_Fibroblast_list* d_Fibroblasts_Quiescent, int h_xmachine_memory_Fibroblast_Quiescent_count,xmachine_memory_Fibroblast_list* h_Fibroblasts_EarlySenescent, xmachine_memory_Fibroblast_list* d_Fibroblasts_EarlySenescent, int h_xmachine_memory_Fibroblast_EarlySenescent_count,xmachine_memory_Fibroblast_list* h_Fibroblasts_Senescent, xmachine_memory_Fibroblast_list* d_Fibroblasts_Senescent, int h_xmachine_memory_Fibroblast_Senescent_count,xmachine_memory_Fibroblast_list* h_Fibroblasts_Proliferating, xmachine_memory_Fibroblast_list* d_Fibroblasts_Proliferating, int h_xmachine_memory_Fibroblast_Proliferating_count,xmachine_memory_Fibroblast_list* h_Fibroblasts_Repair, xmachine_memory_Fibroblast_list* d_Fibroblasts_Repair, int h_xmachine_memory_Fibroblast_Repair_count)
+void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_TissueBlock_list* h_TissueBlocks_default, xmachine_memory_TissueBlock_list* d_TissueBlocks_default, int h_xmachine_memory_TissueBlock_default_count,xmachine_memory_Fibroblast_list* h_Fibroblasts_Quiescent, xmachine_memory_Fibroblast_list* d_Fibroblasts_Quiescent, int h_xmachine_memory_Fibroblast_Quiescent_count,xmachine_memory_Fibroblast_list* h_Fibroblasts_Repair, xmachine_memory_Fibroblast_list* d_Fibroblasts_Repair, int h_xmachine_memory_Fibroblast_Repair_count)
 {
     PROFILE_SCOPED_RANGE("saveIterationData");
 	cudaError_t cudaStatus;
@@ -134,24 +134,6 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
 	if (cudaStatus != cudaSuccess)
 	{
 		fprintf(stderr,"Error Copying Fibroblast Agent Quiescent State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
-		exit(cudaStatus);
-	}
-	cudaStatus = cudaMemcpy( h_Fibroblasts_EarlySenescent, d_Fibroblasts_EarlySenescent, sizeof(xmachine_memory_Fibroblast_list), cudaMemcpyDeviceToHost);
-	if (cudaStatus != cudaSuccess)
-	{
-		fprintf(stderr,"Error Copying Fibroblast Agent EarlySenescent State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
-		exit(cudaStatus);
-	}
-	cudaStatus = cudaMemcpy( h_Fibroblasts_Senescent, d_Fibroblasts_Senescent, sizeof(xmachine_memory_Fibroblast_list), cudaMemcpyDeviceToHost);
-	if (cudaStatus != cudaSuccess)
-	{
-		fprintf(stderr,"Error Copying Fibroblast Agent Senescent State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
-		exit(cudaStatus);
-	}
-	cudaStatus = cudaMemcpy( h_Fibroblasts_Proliferating, d_Fibroblasts_Proliferating, sizeof(xmachine_memory_Fibroblast_list), cudaMemcpyDeviceToHost);
-	if (cudaStatus != cudaSuccess)
-	{
-		fprintf(stderr,"Error Copying Fibroblast Agent Proliferating State Memory from GPU: %s\n", cudaGetErrorString(cudaStatus));
 		exit(cudaStatus);
 	}
 	cudaStatus = cudaMemcpy( h_Fibroblasts_Repair, d_Fibroblasts_Repair, sizeof(xmachine_memory_Fibroblast_list), cudaMemcpyDeviceToHost);
@@ -182,66 +164,18 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
     sprintf(data, "%f", (*get_TISSUE_DAMAGE_PROB()));
     fputs(data, file);
     fputs("</TISSUE_DAMAGE_PROB>\n", file);
-    fputs("\t<EARLY_SENESCENT_MIGRATION_SCALE>", file);
-    sprintf(data, "%f", (*get_EARLY_SENESCENT_MIGRATION_SCALE()));
-    fputs(data, file);
-    fputs("</EARLY_SENESCENT_MIGRATION_SCALE>\n", file);
-    fputs("\t<SENESCENT_MIGRATION_SCALE>", file);
-    sprintf(data, "%f", (*get_SENESCENT_MIGRATION_SCALE()));
-    fputs(data, file);
-    fputs("</SENESCENT_MIGRATION_SCALE>\n", file);
     fputs("\t<QUIESCENT_MIGRATION_SCALE>", file);
     sprintf(data, "%f", (*get_QUIESCENT_MIGRATION_SCALE()));
     fputs(data, file);
     fputs("</QUIESCENT_MIGRATION_SCALE>\n", file);
-    fputs("\t<PROLIFERATION_PROB>", file);
-    sprintf(data, "%f", (*get_PROLIFERATION_PROB()));
+    fputs("\t<REPAIR_RANGE>", file);
+    sprintf(data, "%f", (*get_REPAIR_RANGE()));
     fputs(data, file);
-    fputs("</PROLIFERATION_PROB>\n", file);
-    fputs("\t<BYSTANDER_DISTANCE>", file);
-    sprintf(data, "%f", (*get_BYSTANDER_DISTANCE()));
+    fputs("</REPAIR_RANGE>\n", file);
+    fputs("\t<DAMAGE_DETECTION_RANGE>", file);
+    sprintf(data, "%f", (*get_DAMAGE_DETECTION_RANGE()));
     fputs(data, file);
-    fputs("</BYSTANDER_DISTANCE>\n", file);
-    fputs("\t<BYSTANDER_PROB>", file);
-    sprintf(data, "%f", (*get_BYSTANDER_PROB()));
-    fputs(data, file);
-    fputs("</BYSTANDER_PROB>\n", file);
-    fputs("\t<EXCESSIVE_DAMAGE_AMOUNT>", file);
-    sprintf(data, "%d", (*get_EXCESSIVE_DAMAGE_AMOUNT()));
-    fputs(data, file);
-    fputs("</EXCESSIVE_DAMAGE_AMOUNT>\n", file);
-    fputs("\t<EXCESSIVE_DAMAGE_PROB>", file);
-    sprintf(data, "%f", (*get_EXCESSIVE_DAMAGE_PROB()));
-    fputs(data, file);
-    fputs("</EXCESSIVE_DAMAGE_PROB>\n", file);
-    fputs("\t<REPLICATIVE_SEN_AGE>", file);
-    sprintf(data, "%d", (*get_REPLICATIVE_SEN_AGE()));
-    fputs(data, file);
-    fputs("</REPLICATIVE_SEN_AGE>\n", file);
-    fputs("\t<REPLICATIVE_SEN_PROB>", file);
-    sprintf(data, "%f", (*get_REPLICATIVE_SEN_PROB()));
-    fputs(data, file);
-    fputs("</REPLICATIVE_SEN_PROB>\n", file);
-    fputs("\t<EARLY_SENESCENT_MATURATION_TIME>", file);
-    sprintf(data, "%d", (*get_EARLY_SENESCENT_MATURATION_TIME()));
-    fputs(data, file);
-    fputs("</EARLY_SENESCENT_MATURATION_TIME>\n", file);
-    fputs("\t<TRANSITION_TO_FULL_SENESCENCE_PROB>", file);
-    sprintf(data, "%f", (*get_TRANSITION_TO_FULL_SENESCENCE_PROB()));
-    fputs(data, file);
-    fputs("</TRANSITION_TO_FULL_SENESCENCE_PROB>\n", file);
-    fputs("\t<CLEARANCE_EARLY_SEN_PROB>", file);
-    sprintf(data, "%f", (*get_CLEARANCE_EARLY_SEN_PROB()));
-    fputs(data, file);
-    fputs("</CLEARANCE_EARLY_SEN_PROB>\n", file);
-    fputs("\t<CLEARANCE_SEN_PROB>", file);
-    sprintf(data, "%f", (*get_CLEARANCE_SEN_PROB()));
-    fputs(data, file);
-    fputs("</CLEARANCE_SEN_PROB>\n", file);
-    fputs("\t<REPAIR_RADIUS>", file);
-    sprintf(data, "%f", (*get_REPAIR_RADIUS()));
-    fputs(data, file);
-    fputs("</REPAIR_RADIUS>\n", file);
+    fputs("</DAMAGE_DETECTION_RANGE>\n", file);
 	fputs("</environment>\n" , file);
 
 	//Write each TissueBlock agent to xml
@@ -301,166 +235,20 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
 		fputs(data, file);
 		fputs("</z>\n", file);
         
-		fputs("<doublings>", file);
-        sprintf(data, "%f", h_Fibroblasts_Quiescent->doublings[i]);
-		fputs(data, file);
-		fputs("</doublings>\n", file);
-        
 		fputs("<damage>", file);
         sprintf(data, "%d", h_Fibroblasts_Quiescent->damage[i]);
 		fputs(data, file);
 		fputs("</damage>\n", file);
-        
-		fputs("<early_sen_time_counter>", file);
-        sprintf(data, "%d", h_Fibroblasts_Quiescent->early_sen_time_counter[i]);
-		fputs(data, file);
-		fputs("</early_sen_time_counter>\n", file);
         
 		fputs("<current_state>", file);
         sprintf(data, "%d", h_Fibroblasts_Quiescent->current_state[i]);
 		fputs(data, file);
 		fputs("</current_state>\n", file);
         
-		fputs("</xagent>\n", file);
-	}
-	//Write each Fibroblast agent to xml
-	for (int i=0; i<h_xmachine_memory_Fibroblast_EarlySenescent_count; i++){
-		fputs("<xagent>\n" , file);
-		fputs("<name>Fibroblast</name>\n", file);
-        
-		fputs("<id>", file);
-        sprintf(data, "%d", h_Fibroblasts_EarlySenescent->id[i]);
+		fputs("<go_to_state>", file);
+        sprintf(data, "%d", h_Fibroblasts_Quiescent->go_to_state[i]);
 		fputs(data, file);
-		fputs("</id>\n", file);
-        
-		fputs("<x>", file);
-        sprintf(data, "%f", h_Fibroblasts_EarlySenescent->x[i]);
-		fputs(data, file);
-		fputs("</x>\n", file);
-        
-		fputs("<y>", file);
-        sprintf(data, "%f", h_Fibroblasts_EarlySenescent->y[i]);
-		fputs(data, file);
-		fputs("</y>\n", file);
-        
-		fputs("<z>", file);
-        sprintf(data, "%f", h_Fibroblasts_EarlySenescent->z[i]);
-		fputs(data, file);
-		fputs("</z>\n", file);
-        
-		fputs("<doublings>", file);
-        sprintf(data, "%f", h_Fibroblasts_EarlySenescent->doublings[i]);
-		fputs(data, file);
-		fputs("</doublings>\n", file);
-        
-		fputs("<damage>", file);
-        sprintf(data, "%d", h_Fibroblasts_EarlySenescent->damage[i]);
-		fputs(data, file);
-		fputs("</damage>\n", file);
-        
-		fputs("<early_sen_time_counter>", file);
-        sprintf(data, "%d", h_Fibroblasts_EarlySenescent->early_sen_time_counter[i]);
-		fputs(data, file);
-		fputs("</early_sen_time_counter>\n", file);
-        
-		fputs("<current_state>", file);
-        sprintf(data, "%d", h_Fibroblasts_EarlySenescent->current_state[i]);
-		fputs(data, file);
-		fputs("</current_state>\n", file);
-        
-		fputs("</xagent>\n", file);
-	}
-	//Write each Fibroblast agent to xml
-	for (int i=0; i<h_xmachine_memory_Fibroblast_Senescent_count; i++){
-		fputs("<xagent>\n" , file);
-		fputs("<name>Fibroblast</name>\n", file);
-        
-		fputs("<id>", file);
-        sprintf(data, "%d", h_Fibroblasts_Senescent->id[i]);
-		fputs(data, file);
-		fputs("</id>\n", file);
-        
-		fputs("<x>", file);
-        sprintf(data, "%f", h_Fibroblasts_Senescent->x[i]);
-		fputs(data, file);
-		fputs("</x>\n", file);
-        
-		fputs("<y>", file);
-        sprintf(data, "%f", h_Fibroblasts_Senescent->y[i]);
-		fputs(data, file);
-		fputs("</y>\n", file);
-        
-		fputs("<z>", file);
-        sprintf(data, "%f", h_Fibroblasts_Senescent->z[i]);
-		fputs(data, file);
-		fputs("</z>\n", file);
-        
-		fputs("<doublings>", file);
-        sprintf(data, "%f", h_Fibroblasts_Senescent->doublings[i]);
-		fputs(data, file);
-		fputs("</doublings>\n", file);
-        
-		fputs("<damage>", file);
-        sprintf(data, "%d", h_Fibroblasts_Senescent->damage[i]);
-		fputs(data, file);
-		fputs("</damage>\n", file);
-        
-		fputs("<early_sen_time_counter>", file);
-        sprintf(data, "%d", h_Fibroblasts_Senescent->early_sen_time_counter[i]);
-		fputs(data, file);
-		fputs("</early_sen_time_counter>\n", file);
-        
-		fputs("<current_state>", file);
-        sprintf(data, "%d", h_Fibroblasts_Senescent->current_state[i]);
-		fputs(data, file);
-		fputs("</current_state>\n", file);
-        
-		fputs("</xagent>\n", file);
-	}
-	//Write each Fibroblast agent to xml
-	for (int i=0; i<h_xmachine_memory_Fibroblast_Proliferating_count; i++){
-		fputs("<xagent>\n" , file);
-		fputs("<name>Fibroblast</name>\n", file);
-        
-		fputs("<id>", file);
-        sprintf(data, "%d", h_Fibroblasts_Proliferating->id[i]);
-		fputs(data, file);
-		fputs("</id>\n", file);
-        
-		fputs("<x>", file);
-        sprintf(data, "%f", h_Fibroblasts_Proliferating->x[i]);
-		fputs(data, file);
-		fputs("</x>\n", file);
-        
-		fputs("<y>", file);
-        sprintf(data, "%f", h_Fibroblasts_Proliferating->y[i]);
-		fputs(data, file);
-		fputs("</y>\n", file);
-        
-		fputs("<z>", file);
-        sprintf(data, "%f", h_Fibroblasts_Proliferating->z[i]);
-		fputs(data, file);
-		fputs("</z>\n", file);
-        
-		fputs("<doublings>", file);
-        sprintf(data, "%f", h_Fibroblasts_Proliferating->doublings[i]);
-		fputs(data, file);
-		fputs("</doublings>\n", file);
-        
-		fputs("<damage>", file);
-        sprintf(data, "%d", h_Fibroblasts_Proliferating->damage[i]);
-		fputs(data, file);
-		fputs("</damage>\n", file);
-        
-		fputs("<early_sen_time_counter>", file);
-        sprintf(data, "%d", h_Fibroblasts_Proliferating->early_sen_time_counter[i]);
-		fputs(data, file);
-		fputs("</early_sen_time_counter>\n", file);
-        
-		fputs("<current_state>", file);
-        sprintf(data, "%d", h_Fibroblasts_Proliferating->current_state[i]);
-		fputs(data, file);
-		fputs("</current_state>\n", file);
+		fputs("</go_to_state>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
@@ -489,25 +277,20 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
 		fputs(data, file);
 		fputs("</z>\n", file);
         
-		fputs("<doublings>", file);
-        sprintf(data, "%f", h_Fibroblasts_Repair->doublings[i]);
-		fputs(data, file);
-		fputs("</doublings>\n", file);
-        
 		fputs("<damage>", file);
         sprintf(data, "%d", h_Fibroblasts_Repair->damage[i]);
 		fputs(data, file);
 		fputs("</damage>\n", file);
         
-		fputs("<early_sen_time_counter>", file);
-        sprintf(data, "%d", h_Fibroblasts_Repair->early_sen_time_counter[i]);
-		fputs(data, file);
-		fputs("</early_sen_time_counter>\n", file);
-        
 		fputs("<current_state>", file);
         sprintf(data, "%d", h_Fibroblasts_Repair->current_state[i]);
 		fputs(data, file);
 		fputs("</current_state>\n", file);
+        
+		fputs("<go_to_state>", file);
+        sprintf(data, "%d", h_Fibroblasts_Repair->go_to_state[i]);
+		fputs(data, file);
+		fputs("</go_to_state>\n", file);
         
 		fputs("</xagent>\n", file);
 	}
@@ -527,36 +310,12 @@ PROFILE_SCOPED_RANGE("initEnvVars");
 
     float t_TISSUE_DAMAGE_PROB = (float)0.001;
     set_TISSUE_DAMAGE_PROB(&t_TISSUE_DAMAGE_PROB);
-    float t_EARLY_SENESCENT_MIGRATION_SCALE = (float)0.001;
-    set_EARLY_SENESCENT_MIGRATION_SCALE(&t_EARLY_SENESCENT_MIGRATION_SCALE);
-    float t_SENESCENT_MIGRATION_SCALE = (float)0.001;
-    set_SENESCENT_MIGRATION_SCALE(&t_SENESCENT_MIGRATION_SCALE);
     float t_QUIESCENT_MIGRATION_SCALE = (float)0.001;
     set_QUIESCENT_MIGRATION_SCALE(&t_QUIESCENT_MIGRATION_SCALE);
-    float t_PROLIFERATION_PROB = (float)0.001;
-    set_PROLIFERATION_PROB(&t_PROLIFERATION_PROB);
-    float t_BYSTANDER_DISTANCE = (float)0.001;
-    set_BYSTANDER_DISTANCE(&t_BYSTANDER_DISTANCE);
-    float t_BYSTANDER_PROB = (float)0.001;
-    set_BYSTANDER_PROB(&t_BYSTANDER_PROB);
-    int t_EXCESSIVE_DAMAGE_AMOUNT = (int)100;
-    set_EXCESSIVE_DAMAGE_AMOUNT(&t_EXCESSIVE_DAMAGE_AMOUNT);
-    float t_EXCESSIVE_DAMAGE_PROB = (float)0.001;
-    set_EXCESSIVE_DAMAGE_PROB(&t_EXCESSIVE_DAMAGE_PROB);
-    int t_REPLICATIVE_SEN_AGE = (int)10000;
-    set_REPLICATIVE_SEN_AGE(&t_REPLICATIVE_SEN_AGE);
-    float t_REPLICATIVE_SEN_PROB = (float)0.001;
-    set_REPLICATIVE_SEN_PROB(&t_REPLICATIVE_SEN_PROB);
-    int t_EARLY_SENESCENT_MATURATION_TIME = (int)0.001;
-    set_EARLY_SENESCENT_MATURATION_TIME(&t_EARLY_SENESCENT_MATURATION_TIME);
-    float t_TRANSITION_TO_FULL_SENESCENCE_PROB = (float)0.001;
-    set_TRANSITION_TO_FULL_SENESCENCE_PROB(&t_TRANSITION_TO_FULL_SENESCENCE_PROB);
-    float t_CLEARANCE_EARLY_SEN_PROB = (float)1;
-    set_CLEARANCE_EARLY_SEN_PROB(&t_CLEARANCE_EARLY_SEN_PROB);
-    float t_CLEARANCE_SEN_PROB = (float)1;
-    set_CLEARANCE_SEN_PROB(&t_CLEARANCE_SEN_PROB);
-    float t_REPAIR_RADIUS = (float)0.001;
-    set_REPAIR_RADIUS(&t_REPAIR_RADIUS);
+    float t_REPAIR_RANGE = (float)0.001;
+    set_REPAIR_RANGE(&t_REPAIR_RANGE);
+    float t_DAMAGE_DETECTION_RANGE = (float)0.001;
+    set_DAMAGE_DETECTION_RANGE(&t_DAMAGE_DETECTION_RANGE);
 }
 
 void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_TissueBlocks, int* h_xmachine_memory_TissueBlock_count,xmachine_memory_Fibroblast_list* h_Fibroblasts, int* h_xmachine_memory_Fibroblast_count)
@@ -588,44 +347,19 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
     int in_Fibroblast_x;
     int in_Fibroblast_y;
     int in_Fibroblast_z;
-    int in_Fibroblast_doublings;
     int in_Fibroblast_damage;
-    int in_Fibroblast_early_sen_time_counter;
     int in_Fibroblast_current_state;
+    int in_Fibroblast_go_to_state;
     
     /* tags for environment global variables */
     int in_env;
     int in_env_TISSUE_DAMAGE_PROB;
     
-    int in_env_EARLY_SENESCENT_MIGRATION_SCALE;
-    
-    int in_env_SENESCENT_MIGRATION_SCALE;
-    
     int in_env_QUIESCENT_MIGRATION_SCALE;
     
-    int in_env_PROLIFERATION_PROB;
+    int in_env_REPAIR_RANGE;
     
-    int in_env_BYSTANDER_DISTANCE;
-    
-    int in_env_BYSTANDER_PROB;
-    
-    int in_env_EXCESSIVE_DAMAGE_AMOUNT;
-    
-    int in_env_EXCESSIVE_DAMAGE_PROB;
-    
-    int in_env_REPLICATIVE_SEN_AGE;
-    
-    int in_env_REPLICATIVE_SEN_PROB;
-    
-    int in_env_EARLY_SENESCENT_MATURATION_TIME;
-    
-    int in_env_TRANSITION_TO_FULL_SENESCENCE_PROB;
-    
-    int in_env_CLEARANCE_EARLY_SEN_PROB;
-    
-    int in_env_CLEARANCE_SEN_PROB;
-    
-    int in_env_REPAIR_RADIUS;
+    int in_env_DAMAGE_DETECTION_RANGE;
     
 	/* set agent count to zero */
 	*h_xmachine_memory_TissueBlock_count = 0;
@@ -641,28 +375,15 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 	float Fibroblast_x;
 	float Fibroblast_y;
 	float Fibroblast_z;
-	float Fibroblast_doublings;
 	int Fibroblast_damage;
-	int Fibroblast_early_sen_time_counter;
 	int Fibroblast_current_state;
+	int Fibroblast_go_to_state;
 
     /* Variables for environment variables */
     float env_TISSUE_DAMAGE_PROB;
-    float env_EARLY_SENESCENT_MIGRATION_SCALE;
-    float env_SENESCENT_MIGRATION_SCALE;
     float env_QUIESCENT_MIGRATION_SCALE;
-    float env_PROLIFERATION_PROB;
-    float env_BYSTANDER_DISTANCE;
-    float env_BYSTANDER_PROB;
-    int env_EXCESSIVE_DAMAGE_AMOUNT;
-    float env_EXCESSIVE_DAMAGE_PROB;
-    int env_REPLICATIVE_SEN_AGE;
-    float env_REPLICATIVE_SEN_PROB;
-    int env_EARLY_SENESCENT_MATURATION_TIME;
-    float env_TRANSITION_TO_FULL_SENESCENCE_PROB;
-    float env_CLEARANCE_EARLY_SEN_PROB;
-    float env_CLEARANCE_SEN_PROB;
-    float env_REPAIR_RADIUS;
+    float env_REPAIR_RANGE;
+    float env_DAMAGE_DETECTION_RANGE;
     
 
 
@@ -690,26 +411,13 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 	in_Fibroblast_x = 0;
 	in_Fibroblast_y = 0;
 	in_Fibroblast_z = 0;
-	in_Fibroblast_doublings = 0;
 	in_Fibroblast_damage = 0;
-	in_Fibroblast_early_sen_time_counter = 0;
 	in_Fibroblast_current_state = 0;
+	in_Fibroblast_go_to_state = 0;
     in_env_TISSUE_DAMAGE_PROB = 0;
-    in_env_EARLY_SENESCENT_MIGRATION_SCALE = 0;
-    in_env_SENESCENT_MIGRATION_SCALE = 0;
     in_env_QUIESCENT_MIGRATION_SCALE = 0;
-    in_env_PROLIFERATION_PROB = 0;
-    in_env_BYSTANDER_DISTANCE = 0;
-    in_env_BYSTANDER_PROB = 0;
-    in_env_EXCESSIVE_DAMAGE_AMOUNT = 0;
-    in_env_EXCESSIVE_DAMAGE_PROB = 0;
-    in_env_REPLICATIVE_SEN_AGE = 0;
-    in_env_REPLICATIVE_SEN_PROB = 0;
-    in_env_EARLY_SENESCENT_MATURATION_TIME = 0;
-    in_env_TRANSITION_TO_FULL_SENESCENCE_PROB = 0;
-    in_env_CLEARANCE_EARLY_SEN_PROB = 0;
-    in_env_CLEARANCE_SEN_PROB = 0;
-    in_env_REPAIR_RADIUS = 0;
+    in_env_REPAIR_RANGE = 0;
+    in_env_DAMAGE_DETECTION_RANGE = 0;
 	//set all TissueBlock values to 0
 	//If this is not done then it will cause errors in emu mode where undefined memory is not 0
 	for (int k=0; k<xmachine_memory_TissueBlock_MAX; k++)
@@ -729,10 +437,9 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 		h_Fibroblasts->x[k] = 0;
 		h_Fibroblasts->y[k] = 0;
 		h_Fibroblasts->z[k] = 0;
-		h_Fibroblasts->doublings[k] = 0;
 		h_Fibroblasts->damage[k] = 0;
-		h_Fibroblasts->early_sen_time_counter[k] = 0;
 		h_Fibroblasts->current_state[k] = 0;
+		h_Fibroblasts->go_to_state[k] = 0;
 	}
 	
 
@@ -746,28 +453,15 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
     Fibroblast_x = 0;
     Fibroblast_y = 0;
     Fibroblast_z = 0;
-    Fibroblast_doublings = 0;
     Fibroblast_damage = 0;
-    Fibroblast_early_sen_time_counter = 0;
     Fibroblast_current_state = 0;
+    Fibroblast_go_to_state = 0;
 
     /* Default variables for environment variables */
     env_TISSUE_DAMAGE_PROB = 0.001;
-    env_EARLY_SENESCENT_MIGRATION_SCALE = 0.001;
-    env_SENESCENT_MIGRATION_SCALE = 0.001;
     env_QUIESCENT_MIGRATION_SCALE = 0.001;
-    env_PROLIFERATION_PROB = 0.001;
-    env_BYSTANDER_DISTANCE = 0.001;
-    env_BYSTANDER_PROB = 0.001;
-    env_EXCESSIVE_DAMAGE_AMOUNT = 100;
-    env_EXCESSIVE_DAMAGE_PROB = 0.001;
-    env_REPLICATIVE_SEN_AGE = 10000;
-    env_REPLICATIVE_SEN_PROB = 0.001;
-    env_EARLY_SENESCENT_MATURATION_TIME = 0.001;
-    env_TRANSITION_TO_FULL_SENESCENCE_PROB = 0.001;
-    env_CLEARANCE_EARLY_SEN_PROB = 1;
-    env_CLEARANCE_SEN_PROB = 1;
-    env_REPAIR_RADIUS = 0.001;
+    env_REPAIR_RANGE = 0.001;
+    env_DAMAGE_DETECTION_RANGE = 0.001;
     
     
     // If no input path was specified, issue a message and return.
@@ -922,10 +616,9 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
                     if(agent_minimum.z > Fibroblast_z)
                         agent_minimum.z = (float)Fibroblast_z;
                     
-					h_Fibroblasts->doublings[*h_xmachine_memory_Fibroblast_count] = Fibroblast_doublings;
 					h_Fibroblasts->damage[*h_xmachine_memory_Fibroblast_count] = Fibroblast_damage;
-					h_Fibroblasts->early_sen_time_counter[*h_xmachine_memory_Fibroblast_count] = Fibroblast_early_sen_time_counter;
 					h_Fibroblasts->current_state[*h_xmachine_memory_Fibroblast_count] = Fibroblast_current_state;
+					h_Fibroblasts->go_to_state[*h_xmachine_memory_Fibroblast_count] = Fibroblast_go_to_state;
 					(*h_xmachine_memory_Fibroblast_count) ++;	
 				}
 				else
@@ -945,10 +638,9 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
                 Fibroblast_x = 0;
                 Fibroblast_y = 0;
                 Fibroblast_z = 0;
-                Fibroblast_doublings = 0;
                 Fibroblast_damage = 0;
-                Fibroblast_early_sen_time_counter = 0;
                 Fibroblast_current_state = 0;
+                Fibroblast_go_to_state = 0;
                 
                 in_xagent = 0;
 			}
@@ -970,48 +662,22 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 			if(strcmp(buffer, "/y") == 0) in_Fibroblast_y = 0;
 			if(strcmp(buffer, "z") == 0) in_Fibroblast_z = 1;
 			if(strcmp(buffer, "/z") == 0) in_Fibroblast_z = 0;
-			if(strcmp(buffer, "doublings") == 0) in_Fibroblast_doublings = 1;
-			if(strcmp(buffer, "/doublings") == 0) in_Fibroblast_doublings = 0;
 			if(strcmp(buffer, "damage") == 0) in_Fibroblast_damage = 1;
 			if(strcmp(buffer, "/damage") == 0) in_Fibroblast_damage = 0;
-			if(strcmp(buffer, "early_sen_time_counter") == 0) in_Fibroblast_early_sen_time_counter = 1;
-			if(strcmp(buffer, "/early_sen_time_counter") == 0) in_Fibroblast_early_sen_time_counter = 0;
 			if(strcmp(buffer, "current_state") == 0) in_Fibroblast_current_state = 1;
 			if(strcmp(buffer, "/current_state") == 0) in_Fibroblast_current_state = 0;
+			if(strcmp(buffer, "go_to_state") == 0) in_Fibroblast_go_to_state = 1;
+			if(strcmp(buffer, "/go_to_state") == 0) in_Fibroblast_go_to_state = 0;
 			
             /* environment variables */
             if(strcmp(buffer, "TISSUE_DAMAGE_PROB") == 0) in_env_TISSUE_DAMAGE_PROB = 1;
             if(strcmp(buffer, "/TISSUE_DAMAGE_PROB") == 0) in_env_TISSUE_DAMAGE_PROB = 0;
-			if(strcmp(buffer, "EARLY_SENESCENT_MIGRATION_SCALE") == 0) in_env_EARLY_SENESCENT_MIGRATION_SCALE = 1;
-            if(strcmp(buffer, "/EARLY_SENESCENT_MIGRATION_SCALE") == 0) in_env_EARLY_SENESCENT_MIGRATION_SCALE = 0;
-			if(strcmp(buffer, "SENESCENT_MIGRATION_SCALE") == 0) in_env_SENESCENT_MIGRATION_SCALE = 1;
-            if(strcmp(buffer, "/SENESCENT_MIGRATION_SCALE") == 0) in_env_SENESCENT_MIGRATION_SCALE = 0;
 			if(strcmp(buffer, "QUIESCENT_MIGRATION_SCALE") == 0) in_env_QUIESCENT_MIGRATION_SCALE = 1;
             if(strcmp(buffer, "/QUIESCENT_MIGRATION_SCALE") == 0) in_env_QUIESCENT_MIGRATION_SCALE = 0;
-			if(strcmp(buffer, "PROLIFERATION_PROB") == 0) in_env_PROLIFERATION_PROB = 1;
-            if(strcmp(buffer, "/PROLIFERATION_PROB") == 0) in_env_PROLIFERATION_PROB = 0;
-			if(strcmp(buffer, "BYSTANDER_DISTANCE") == 0) in_env_BYSTANDER_DISTANCE = 1;
-            if(strcmp(buffer, "/BYSTANDER_DISTANCE") == 0) in_env_BYSTANDER_DISTANCE = 0;
-			if(strcmp(buffer, "BYSTANDER_PROB") == 0) in_env_BYSTANDER_PROB = 1;
-            if(strcmp(buffer, "/BYSTANDER_PROB") == 0) in_env_BYSTANDER_PROB = 0;
-			if(strcmp(buffer, "EXCESSIVE_DAMAGE_AMOUNT") == 0) in_env_EXCESSIVE_DAMAGE_AMOUNT = 1;
-            if(strcmp(buffer, "/EXCESSIVE_DAMAGE_AMOUNT") == 0) in_env_EXCESSIVE_DAMAGE_AMOUNT = 0;
-			if(strcmp(buffer, "EXCESSIVE_DAMAGE_PROB") == 0) in_env_EXCESSIVE_DAMAGE_PROB = 1;
-            if(strcmp(buffer, "/EXCESSIVE_DAMAGE_PROB") == 0) in_env_EXCESSIVE_DAMAGE_PROB = 0;
-			if(strcmp(buffer, "REPLICATIVE_SEN_AGE") == 0) in_env_REPLICATIVE_SEN_AGE = 1;
-            if(strcmp(buffer, "/REPLICATIVE_SEN_AGE") == 0) in_env_REPLICATIVE_SEN_AGE = 0;
-			if(strcmp(buffer, "REPLICATIVE_SEN_PROB") == 0) in_env_REPLICATIVE_SEN_PROB = 1;
-            if(strcmp(buffer, "/REPLICATIVE_SEN_PROB") == 0) in_env_REPLICATIVE_SEN_PROB = 0;
-			if(strcmp(buffer, "EARLY_SENESCENT_MATURATION_TIME") == 0) in_env_EARLY_SENESCENT_MATURATION_TIME = 1;
-            if(strcmp(buffer, "/EARLY_SENESCENT_MATURATION_TIME") == 0) in_env_EARLY_SENESCENT_MATURATION_TIME = 0;
-			if(strcmp(buffer, "TRANSITION_TO_FULL_SENESCENCE_PROB") == 0) in_env_TRANSITION_TO_FULL_SENESCENCE_PROB = 1;
-            if(strcmp(buffer, "/TRANSITION_TO_FULL_SENESCENCE_PROB") == 0) in_env_TRANSITION_TO_FULL_SENESCENCE_PROB = 0;
-			if(strcmp(buffer, "CLEARANCE_EARLY_SEN_PROB") == 0) in_env_CLEARANCE_EARLY_SEN_PROB = 1;
-            if(strcmp(buffer, "/CLEARANCE_EARLY_SEN_PROB") == 0) in_env_CLEARANCE_EARLY_SEN_PROB = 0;
-			if(strcmp(buffer, "CLEARANCE_SEN_PROB") == 0) in_env_CLEARANCE_SEN_PROB = 1;
-            if(strcmp(buffer, "/CLEARANCE_SEN_PROB") == 0) in_env_CLEARANCE_SEN_PROB = 0;
-			if(strcmp(buffer, "REPAIR_RADIUS") == 0) in_env_REPAIR_RADIUS = 1;
-            if(strcmp(buffer, "/REPAIR_RADIUS") == 0) in_env_REPAIR_RADIUS = 0;
+			if(strcmp(buffer, "REPAIR_RANGE") == 0) in_env_REPAIR_RANGE = 1;
+            if(strcmp(buffer, "/REPAIR_RANGE") == 0) in_env_REPAIR_RANGE = 0;
+			if(strcmp(buffer, "DAMAGE_DETECTION_RANGE") == 0) in_env_DAMAGE_DETECTION_RANGE = 1;
+            if(strcmp(buffer, "/DAMAGE_DETECTION_RANGE") == 0) in_env_DAMAGE_DETECTION_RANGE = 0;
 			
 
 			/* End of tag and reset buffer */
@@ -1057,17 +723,14 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
 				if(in_Fibroblast_z){
                     Fibroblast_z = (float) fgpu_atof(buffer); 
                 }
-				if(in_Fibroblast_doublings){
-                    Fibroblast_doublings = (float) fgpu_atof(buffer); 
-                }
 				if(in_Fibroblast_damage){
                     Fibroblast_damage = (int) fpgu_strtol(buffer); 
                 }
-				if(in_Fibroblast_early_sen_time_counter){
-                    Fibroblast_early_sen_time_counter = (int) fpgu_strtol(buffer); 
-                }
 				if(in_Fibroblast_current_state){
                     Fibroblast_current_state = (int) fpgu_strtol(buffer); 
+                }
+				if(in_Fibroblast_go_to_state){
+                    Fibroblast_go_to_state = (int) fpgu_strtol(buffer); 
                 }
 				
             }
@@ -1079,20 +742,6 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
                     set_TISSUE_DAMAGE_PROB(&env_TISSUE_DAMAGE_PROB);
                   
               }
-            if(in_env_EARLY_SENESCENT_MIGRATION_SCALE){
-              
-                    env_EARLY_SENESCENT_MIGRATION_SCALE = (float) fgpu_atof(buffer);
-                    
-                    set_EARLY_SENESCENT_MIGRATION_SCALE(&env_EARLY_SENESCENT_MIGRATION_SCALE);
-                  
-              }
-            if(in_env_SENESCENT_MIGRATION_SCALE){
-              
-                    env_SENESCENT_MIGRATION_SCALE = (float) fgpu_atof(buffer);
-                    
-                    set_SENESCENT_MIGRATION_SCALE(&env_SENESCENT_MIGRATION_SCALE);
-                  
-              }
             if(in_env_QUIESCENT_MIGRATION_SCALE){
               
                     env_QUIESCENT_MIGRATION_SCALE = (float) fgpu_atof(buffer);
@@ -1100,88 +749,18 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
                     set_QUIESCENT_MIGRATION_SCALE(&env_QUIESCENT_MIGRATION_SCALE);
                   
               }
-            if(in_env_PROLIFERATION_PROB){
+            if(in_env_REPAIR_RANGE){
               
-                    env_PROLIFERATION_PROB = (float) fgpu_atof(buffer);
+                    env_REPAIR_RANGE = (float) fgpu_atof(buffer);
                     
-                    set_PROLIFERATION_PROB(&env_PROLIFERATION_PROB);
+                    set_REPAIR_RANGE(&env_REPAIR_RANGE);
                   
               }
-            if(in_env_BYSTANDER_DISTANCE){
+            if(in_env_DAMAGE_DETECTION_RANGE){
               
-                    env_BYSTANDER_DISTANCE = (float) fgpu_atof(buffer);
+                    env_DAMAGE_DETECTION_RANGE = (float) fgpu_atof(buffer);
                     
-                    set_BYSTANDER_DISTANCE(&env_BYSTANDER_DISTANCE);
-                  
-              }
-            if(in_env_BYSTANDER_PROB){
-              
-                    env_BYSTANDER_PROB = (float) fgpu_atof(buffer);
-                    
-                    set_BYSTANDER_PROB(&env_BYSTANDER_PROB);
-                  
-              }
-            if(in_env_EXCESSIVE_DAMAGE_AMOUNT){
-              
-                    env_EXCESSIVE_DAMAGE_AMOUNT = (int) fpgu_strtol(buffer);
-                    
-                    set_EXCESSIVE_DAMAGE_AMOUNT(&env_EXCESSIVE_DAMAGE_AMOUNT);
-                  
-              }
-            if(in_env_EXCESSIVE_DAMAGE_PROB){
-              
-                    env_EXCESSIVE_DAMAGE_PROB = (float) fgpu_atof(buffer);
-                    
-                    set_EXCESSIVE_DAMAGE_PROB(&env_EXCESSIVE_DAMAGE_PROB);
-                  
-              }
-            if(in_env_REPLICATIVE_SEN_AGE){
-              
-                    env_REPLICATIVE_SEN_AGE = (int) fpgu_strtol(buffer);
-                    
-                    set_REPLICATIVE_SEN_AGE(&env_REPLICATIVE_SEN_AGE);
-                  
-              }
-            if(in_env_REPLICATIVE_SEN_PROB){
-              
-                    env_REPLICATIVE_SEN_PROB = (float) fgpu_atof(buffer);
-                    
-                    set_REPLICATIVE_SEN_PROB(&env_REPLICATIVE_SEN_PROB);
-                  
-              }
-            if(in_env_EARLY_SENESCENT_MATURATION_TIME){
-              
-                    env_EARLY_SENESCENT_MATURATION_TIME = (int) fpgu_strtol(buffer);
-                    
-                    set_EARLY_SENESCENT_MATURATION_TIME(&env_EARLY_SENESCENT_MATURATION_TIME);
-                  
-              }
-            if(in_env_TRANSITION_TO_FULL_SENESCENCE_PROB){
-              
-                    env_TRANSITION_TO_FULL_SENESCENCE_PROB = (float) fgpu_atof(buffer);
-                    
-                    set_TRANSITION_TO_FULL_SENESCENCE_PROB(&env_TRANSITION_TO_FULL_SENESCENCE_PROB);
-                  
-              }
-            if(in_env_CLEARANCE_EARLY_SEN_PROB){
-              
-                    env_CLEARANCE_EARLY_SEN_PROB = (float) fgpu_atof(buffer);
-                    
-                    set_CLEARANCE_EARLY_SEN_PROB(&env_CLEARANCE_EARLY_SEN_PROB);
-                  
-              }
-            if(in_env_CLEARANCE_SEN_PROB){
-              
-                    env_CLEARANCE_SEN_PROB = (float) fgpu_atof(buffer);
-                    
-                    set_CLEARANCE_SEN_PROB(&env_CLEARANCE_SEN_PROB);
-                  
-              }
-            if(in_env_REPAIR_RADIUS){
-              
-                    env_REPAIR_RADIUS = (float) fgpu_atof(buffer);
-                    
-                    set_REPAIR_RADIUS(&env_REPAIR_RADIUS);
+                    set_DAMAGE_DETECTION_RANGE(&env_DAMAGE_DETECTION_RANGE);
                   
               }
             

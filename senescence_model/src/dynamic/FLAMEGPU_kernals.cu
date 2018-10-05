@@ -35,12 +35,6 @@ __constant__ int d_xmachine_memory_TissueBlock_default_count;
 
 __constant__ int d_xmachine_memory_Fibroblast_Quiescent_count;
 
-__constant__ int d_xmachine_memory_Fibroblast_EarlySenescent_count;
-
-__constant__ int d_xmachine_memory_Fibroblast_Senescent_count;
-
-__constant__ int d_xmachine_memory_Fibroblast_Proliferating_count;
-
 __constant__ int d_xmachine_memory_Fibroblast_Repair_count;
 
 
@@ -56,15 +50,15 @@ __constant__ glm::vec3 d_message_tissue_damage_report_max_bounds;           /**<
 __constant__ glm::ivec3 d_message_tissue_damage_report_partitionDim;           /**< partition dimensions (x,y,z) of partitioning environment */
 __constant__ float d_message_tissue_damage_report_radius;                 /**< partition radius (used to determin the size of the partitions) */
 
-/* fibroblast_location_report Message variables */
+/* fibroblast_report Message variables */
 /* Non partitioned, spatial partitioned and on-graph partitioned message variables  */
-__constant__ int d_message_fibroblast_location_report_count;         /**< message list counter*/
-__constant__ int d_message_fibroblast_location_report_output_type;   /**< message output type (single or optional)*/
+__constant__ int d_message_fibroblast_report_count;         /**< message list counter*/
+__constant__ int d_message_fibroblast_report_output_type;   /**< message output type (single or optional)*/
 //Spatial Partitioning Variables
-__constant__ glm::vec3 d_message_fibroblast_location_report_min_bounds;           /**< min bounds (x,y,z) of partitioning environment */
-__constant__ glm::vec3 d_message_fibroblast_location_report_max_bounds;           /**< max bounds (x,y,z) of partitioning environment */
-__constant__ glm::ivec3 d_message_fibroblast_location_report_partitionDim;           /**< partition dimensions (x,y,z) of partitioning environment */
-__constant__ float d_message_fibroblast_location_report_radius;                 /**< partition radius (used to determin the size of the partitions) */
+__constant__ glm::vec3 d_message_fibroblast_report_min_bounds;           /**< min bounds (x,y,z) of partitioning environment */
+__constant__ glm::vec3 d_message_fibroblast_report_max_bounds;           /**< max bounds (x,y,z) of partitioning environment */
+__constant__ glm::ivec3 d_message_fibroblast_report_partitionDim;           /**< partition dimensions (x,y,z) of partitioning environment */
+__constant__ float d_message_fibroblast_report_radius;                 /**< partition radius (used to determin the size of the partitions) */
 
 	
 
@@ -94,16 +88,17 @@ texture<int, 1, cudaReadModeElementType> tex_xmachine_message_tissue_damage_repo
 __constant__ int d_tex_xmachine_message_tissue_damage_report_pbm_end_or_count_offset;
 
 
-/* fibroblast_location_report Message Bindings */texture<int, 1, cudaReadModeElementType> tex_xmachine_message_fibroblast_location_report_id;
-__constant__ int d_tex_xmachine_message_fibroblast_location_report_id_offset;texture<float, 1, cudaReadModeElementType> tex_xmachine_message_fibroblast_location_report_x;
-__constant__ int d_tex_xmachine_message_fibroblast_location_report_x_offset;texture<float, 1, cudaReadModeElementType> tex_xmachine_message_fibroblast_location_report_y;
-__constant__ int d_tex_xmachine_message_fibroblast_location_report_y_offset;texture<float, 1, cudaReadModeElementType> tex_xmachine_message_fibroblast_location_report_z;
-__constant__ int d_tex_xmachine_message_fibroblast_location_report_z_offset;texture<int, 1, cudaReadModeElementType> tex_xmachine_message_fibroblast_location_report_current_state;
-__constant__ int d_tex_xmachine_message_fibroblast_location_report_current_state_offset;
-texture<int, 1, cudaReadModeElementType> tex_xmachine_message_fibroblast_location_report_pbm_start;
-__constant__ int d_tex_xmachine_message_fibroblast_location_report_pbm_start_offset;
-texture<int, 1, cudaReadModeElementType> tex_xmachine_message_fibroblast_location_report_pbm_end_or_count;
-__constant__ int d_tex_xmachine_message_fibroblast_location_report_pbm_end_or_count_offset;
+/* fibroblast_report Message Bindings */texture<int, 1, cudaReadModeElementType> tex_xmachine_message_fibroblast_report_id;
+__constant__ int d_tex_xmachine_message_fibroblast_report_id_offset;texture<float, 1, cudaReadModeElementType> tex_xmachine_message_fibroblast_report_x;
+__constant__ int d_tex_xmachine_message_fibroblast_report_x_offset;texture<float, 1, cudaReadModeElementType> tex_xmachine_message_fibroblast_report_y;
+__constant__ int d_tex_xmachine_message_fibroblast_report_y_offset;texture<float, 1, cudaReadModeElementType> tex_xmachine_message_fibroblast_report_z;
+__constant__ int d_tex_xmachine_message_fibroblast_report_z_offset;texture<int, 1, cudaReadModeElementType> tex_xmachine_message_fibroblast_report_current_state;
+__constant__ int d_tex_xmachine_message_fibroblast_report_current_state_offset;texture<int, 1, cudaReadModeElementType> tex_xmachine_message_fibroblast_report_go_to_state;
+__constant__ int d_tex_xmachine_message_fibroblast_report_go_to_state_offset;
+texture<int, 1, cudaReadModeElementType> tex_xmachine_message_fibroblast_report_pbm_start;
+__constant__ int d_tex_xmachine_message_fibroblast_report_pbm_start_offset;
+texture<int, 1, cudaReadModeElementType> tex_xmachine_message_fibroblast_report_pbm_end_or_count;
+__constant__ int d_tex_xmachine_message_fibroblast_report_pbm_end_or_count_offset;
 
 
     
@@ -187,6 +182,76 @@ __device__ bool next_cell2D(glm::ivec3* relative_cell)
 	return false;
 }
 
+
+/** TransitionToRepair_function_filter
+ *	Standard agent condition function. Filters agents from one state list to the next depending on the condition
+ * @param currentState xmachine_memory_Fibroblast_list representing agent i the current state
+ * @param nextState xmachine_memory_Fibroblast_list representing agent i the next state
+ */
+ __global__ void TransitionToRepair_function_filter(xmachine_memory_Fibroblast_list* currentState, xmachine_memory_Fibroblast_list* nextState)
+ {
+	//global thread index
+	int index = (blockIdx.x*blockDim.x) + threadIdx.x;
+	
+	//check thread max
+	if (index < d_xmachine_memory_Fibroblast_count){
+	
+		//apply the filter
+		if (currentState->go_to_state[index]==2)
+		{	//copy agent data to newstate list
+			nextState->id[index] = currentState->id[index];
+			nextState->x[index] = currentState->x[index];
+			nextState->y[index] = currentState->y[index];
+			nextState->z[index] = currentState->z[index];
+			nextState->damage[index] = currentState->damage[index];
+			nextState->current_state[index] = currentState->current_state[index];
+			nextState->go_to_state[index] = currentState->go_to_state[index];
+			//set scan input flag to 1
+			nextState->_scan_input[index] = 1;
+		}
+		else
+		{
+			//set scan input flag of current state to 1 (keep agent)
+			currentState->_scan_input[index] = 1;
+		}
+	
+	}
+ }
+
+/** TransitionToQuiescent_function_filter
+ *	Standard agent condition function. Filters agents from one state list to the next depending on the condition
+ * @param currentState xmachine_memory_Fibroblast_list representing agent i the current state
+ * @param nextState xmachine_memory_Fibroblast_list representing agent i the next state
+ */
+ __global__ void TransitionToQuiescent_function_filter(xmachine_memory_Fibroblast_list* currentState, xmachine_memory_Fibroblast_list* nextState)
+ {
+	//global thread index
+	int index = (blockIdx.x*blockDim.x) + threadIdx.x;
+	
+	//check thread max
+	if (index < d_xmachine_memory_Fibroblast_count){
+	
+		//apply the filter
+		if (currentState->go_to_state[index]==1)
+		{	//copy agent data to newstate list
+			nextState->id[index] = currentState->id[index];
+			nextState->x[index] = currentState->x[index];
+			nextState->y[index] = currentState->y[index];
+			nextState->z[index] = currentState->z[index];
+			nextState->damage[index] = currentState->damage[index];
+			nextState->current_state[index] = currentState->current_state[index];
+			nextState->go_to_state[index] = currentState->go_to_state[index];
+			//set scan input flag to 1
+			nextState->_scan_input[index] = 1;
+		}
+		else
+		{
+			//set scan input flag of current state to 1 (keep agent)
+			currentState->_scan_input[index] = 1;
+		}
+	
+	}
+ }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* Dynamically created TissueBlock agent functions */
@@ -360,10 +425,9 @@ __global__ void scatter_Fibroblast_Agents(xmachine_memory_Fibroblast_list* agent
 		agents_dst->x[output_index] = agents_src->x[index];        
 		agents_dst->y[output_index] = agents_src->y[index];        
 		agents_dst->z[output_index] = agents_src->z[index];        
-		agents_dst->doublings[output_index] = agents_src->doublings[index];        
 		agents_dst->damage[output_index] = agents_src->damage[index];        
-		agents_dst->early_sen_time_counter[output_index] = agents_src->early_sen_time_counter[index];        
-		agents_dst->current_state[output_index] = agents_src->current_state[index];
+		agents_dst->current_state[output_index] = agents_src->current_state[index];        
+		agents_dst->go_to_state[output_index] = agents_src->go_to_state[index];
 	}
 }
 
@@ -387,10 +451,9 @@ __global__ void append_Fibroblast_Agents(xmachine_memory_Fibroblast_list* agents
 	    agents_dst->x[output_index] = agents_src->x[index];
 	    agents_dst->y[output_index] = agents_src->y[index];
 	    agents_dst->z[output_index] = agents_src->z[index];
-	    agents_dst->doublings[output_index] = agents_src->doublings[index];
 	    agents_dst->damage[output_index] = agents_src->damage[index];
-	    agents_dst->early_sen_time_counter[output_index] = agents_src->early_sen_time_counter[index];
 	    agents_dst->current_state[output_index] = agents_src->current_state[index];
+	    agents_dst->go_to_state[output_index] = agents_src->go_to_state[index];
     }
 }
 
@@ -401,13 +464,12 @@ __global__ void append_Fibroblast_Agents(xmachine_memory_Fibroblast_list* agents
  * @param x agent variable of type float
  * @param y agent variable of type float
  * @param z agent variable of type float
- * @param doublings agent variable of type float
  * @param damage agent variable of type int
- * @param early_sen_time_counter agent variable of type int
  * @param current_state agent variable of type int
+ * @param go_to_state agent variable of type int
  */
 template <int AGENT_TYPE>
-__device__ void add_Fibroblast_agent(xmachine_memory_Fibroblast_list* agents, int id, float x, float y, float z, float doublings, int damage, int early_sen_time_counter, int current_state){
+__device__ void add_Fibroblast_agent(xmachine_memory_Fibroblast_list* agents, int id, float x, float y, float z, int damage, int current_state, int go_to_state){
 	
 	int index;
     
@@ -430,16 +492,15 @@ __device__ void add_Fibroblast_agent(xmachine_memory_Fibroblast_list* agents, in
 	agents->x[index] = x;
 	agents->y[index] = y;
 	agents->z[index] = z;
-	agents->doublings[index] = doublings;
 	agents->damage[index] = damage;
-	agents->early_sen_time_counter[index] = early_sen_time_counter;
 	agents->current_state[index] = current_state;
+	agents->go_to_state[index] = go_to_state;
 
 }
 
 //non templated version assumes DISCRETE_2D but works also for CONTINUOUS
-__device__ void add_Fibroblast_agent(xmachine_memory_Fibroblast_list* agents, int id, float x, float y, float z, float doublings, int damage, int early_sen_time_counter, int current_state){
-    add_Fibroblast_agent<DISCRETE_2D>(agents, id, x, y, z, doublings, damage, early_sen_time_counter, current_state);
+__device__ void add_Fibroblast_agent(xmachine_memory_Fibroblast_list* agents, int id, float x, float y, float z, int damage, int current_state, int go_to_state){
+    add_Fibroblast_agent<DISCRETE_2D>(agents, id, x, y, z, damage, current_state, go_to_state);
 }
 
 /** reorder_Fibroblast_agents
@@ -459,10 +520,9 @@ __global__ void reorder_Fibroblast_agents(unsigned int* values, xmachine_memory_
 	ordered_agents->x[index] = unordered_agents->x[old_pos];
 	ordered_agents->y[index] = unordered_agents->y[old_pos];
 	ordered_agents->z[index] = unordered_agents->z[old_pos];
-	ordered_agents->doublings[index] = unordered_agents->doublings[old_pos];
 	ordered_agents->damage[index] = unordered_agents->damage[old_pos];
-	ordered_agents->early_sen_time_counter[index] = unordered_agents->early_sen_time_counter[old_pos];
 	ordered_agents->current_state[index] = unordered_agents->current_state[old_pos];
+	ordered_agents->go_to_state[index] = unordered_agents->go_to_state[old_pos];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -856,36 +916,37 @@ __device__ xmachine_message_tissue_damage_report* get_next_tissue_damage_report_
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* Dynamically created fibroblast_location_report message functions */
+/* Dynamically created fibroblast_report message functions */
 
 
-/** add_fibroblast_location_report_message
- * Add non partitioned or spatially partitioned fibroblast_location_report message
- * @param messages xmachine_message_fibroblast_location_report_list message list to add too
+/** add_fibroblast_report_message
+ * Add non partitioned or spatially partitioned fibroblast_report message
+ * @param messages xmachine_message_fibroblast_report_list message list to add too
  * @param id agent variable of type int
  * @param x agent variable of type float
  * @param y agent variable of type float
  * @param z agent variable of type float
  * @param current_state agent variable of type int
+ * @param go_to_state agent variable of type int
  */
-__device__ void add_fibroblast_location_report_message(xmachine_message_fibroblast_location_report_list* messages, int id, float x, float y, float z, int current_state){
+__device__ void add_fibroblast_report_message(xmachine_message_fibroblast_report_list* messages, int id, float x, float y, float z, int current_state, int go_to_state){
 
 	//global thread index
-	int index = (blockIdx.x*blockDim.x) + threadIdx.x + d_message_fibroblast_location_report_count;
+	int index = (blockIdx.x*blockDim.x) + threadIdx.x + d_message_fibroblast_report_count;
 
 	int _position;
 	int _scan_input;
 
 	//decide output position
-	if(d_message_fibroblast_location_report_output_type == single_message){
+	if(d_message_fibroblast_report_output_type == single_message){
 		_position = index; //same as agent position
 		_scan_input = 0;
-	}else if (d_message_fibroblast_location_report_output_type == optional_message){
+	}else if (d_message_fibroblast_report_output_type == optional_message){
 		_position = 0;	   //to be calculated using Prefix sum
 		_scan_input = 1;
 	}
 
-	//AoS - xmachine_message_fibroblast_location_report Coalesced memory write
+	//AoS - xmachine_message_fibroblast_report Coalesced memory write
 	messages->_scan_input[index] = _scan_input;	
 	messages->_position[index] = _position;
 	messages->id[index] = id;
@@ -893,15 +954,16 @@ __device__ void add_fibroblast_location_report_message(xmachine_message_fibrobla
 	messages->y[index] = y;
 	messages->z[index] = z;
 	messages->current_state[index] = current_state;
+	messages->go_to_state[index] = go_to_state;
 
 }
 
 /**
- * Scatter non partitioned or spatially partitioned fibroblast_location_report message (for optional messages)
- * @param messages scatter_optional_fibroblast_location_report_messages Sparse xmachine_message_fibroblast_location_report_list message list
- * @param message_swap temp xmachine_message_fibroblast_location_report_list message list to scatter sparse messages to
+ * Scatter non partitioned or spatially partitioned fibroblast_report message (for optional messages)
+ * @param messages scatter_optional_fibroblast_report_messages Sparse xmachine_message_fibroblast_report_list message list
+ * @param message_swap temp xmachine_message_fibroblast_report_list message list to scatter sparse messages to
  */
-__global__ void scatter_optional_fibroblast_location_report_messages(xmachine_message_fibroblast_location_report_list* messages, xmachine_message_fibroblast_location_report_list* messages_swap){
+__global__ void scatter_optional_fibroblast_report_messages(xmachine_message_fibroblast_report_list* messages, xmachine_message_fibroblast_report_list* messages_swap){
 	//global thread index
 	int index = (blockIdx.x*blockDim.x) + threadIdx.x;
 
@@ -909,23 +971,24 @@ __global__ void scatter_optional_fibroblast_location_report_messages(xmachine_me
 
 	//if optional message is to be written
 	if (_scan_input == 1){
-		int output_index = messages_swap->_position[index] + d_message_fibroblast_location_report_count;
+		int output_index = messages_swap->_position[index] + d_message_fibroblast_report_count;
 
-		//AoS - xmachine_message_fibroblast_location_report Un-Coalesced scattered memory write
+		//AoS - xmachine_message_fibroblast_report Un-Coalesced scattered memory write
 		messages->_position[output_index] = output_index;
 		messages->id[output_index] = messages_swap->id[index];
 		messages->x[output_index] = messages_swap->x[index];
 		messages->y[output_index] = messages_swap->y[index];
 		messages->z[output_index] = messages_swap->z[index];
-		messages->current_state[output_index] = messages_swap->current_state[index];				
+		messages->current_state[output_index] = messages_swap->current_state[index];
+		messages->go_to_state[output_index] = messages_swap->go_to_state[index];				
 	}
 }
 
-/** reset_fibroblast_location_report_swaps
- * Reset non partitioned or spatially partitioned fibroblast_location_report message swaps (for scattering optional messages)
+/** reset_fibroblast_report_swaps
+ * Reset non partitioned or spatially partitioned fibroblast_report message swaps (for scattering optional messages)
  * @param message_swap message list to reset _position and _scan_input values back to 0
  */
-__global__ void reset_fibroblast_location_report_swaps(xmachine_message_fibroblast_location_report_list* messages_swap){
+__global__ void reset_fibroblast_report_swaps(xmachine_message_fibroblast_report_list* messages_swap){
 
 	//global thread index
 	int index = (blockIdx.x*blockDim.x) + threadIdx.x;
@@ -936,16 +999,16 @@ __global__ void reset_fibroblast_location_report_swaps(xmachine_message_fibrobla
 
 /* Message functions */
 
-/** message_fibroblast_location_report_grid_position
+/** message_fibroblast_report_grid_position
  * Calculates the grid cell position given an glm::vec3 vector
  * @param position glm::vec3 vector representing a position
  */
-__device__ glm::ivec3 message_fibroblast_location_report_grid_position(glm::vec3 position)
+__device__ glm::ivec3 message_fibroblast_report_grid_position(glm::vec3 position)
 {
     glm::ivec3 gridPos;
-    gridPos.x = floor((position.x - d_message_fibroblast_location_report_min_bounds.x) * (float)d_message_fibroblast_location_report_partitionDim.x / (d_message_fibroblast_location_report_max_bounds.x - d_message_fibroblast_location_report_min_bounds.x));
-    gridPos.y = floor((position.y - d_message_fibroblast_location_report_min_bounds.y) * (float)d_message_fibroblast_location_report_partitionDim.y / (d_message_fibroblast_location_report_max_bounds.y - d_message_fibroblast_location_report_min_bounds.y));
-    gridPos.z = floor((position.z - d_message_fibroblast_location_report_min_bounds.z) * (float)d_message_fibroblast_location_report_partitionDim.z / (d_message_fibroblast_location_report_max_bounds.z - d_message_fibroblast_location_report_min_bounds.z));
+    gridPos.x = floor((position.x - d_message_fibroblast_report_min_bounds.x) * (float)d_message_fibroblast_report_partitionDim.x / (d_message_fibroblast_report_max_bounds.x - d_message_fibroblast_report_min_bounds.x));
+    gridPos.y = floor((position.y - d_message_fibroblast_report_min_bounds.y) * (float)d_message_fibroblast_report_partitionDim.y / (d_message_fibroblast_report_max_bounds.y - d_message_fibroblast_report_min_bounds.y));
+    gridPos.z = floor((position.z - d_message_fibroblast_report_min_bounds.z) * (float)d_message_fibroblast_report_partitionDim.z / (d_message_fibroblast_report_max_bounds.z - d_message_fibroblast_report_min_bounds.z));
 
 	//do wrapping or bounding
 	
@@ -953,47 +1016,47 @@ __device__ glm::ivec3 message_fibroblast_location_report_grid_position(glm::vec3
     return gridPos;
 }
 
-/** message_fibroblast_location_report_hash
+/** message_fibroblast_report_hash
  * Given the grid position in partition space this function calculates a hash value
  * @param gridPos The position in partition space
  */
-__device__ unsigned int message_fibroblast_location_report_hash(glm::ivec3 gridPos)
+__device__ unsigned int message_fibroblast_report_hash(glm::ivec3 gridPos)
 {
 	//cheap bounding without mod (within range +- partition dimension)
-	gridPos.x = (gridPos.x<0)? d_message_fibroblast_location_report_partitionDim.x-1: gridPos.x; 
-	gridPos.x = (gridPos.x>=d_message_fibroblast_location_report_partitionDim.x)? 0 : gridPos.x; 
-	gridPos.y = (gridPos.y<0)? d_message_fibroblast_location_report_partitionDim.y-1 : gridPos.y; 
-	gridPos.y = (gridPos.y>=d_message_fibroblast_location_report_partitionDim.y)? 0 : gridPos.y; 
-	gridPos.z = (gridPos.z<0)? d_message_fibroblast_location_report_partitionDim.z-1: gridPos.z; 
-	gridPos.z = (gridPos.z>=d_message_fibroblast_location_report_partitionDim.z)? 0 : gridPos.z; 
+	gridPos.x = (gridPos.x<0)? d_message_fibroblast_report_partitionDim.x-1: gridPos.x; 
+	gridPos.x = (gridPos.x>=d_message_fibroblast_report_partitionDim.x)? 0 : gridPos.x; 
+	gridPos.y = (gridPos.y<0)? d_message_fibroblast_report_partitionDim.y-1 : gridPos.y; 
+	gridPos.y = (gridPos.y>=d_message_fibroblast_report_partitionDim.y)? 0 : gridPos.y; 
+	gridPos.z = (gridPos.z<0)? d_message_fibroblast_report_partitionDim.z-1: gridPos.z; 
+	gridPos.z = (gridPos.z>=d_message_fibroblast_report_partitionDim.z)? 0 : gridPos.z; 
 
 	//unique id
-	return ((gridPos.z * d_message_fibroblast_location_report_partitionDim.y) * d_message_fibroblast_location_report_partitionDim.x) + (gridPos.y * d_message_fibroblast_location_report_partitionDim.x) + gridPos.x;
+	return ((gridPos.z * d_message_fibroblast_report_partitionDim.y) * d_message_fibroblast_report_partitionDim.x) + (gridPos.y * d_message_fibroblast_report_partitionDim.x) + gridPos.x;
 }
 
 #ifdef FAST_ATOMIC_SORTING
-	/** hist_fibroblast_location_report_messages
+	/** hist_fibroblast_report_messages
 		 * Kernal function for performing a histogram (count) on each partition bin and saving the hash and index of a message within that bin
 		 * @param local_bin_index output index of the message within the calculated bin
 		 * @param unsorted_index output bin index (hash) value
 		 * @param messages the message list used to generate the hash value outputs
 		 * @param agent_count the current number of agents outputting messages
 		 */
-	__global__ void hist_fibroblast_location_report_messages(uint* local_bin_index, uint* unsorted_index, int* global_bin_count, xmachine_message_fibroblast_location_report_list* messages, int agent_count)
+	__global__ void hist_fibroblast_report_messages(uint* local_bin_index, uint* unsorted_index, int* global_bin_count, xmachine_message_fibroblast_report_list* messages, int agent_count)
 	{
 		unsigned int index = (blockIdx.x * blockDim.x) + threadIdx.x;
 
 		if (index >= agent_count)
 			return;
         glm::vec3 position = glm::vec3(messages->x[index], messages->y[index], messages->z[index]);
-		glm::ivec3 grid_position = message_fibroblast_location_report_grid_position(position);
-		unsigned int hash = message_fibroblast_location_report_hash(grid_position);
+		glm::ivec3 grid_position = message_fibroblast_report_grid_position(position);
+		unsigned int hash = message_fibroblast_report_hash(grid_position);
 		unsigned int bin_idx = atomicInc((unsigned int*) &global_bin_count[hash], 0xFFFFFFFF);
 		local_bin_index[index] = bin_idx;
 		unsorted_index[index] = hash;
 	}
 	
-	/** reorder_fibroblast_location_report_messages
+	/** reorder_fibroblast_report_messages
 	 * Reorders the messages accoring to the partition boundary matrix start indices of each bin
 	 * @param local_bin_index index of the message within the desired bin
 	 * @param unsorted_index bin index (hash) value
@@ -1002,7 +1065,7 @@ __device__ unsigned int message_fibroblast_location_report_hash(glm::ivec3 gridP
 	 * @param ordered_messages buffer used to scatter messages into the correct order
 	  @param agent_count the current number of agents outputting messages
 	 */
-	 __global__ void reorder_fibroblast_location_report_messages(uint* local_bin_index, uint* unsorted_index, int* pbm_start_index, xmachine_message_fibroblast_location_report_list* unordered_messages, xmachine_message_fibroblast_location_report_list* ordered_messages, int agent_count)
+	 __global__ void reorder_fibroblast_report_messages(uint* local_bin_index, uint* unsorted_index, int* pbm_start_index, xmachine_message_fibroblast_report_list* unordered_messages, xmachine_message_fibroblast_report_list* ordered_messages, int agent_count)
 	{
 		int index = (blockIdx.x *blockDim.x) + threadIdx.x;
 
@@ -1018,28 +1081,29 @@ __device__ unsigned int message_fibroblast_location_report_hash(glm::ivec3 gridP
 		ordered_messages->y[sorted_index] = unordered_messages->y[index];
 		ordered_messages->z[sorted_index] = unordered_messages->z[index];
 		ordered_messages->current_state[sorted_index] = unordered_messages->current_state[index];
+		ordered_messages->go_to_state[sorted_index] = unordered_messages->go_to_state[index];
 	}
 	 
 #else
 
-	/** hash_fibroblast_location_report_messages
+	/** hash_fibroblast_report_messages
 	 * Kernal function for calculating a hash value for each messahe depending on its position
 	 * @param keys output for the hash key
 	 * @param values output for the index value
 	 * @param messages the message list used to generate the hash value outputs
 	 */
-	__global__ void hash_fibroblast_location_report_messages(uint* keys, uint* values, xmachine_message_fibroblast_location_report_list* messages)
+	__global__ void hash_fibroblast_report_messages(uint* keys, uint* values, xmachine_message_fibroblast_report_list* messages)
 	{
 		unsigned int index = (blockIdx.x * blockDim.x) + threadIdx.x;
         glm::vec3 position = glm::vec3(messages->x[index], messages->y[index], messages->z[index]);
-		glm::ivec3 grid_position = message_fibroblast_location_report_grid_position(position);
-		unsigned int hash = message_fibroblast_location_report_hash(grid_position);
+		glm::ivec3 grid_position = message_fibroblast_report_grid_position(position);
+		unsigned int hash = message_fibroblast_report_hash(grid_position);
 
 		keys[index] = hash;
 		values[index] = index;
 	}
 
-	/** reorder_fibroblast_location_report_messages
+	/** reorder_fibroblast_report_messages
 	 * Reorders the messages accoring to the ordered sort identifiers and builds a Partition Boundary Matrix by looking at the previosu threads sort id.
 	 * @param keys the sorted hash keys
 	 * @param values the sorted index values
@@ -1047,7 +1111,7 @@ __device__ unsigned int message_fibroblast_location_report_hash(glm::ivec3 gridP
 	 * @param unordered_messages the original unordered message data
 	 * @param ordered_messages buffer used to scatter messages into the correct order
 	 */
-	__global__ void reorder_fibroblast_location_report_messages(uint* keys, uint* values, xmachine_message_fibroblast_location_report_PBM* matrix, xmachine_message_fibroblast_location_report_list* unordered_messages, xmachine_message_fibroblast_location_report_list* ordered_messages)
+	__global__ void reorder_fibroblast_report_messages(uint* keys, uint* values, xmachine_message_fibroblast_report_PBM* matrix, xmachine_message_fibroblast_report_list* unordered_messages, xmachine_message_fibroblast_report_list* ordered_messages)
 	{
 		extern __shared__ int sm_data [];
 
@@ -1078,7 +1142,7 @@ __device__ unsigned int message_fibroblast_location_report_hash(glm::ivec3 gridP
 		//TODO: Check key is not out of bounds
 
 		//set partition boundaries
-		if (index < d_message_fibroblast_location_report_count)
+		if (index < d_message_fibroblast_report_count)
 		{
 			//if first thread then set first partition cell start
 			if (index == 0)
@@ -1097,7 +1161,7 @@ __device__ unsigned int message_fibroblast_location_report_hash(glm::ivec3 gridP
 			}
 
 			//if last thread then set final partition cell end
-			if (index == d_message_fibroblast_location_report_count-1)
+			if (index == d_message_fibroblast_report_count-1)
 			{
 				matrix->end_or_count[key] = index+1;
 			}
@@ -1109,11 +1173,12 @@ __device__ unsigned int message_fibroblast_location_report_hash(glm::ivec3 gridP
 		ordered_messages->y[index] = unordered_messages->y[old_pos];
 		ordered_messages->z[index] = unordered_messages->z[old_pos];
 		ordered_messages->current_state[index] = unordered_messages->current_state[old_pos];
+		ordered_messages->go_to_state[index] = unordered_messages->go_to_state[old_pos];
 	}
 
 #endif
 
-/** load_next_fibroblast_location_report_message
+/** load_next_fibroblast_report_message
  * Used to load the next message data to shared memory
  * Idea is check the current cell index to see if we can simply get a message from the current cell
  * If we are at the end of the current cell then loop till we find the next cell with messages (this way we ignore cells with no messages)
@@ -1125,7 +1190,7 @@ __device__ unsigned int message_fibroblast_location_report_hash(glm::ivec3 gridP
  * @param cell_index the current cell index in agent_grid_cell+relative_cell
  * @return true if a message has been loaded into sm false otherwise
  */
-__device__ bool load_next_fibroblast_location_report_message(xmachine_message_fibroblast_location_report_list* messages, xmachine_message_fibroblast_location_report_PBM* partition_matrix, glm::ivec3 relative_cell, int cell_index_max, glm::ivec3 agent_grid_cell, int cell_index)
+__device__ bool load_next_fibroblast_report_message(xmachine_message_fibroblast_report_list* messages, xmachine_message_fibroblast_report_PBM* partition_matrix, glm::ivec3 relative_cell, int cell_index_max, glm::ivec3 agent_grid_cell, int cell_index)
 {
 	extern __shared__ int sm_data [];
 	char* message_share = (char*)&sm_data[0];
@@ -1144,10 +1209,10 @@ __device__ bool load_next_fibroblast_location_report_message(xmachine_message_fi
 		{
 			//calculate the next cells grid position and hash
 			glm::ivec3 next_cell_position = agent_grid_cell + relative_cell;
-			int next_cell_hash = message_fibroblast_location_report_hash(next_cell_position);
+			int next_cell_hash = message_fibroblast_report_hash(next_cell_position);
 			//use the hash to calculate the start index
-			int cell_index_min = tex1Dfetch(tex_xmachine_message_fibroblast_location_report_pbm_start, next_cell_hash + d_tex_xmachine_message_fibroblast_location_report_pbm_start_offset);
-			cell_index_max = tex1Dfetch(tex_xmachine_message_fibroblast_location_report_pbm_end_or_count, next_cell_hash + d_tex_xmachine_message_fibroblast_location_report_pbm_end_or_count_offset);
+			int cell_index_min = tex1Dfetch(tex_xmachine_message_fibroblast_report_pbm_start, next_cell_hash + d_tex_xmachine_message_fibroblast_report_pbm_start_offset);
+			cell_index_max = tex1Dfetch(tex_xmachine_message_fibroblast_report_pbm_end_or_count, next_cell_hash + d_tex_xmachine_message_fibroblast_report_pbm_end_or_count_offset);
 			//check for messages in the cell (cell index max is the count for atomic sorting)
 #ifdef FAST_ATOMIC_SORTING
 			if (cell_index_max > 0)
@@ -1172,18 +1237,18 @@ __device__ bool load_next_fibroblast_location_report_message(xmachine_message_fi
 	}
 	
 	//get message data using texture fetch
-	xmachine_message_fibroblast_location_report temp_message;
+	xmachine_message_fibroblast_report temp_message;
 	temp_message._relative_cell = relative_cell;
 	temp_message._cell_index_max = cell_index_max;
 	temp_message._cell_index = cell_index;
 	temp_message._agent_grid_cell = agent_grid_cell;
 
 	//Using texture cache
-  temp_message.id = tex1Dfetch(tex_xmachine_message_fibroblast_location_report_id, cell_index + d_tex_xmachine_message_fibroblast_location_report_id_offset); temp_message.x = tex1Dfetch(tex_xmachine_message_fibroblast_location_report_x, cell_index + d_tex_xmachine_message_fibroblast_location_report_x_offset); temp_message.y = tex1Dfetch(tex_xmachine_message_fibroblast_location_report_y, cell_index + d_tex_xmachine_message_fibroblast_location_report_y_offset); temp_message.z = tex1Dfetch(tex_xmachine_message_fibroblast_location_report_z, cell_index + d_tex_xmachine_message_fibroblast_location_report_z_offset); temp_message.current_state = tex1Dfetch(tex_xmachine_message_fibroblast_location_report_current_state, cell_index + d_tex_xmachine_message_fibroblast_location_report_current_state_offset); 
+  temp_message.id = tex1Dfetch(tex_xmachine_message_fibroblast_report_id, cell_index + d_tex_xmachine_message_fibroblast_report_id_offset); temp_message.x = tex1Dfetch(tex_xmachine_message_fibroblast_report_x, cell_index + d_tex_xmachine_message_fibroblast_report_x_offset); temp_message.y = tex1Dfetch(tex_xmachine_message_fibroblast_report_y, cell_index + d_tex_xmachine_message_fibroblast_report_y_offset); temp_message.z = tex1Dfetch(tex_xmachine_message_fibroblast_report_z, cell_index + d_tex_xmachine_message_fibroblast_report_z_offset); temp_message.current_state = tex1Dfetch(tex_xmachine_message_fibroblast_report_current_state, cell_index + d_tex_xmachine_message_fibroblast_report_current_state_offset); temp_message.go_to_state = tex1Dfetch(tex_xmachine_message_fibroblast_report_go_to_state, cell_index + d_tex_xmachine_message_fibroblast_report_go_to_state_offset); 
 
 	//load it into shared memory (no sync as no sharing between threads)
-	int message_index = SHARE_INDEX(threadIdx.y*blockDim.x+threadIdx.x, sizeof(xmachine_message_fibroblast_location_report));
-	xmachine_message_fibroblast_location_report* sm_message = ((xmachine_message_fibroblast_location_report*)&message_share[message_index]);
+	int message_index = SHARE_INDEX(threadIdx.y*blockDim.x+threadIdx.x, sizeof(xmachine_message_fibroblast_report));
+	xmachine_message_fibroblast_report* sm_message = ((xmachine_message_fibroblast_report*)&message_share[message_index]);
 	sm_message[0] = temp_message;
 
 	return true;
@@ -1191,15 +1256,15 @@ __device__ bool load_next_fibroblast_location_report_message(xmachine_message_fi
 
 
 /*
- * get first spatial partitioned fibroblast_location_report message (first batch load into shared memory)
+ * get first spatial partitioned fibroblast_report message (first batch load into shared memory)
  */
-__device__ xmachine_message_fibroblast_location_report* get_first_fibroblast_location_report_message(xmachine_message_fibroblast_location_report_list* messages, xmachine_message_fibroblast_location_report_PBM* partition_matrix, float x, float y, float z){
+__device__ xmachine_message_fibroblast_report* get_first_fibroblast_report_message(xmachine_message_fibroblast_report_list* messages, xmachine_message_fibroblast_report_PBM* partition_matrix, float x, float y, float z){
 
 	extern __shared__ int sm_data [];
 	char* message_share = (char*)&sm_data[0];
 
 	// If there are no messages, do not load any messages
-	if(d_message_fibroblast_location_report_count == 0){
+	if(d_message_fibroblast_report_count == 0){
 		return nullptr;
 	}
 
@@ -1207,12 +1272,12 @@ __device__ xmachine_message_fibroblast_location_report* get_first_fibroblast_loc
 	int cell_index_max = 0;
 	int cell_index = 0;
 	glm::vec3 position = glm::vec3(x, y, z);
-	glm::ivec3 agent_grid_cell = message_fibroblast_location_report_grid_position(position);
+	glm::ivec3 agent_grid_cell = message_fibroblast_report_grid_position(position);
 	
-	if (load_next_fibroblast_location_report_message(messages, partition_matrix, relative_cell, cell_index_max, agent_grid_cell, cell_index))
+	if (load_next_fibroblast_report_message(messages, partition_matrix, relative_cell, cell_index_max, agent_grid_cell, cell_index))
 	{
-		int message_index = SHARE_INDEX(threadIdx.y*blockDim.x+threadIdx.x, sizeof(xmachine_message_fibroblast_location_report));
-		return ((xmachine_message_fibroblast_location_report*)&message_share[message_index]);
+		int message_index = SHARE_INDEX(threadIdx.y*blockDim.x+threadIdx.x, sizeof(xmachine_message_fibroblast_report));
+		return ((xmachine_message_fibroblast_report*)&message_share[message_index]);
 	}
 	else
 	{
@@ -1221,23 +1286,23 @@ __device__ xmachine_message_fibroblast_location_report* get_first_fibroblast_loc
 }
 
 /*
- * get next spatial partitioned fibroblast_location_report message (either from SM or next batch load)
+ * get next spatial partitioned fibroblast_report message (either from SM or next batch load)
  */
-__device__ xmachine_message_fibroblast_location_report* get_next_fibroblast_location_report_message(xmachine_message_fibroblast_location_report* message, xmachine_message_fibroblast_location_report_list* messages, xmachine_message_fibroblast_location_report_PBM* partition_matrix){
+__device__ xmachine_message_fibroblast_report* get_next_fibroblast_report_message(xmachine_message_fibroblast_report* message, xmachine_message_fibroblast_report_list* messages, xmachine_message_fibroblast_report_PBM* partition_matrix){
 	
 	extern __shared__ int sm_data [];
 	char* message_share = (char*)&sm_data[0];
 	
 	// If there are no messages, do not load any messages
-	if(d_message_fibroblast_location_report_count == 0){
+	if(d_message_fibroblast_report_count == 0){
 		return nullptr;
 	}
 	
-	if (load_next_fibroblast_location_report_message(messages, partition_matrix, message->_relative_cell, message->_cell_index_max, message->_agent_grid_cell, message->_cell_index))
+	if (load_next_fibroblast_report_message(messages, partition_matrix, message->_relative_cell, message->_cell_index_max, message->_agent_grid_cell, message->_cell_index))
 	{
 		//get conflict free address of 
-		int message_index = SHARE_INDEX(threadIdx.y*blockDim.x+threadIdx.x, sizeof(xmachine_message_fibroblast_location_report));
-		return ((xmachine_message_fibroblast_location_report*)&message_share[message_index]);
+		int message_index = SHARE_INDEX(threadIdx.y*blockDim.x+threadIdx.x, sizeof(xmachine_message_fibroblast_report));
+		return ((xmachine_message_fibroblast_report*)&message_share[message_index]);
 	}
 	else
 		return nullptr;
@@ -1254,7 +1319,7 @@ __device__ xmachine_message_fibroblast_location_report* get_next_fibroblast_loca
 /**
  *
  */
-__global__ void GPUFLAME_TissueTakesDamage(xmachine_memory_TissueBlock_list* agents, RNG_rand48* rand48){
+__global__ void GPUFLAME_TissueTakesDamage(xmachine_memory_TissueBlock_list* agents, xmachine_message_tissue_damage_report_list* tissue_damage_report_messages, RNG_rand48* rand48){
 	
 	//continuous agent: index is agent position in 1D agent list
 	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
@@ -1276,7 +1341,7 @@ __global__ void GPUFLAME_TissueTakesDamage(xmachine_memory_TissueBlock_list* age
 	agent.damage = agents->damage[index];
 
 	//FLAME function call
-	int dead = !TissueTakesDamage(&agent, rand48);
+	int dead = !TissueTakesDamage(&agent, tissue_damage_report_messages	, rand48);
 	
 
 	//continuous agent: set reallocation flag
@@ -1293,46 +1358,7 @@ __global__ void GPUFLAME_TissueTakesDamage(xmachine_memory_TissueBlock_list* age
 /**
  *
  */
-__global__ void GPUFLAME_TissueSendDamageReport(xmachine_memory_TissueBlock_list* agents, xmachine_message_tissue_damage_report_list* tissue_damage_report_messages){
-	
-	//continuous agent: index is agent position in 1D agent list
-	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
-  
-    //For agents not using non partitioned message input check the agent bounds
-    if (index >= d_xmachine_memory_TissueBlock_count)
-        return;
-    
-
-	//SoA to AoS - xmachine_memory_TissueSendDamageReport Coalesced memory read (arrays point to first item for agent index)
-	xmachine_memory_TissueBlock agent;
-    
-    // Thread bounds already checked, but the agent function will still execute. load default values?
-	
-	agent.id = agents->id[index];
-	agent.x = agents->x[index];
-	agent.y = agents->y[index];
-	agent.z = agents->z[index];
-	agent.damage = agents->damage[index];
-
-	//FLAME function call
-	int dead = !TissueSendDamageReport(&agent, tissue_damage_report_messages	);
-	
-
-	//continuous agent: set reallocation flag
-	agents->_scan_input[index]  = dead; 
-
-	//AoS to SoA - xmachine_memory_TissueSendDamageReport Coalesced memory write (ignore arrays)
-	agents->id[index] = agent.id;
-	agents->x[index] = agent.x;
-	agents->y[index] = agent.y;
-	agents->z[index] = agent.z;
-	agents->damage[index] = agent.damage;
-}
-
-/**
- *
- */
-__global__ void GPUFLAME_RepairDamage(xmachine_memory_TissueBlock_list* agents, xmachine_message_fibroblast_location_report_list* fibroblast_location_report_messages, xmachine_message_fibroblast_location_report_PBM* partition_matrix){
+__global__ void GPUFLAME_RepairDamage(xmachine_memory_TissueBlock_list* agents, xmachine_message_fibroblast_report_list* fibroblast_report_messages, xmachine_message_fibroblast_report_PBM* partition_matrix){
 	
 	//continuous agent: index is agent position in 1D agent list
 	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
@@ -1354,7 +1380,7 @@ __global__ void GPUFLAME_RepairDamage(xmachine_memory_TissueBlock_list* agents, 
 	agent.damage = agents->damage[index];
 
 	//FLAME function call
-	int dead = !RepairDamage(&agent, fibroblast_location_report_messages, partition_matrix);
+	int dead = !RepairDamage(&agent, fibroblast_report_messages, partition_matrix);
 	
 
 	//continuous agent: set reallocation flag
@@ -1371,7 +1397,7 @@ __global__ void GPUFLAME_RepairDamage(xmachine_memory_TissueBlock_list* agents, 
 /**
  *
  */
-__global__ void GPUFLAME_QuiescentMigration(xmachine_memory_Fibroblast_list* agents, xmachine_message_tissue_damage_report_list* tissue_damage_report_messages, xmachine_message_tissue_damage_report_PBM* partition_matrix){
+__global__ void GPUFLAME_QuiescentMigration(xmachine_memory_Fibroblast_list* agents, xmachine_message_tissue_damage_report_list* tissue_damage_report_messages, xmachine_message_tissue_damage_report_PBM* partition_matrix, xmachine_message_fibroblast_report_list* fibroblast_report_messages){
 	
 	//continuous agent: index is agent position in 1D agent list
 	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
@@ -1390,13 +1416,12 @@ __global__ void GPUFLAME_QuiescentMigration(xmachine_memory_Fibroblast_list* age
 	agent.x = agents->x[index];
 	agent.y = agents->y[index];
 	agent.z = agents->z[index];
-	agent.doublings = agents->doublings[index];
 	agent.damage = agents->damage[index];
-	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
 	agent.current_state = agents->current_state[index];
+	agent.go_to_state = agents->go_to_state[index];
 
 	//FLAME function call
-	int dead = !QuiescentMigration(&agent, tissue_damage_report_messages, partition_matrix);
+	int dead = !QuiescentMigration(&agent, tissue_damage_report_messages, partition_matrix, fibroblast_report_messages	);
 	
 
 	//continuous agent: set reallocation flag
@@ -1407,16 +1432,15 @@ __global__ void GPUFLAME_QuiescentMigration(xmachine_memory_Fibroblast_list* age
 	agents->x[index] = agent.x;
 	agents->y[index] = agent.y;
 	agents->z[index] = agent.z;
-	agents->doublings[index] = agent.doublings;
 	agents->damage[index] = agent.damage;
-	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
 	agents->current_state[index] = agent.current_state;
+	agents->go_to_state[index] = agent.go_to_state;
 }
 
 /**
  *
  */
-__global__ void GPUFLAME_SenescentMigration(xmachine_memory_Fibroblast_list* agents, xmachine_message_tissue_damage_report_list* tissue_damage_report_messages, xmachine_message_tissue_damage_report_PBM* partition_matrix){
+__global__ void GPUFLAME_TransitionToRepair(xmachine_memory_Fibroblast_list* agents){
 	
 	//continuous agent: index is agent position in 1D agent list
 	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
@@ -1426,7 +1450,7 @@ __global__ void GPUFLAME_SenescentMigration(xmachine_memory_Fibroblast_list* age
         return;
     
 
-	//SoA to AoS - xmachine_memory_SenescentMigration Coalesced memory read (arrays point to first item for agent index)
+	//SoA to AoS - xmachine_memory_TransitionToRepair Coalesced memory read (arrays point to first item for agent index)
 	xmachine_memory_Fibroblast agent;
     
     // Thread bounds already checked, but the agent function will still execute. load default values?
@@ -1435,33 +1459,31 @@ __global__ void GPUFLAME_SenescentMigration(xmachine_memory_Fibroblast_list* age
 	agent.x = agents->x[index];
 	agent.y = agents->y[index];
 	agent.z = agents->z[index];
-	agent.doublings = agents->doublings[index];
 	agent.damage = agents->damage[index];
-	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
 	agent.current_state = agents->current_state[index];
+	agent.go_to_state = agents->go_to_state[index];
 
 	//FLAME function call
-	int dead = !SenescentMigration(&agent, tissue_damage_report_messages, partition_matrix);
+	int dead = !TransitionToRepair(&agent);
 	
 
 	//continuous agent: set reallocation flag
 	agents->_scan_input[index]  = dead; 
 
-	//AoS to SoA - xmachine_memory_SenescentMigration Coalesced memory write (ignore arrays)
+	//AoS to SoA - xmachine_memory_TransitionToRepair Coalesced memory write (ignore arrays)
 	agents->id[index] = agent.id;
 	agents->x[index] = agent.x;
 	agents->y[index] = agent.y;
 	agents->z[index] = agent.z;
-	agents->doublings[index] = agent.doublings;
 	agents->damage[index] = agent.damage;
-	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
 	agents->current_state[index] = agent.current_state;
+	agents->go_to_state[index] = agent.go_to_state;
 }
 
 /**
  *
  */
-__global__ void GPUFLAME_EarlySenescentMigration(xmachine_memory_Fibroblast_list* agents, xmachine_message_tissue_damage_report_list* tissue_damage_report_messages, xmachine_message_tissue_damage_report_PBM* partition_matrix){
+__global__ void GPUFLAME_TransitionToQuiescent(xmachine_memory_Fibroblast_list* agents){
 	
 	//continuous agent: index is agent position in 1D agent list
 	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
@@ -1471,7 +1493,7 @@ __global__ void GPUFLAME_EarlySenescentMigration(xmachine_memory_Fibroblast_list
         return;
     
 
-	//SoA to AoS - xmachine_memory_EarlySenescentMigration Coalesced memory read (arrays point to first item for agent index)
+	//SoA to AoS - xmachine_memory_TransitionToQuiescent Coalesced memory read (arrays point to first item for agent index)
 	xmachine_memory_Fibroblast agent;
     
     // Thread bounds already checked, but the agent function will still execute. load default values?
@@ -1480,432 +1502,25 @@ __global__ void GPUFLAME_EarlySenescentMigration(xmachine_memory_Fibroblast_list
 	agent.x = agents->x[index];
 	agent.y = agents->y[index];
 	agent.z = agents->z[index];
-	agent.doublings = agents->doublings[index];
 	agent.damage = agents->damage[index];
-	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
 	agent.current_state = agents->current_state[index];
+	agent.go_to_state = agents->go_to_state[index];
 
 	//FLAME function call
-	int dead = !EarlySenescentMigration(&agent, tissue_damage_report_messages, partition_matrix);
+	int dead = !TransitionToQuiescent(&agent);
 	
 
 	//continuous agent: set reallocation flag
 	agents->_scan_input[index]  = dead; 
 
-	//AoS to SoA - xmachine_memory_EarlySenescentMigration Coalesced memory write (ignore arrays)
+	//AoS to SoA - xmachine_memory_TransitionToQuiescent Coalesced memory write (ignore arrays)
 	agents->id[index] = agent.id;
 	agents->x[index] = agent.x;
 	agents->y[index] = agent.y;
 	agents->z[index] = agent.z;
-	agents->doublings[index] = agent.doublings;
 	agents->damage[index] = agent.damage;
-	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
 	agents->current_state[index] = agent.current_state;
-}
-
-/**
- *
- */
-__global__ void GPUFLAME_QuiescentTakesDamage(xmachine_memory_Fibroblast_list* agents, RNG_rand48* rand48){
-	
-	//continuous agent: index is agent position in 1D agent list
-	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
-  
-    //For agents not using non partitioned message input check the agent bounds
-    if (index >= d_xmachine_memory_Fibroblast_count)
-        return;
-    
-
-	//SoA to AoS - xmachine_memory_QuiescentTakesDamage Coalesced memory read (arrays point to first item for agent index)
-	xmachine_memory_Fibroblast agent;
-    
-    // Thread bounds already checked, but the agent function will still execute. load default values?
-	
-	agent.id = agents->id[index];
-	agent.x = agents->x[index];
-	agent.y = agents->y[index];
-	agent.z = agents->z[index];
-	agent.doublings = agents->doublings[index];
-	agent.damage = agents->damage[index];
-	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
-	agent.current_state = agents->current_state[index];
-
-	//FLAME function call
-	int dead = !QuiescentTakesDamage(&agent, rand48);
-	
-
-	//continuous agent: set reallocation flag
-	agents->_scan_input[index]  = dead; 
-
-	//AoS to SoA - xmachine_memory_QuiescentTakesDamage Coalesced memory write (ignore arrays)
-	agents->id[index] = agent.id;
-	agents->x[index] = agent.x;
-	agents->y[index] = agent.y;
-	agents->z[index] = agent.z;
-	agents->doublings[index] = agent.doublings;
-	agents->damage[index] = agent.damage;
-	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
-	agents->current_state[index] = agent.current_state;
-}
-
-/**
- *
- */
-__global__ void GPUFLAME_TransitionToProliferating(xmachine_memory_Fibroblast_list* agents, RNG_rand48* rand48){
-	
-	//continuous agent: index is agent position in 1D agent list
-	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
-  
-    //For agents not using non partitioned message input check the agent bounds
-    if (index >= d_xmachine_memory_Fibroblast_count)
-        return;
-    
-
-	//SoA to AoS - xmachine_memory_TransitionToProliferating Coalesced memory read (arrays point to first item for agent index)
-	xmachine_memory_Fibroblast agent;
-    
-    // Thread bounds already checked, but the agent function will still execute. load default values?
-	
-	agent.id = agents->id[index];
-	agent.x = agents->x[index];
-	agent.y = agents->y[index];
-	agent.z = agents->z[index];
-	agent.doublings = agents->doublings[index];
-	agent.damage = agents->damage[index];
-	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
-	agent.current_state = agents->current_state[index];
-
-	//FLAME function call
-	int dead = !TransitionToProliferating(&agent, rand48);
-	
-
-	//continuous agent: set reallocation flag
-	agents->_scan_input[index]  = dead; 
-
-	//AoS to SoA - xmachine_memory_TransitionToProliferating Coalesced memory write (ignore arrays)
-	agents->id[index] = agent.id;
-	agents->x[index] = agent.x;
-	agents->y[index] = agent.y;
-	agents->z[index] = agent.z;
-	agents->doublings[index] = agent.doublings;
-	agents->damage[index] = agent.damage;
-	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
-	agents->current_state[index] = agent.current_state;
-}
-
-/**
- *
- */
-__global__ void GPUFLAME_Proliferation(xmachine_memory_Fibroblast_list* agents, xmachine_memory_Fibroblast_list* Fibroblast_agents){
-	
-	//continuous agent: index is agent position in 1D agent list
-	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
-  
-    //For agents not using non partitioned message input check the agent bounds
-    if (index >= d_xmachine_memory_Fibroblast_count)
-        return;
-    
-
-	//SoA to AoS - xmachine_memory_Proliferation Coalesced memory read (arrays point to first item for agent index)
-	xmachine_memory_Fibroblast agent;
-    
-    // Thread bounds already checked, but the agent function will still execute. load default values?
-	
-	agent.id = agents->id[index];
-	agent.x = agents->x[index];
-	agent.y = agents->y[index];
-	agent.z = agents->z[index];
-	agent.doublings = agents->doublings[index];
-	agent.damage = agents->damage[index];
-	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
-	agent.current_state = agents->current_state[index];
-
-	//FLAME function call
-	int dead = !Proliferation(&agent, Fibroblast_agents);
-	
-
-	//continuous agent: set reallocation flag
-	agents->_scan_input[index]  = dead; 
-
-	//AoS to SoA - xmachine_memory_Proliferation Coalesced memory write (ignore arrays)
-	agents->id[index] = agent.id;
-	agents->x[index] = agent.x;
-	agents->y[index] = agent.y;
-	agents->z[index] = agent.z;
-	agents->doublings[index] = agent.doublings;
-	agents->damage[index] = agent.damage;
-	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
-	agents->current_state[index] = agent.current_state;
-}
-
-/**
- *
- */
-__global__ void GPUFLAME_BystanderEffect(xmachine_memory_Fibroblast_list* agents, xmachine_message_fibroblast_location_report_list* fibroblast_location_report_messages, xmachine_message_fibroblast_location_report_PBM* partition_matrix, RNG_rand48* rand48){
-	
-	//continuous agent: index is agent position in 1D agent list
-	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
-  
-    //For agents not using non partitioned message input check the agent bounds
-    if (index >= d_xmachine_memory_Fibroblast_count)
-        return;
-    
-
-	//SoA to AoS - xmachine_memory_BystanderEffect Coalesced memory read (arrays point to first item for agent index)
-	xmachine_memory_Fibroblast agent;
-    
-    // Thread bounds already checked, but the agent function will still execute. load default values?
-	
-	agent.id = agents->id[index];
-	agent.x = agents->x[index];
-	agent.y = agents->y[index];
-	agent.z = agents->z[index];
-	agent.doublings = agents->doublings[index];
-	agent.damage = agents->damage[index];
-	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
-	agent.current_state = agents->current_state[index];
-
-	//FLAME function call
-	int dead = !BystanderEffect(&agent, fibroblast_location_report_messages, partition_matrix, rand48);
-	
-
-	//continuous agent: set reallocation flag
-	agents->_scan_input[index]  = dead; 
-
-	//AoS to SoA - xmachine_memory_BystanderEffect Coalesced memory write (ignore arrays)
-	agents->id[index] = agent.id;
-	agents->x[index] = agent.x;
-	agents->y[index] = agent.y;
-	agents->z[index] = agent.z;
-	agents->doublings[index] = agent.doublings;
-	agents->damage[index] = agent.damage;
-	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
-	agents->current_state[index] = agent.current_state;
-}
-
-/**
- *
- */
-__global__ void GPUFLAME_ExcessiveDamage(xmachine_memory_Fibroblast_list* agents, RNG_rand48* rand48){
-	
-	//continuous agent: index is agent position in 1D agent list
-	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
-  
-    //For agents not using non partitioned message input check the agent bounds
-    if (index >= d_xmachine_memory_Fibroblast_count)
-        return;
-    
-
-	//SoA to AoS - xmachine_memory_ExcessiveDamage Coalesced memory read (arrays point to first item for agent index)
-	xmachine_memory_Fibroblast agent;
-    
-    // Thread bounds already checked, but the agent function will still execute. load default values?
-	
-	agent.id = agents->id[index];
-	agent.x = agents->x[index];
-	agent.y = agents->y[index];
-	agent.z = agents->z[index];
-	agent.doublings = agents->doublings[index];
-	agent.damage = agents->damage[index];
-	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
-	agent.current_state = agents->current_state[index];
-
-	//FLAME function call
-	int dead = !ExcessiveDamage(&agent, rand48);
-	
-
-	//continuous agent: set reallocation flag
-	agents->_scan_input[index]  = dead; 
-
-	//AoS to SoA - xmachine_memory_ExcessiveDamage Coalesced memory write (ignore arrays)
-	agents->id[index] = agent.id;
-	agents->x[index] = agent.x;
-	agents->y[index] = agent.y;
-	agents->z[index] = agent.z;
-	agents->doublings[index] = agent.doublings;
-	agents->damage[index] = agent.damage;
-	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
-	agents->current_state[index] = agent.current_state;
-}
-
-/**
- *
- */
-__global__ void GPUFLAME_ReplicativeSenescence(xmachine_memory_Fibroblast_list* agents, RNG_rand48* rand48){
-	
-	//continuous agent: index is agent position in 1D agent list
-	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
-  
-    //For agents not using non partitioned message input check the agent bounds
-    if (index >= d_xmachine_memory_Fibroblast_count)
-        return;
-    
-
-	//SoA to AoS - xmachine_memory_ReplicativeSenescence Coalesced memory read (arrays point to first item for agent index)
-	xmachine_memory_Fibroblast agent;
-    
-    // Thread bounds already checked, but the agent function will still execute. load default values?
-	
-	agent.id = agents->id[index];
-	agent.x = agents->x[index];
-	agent.y = agents->y[index];
-	agent.z = agents->z[index];
-	agent.doublings = agents->doublings[index];
-	agent.damage = agents->damage[index];
-	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
-	agent.current_state = agents->current_state[index];
-
-	//FLAME function call
-	int dead = !ReplicativeSenescence(&agent, rand48);
-	
-
-	//continuous agent: set reallocation flag
-	agents->_scan_input[index]  = dead; 
-
-	//AoS to SoA - xmachine_memory_ReplicativeSenescence Coalesced memory write (ignore arrays)
-	agents->id[index] = agent.id;
-	agents->x[index] = agent.x;
-	agents->y[index] = agent.y;
-	agents->z[index] = agent.z;
-	agents->doublings[index] = agent.doublings;
-	agents->damage[index] = agent.damage;
-	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
-	agents->current_state[index] = agent.current_state;
-}
-
-/**
- *
- */
-__global__ void GPUFLAME_EarlySenCountTime(xmachine_memory_Fibroblast_list* agents){
-	
-	//continuous agent: index is agent position in 1D agent list
-	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
-  
-    //For agents not using non partitioned message input check the agent bounds
-    if (index >= d_xmachine_memory_Fibroblast_count)
-        return;
-    
-
-	//SoA to AoS - xmachine_memory_EarlySenCountTime Coalesced memory read (arrays point to first item for agent index)
-	xmachine_memory_Fibroblast agent;
-    
-    // Thread bounds already checked, but the agent function will still execute. load default values?
-	
-	agent.id = agents->id[index];
-	agent.x = agents->x[index];
-	agent.y = agents->y[index];
-	agent.z = agents->z[index];
-	agent.doublings = agents->doublings[index];
-	agent.damage = agents->damage[index];
-	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
-	agent.current_state = agents->current_state[index];
-
-	//FLAME function call
-	int dead = !EarlySenCountTime(&agent);
-	
-
-	//continuous agent: set reallocation flag
-	agents->_scan_input[index]  = dead; 
-
-	//AoS to SoA - xmachine_memory_EarlySenCountTime Coalesced memory write (ignore arrays)
-	agents->id[index] = agent.id;
-	agents->x[index] = agent.x;
-	agents->y[index] = agent.y;
-	agents->z[index] = agent.z;
-	agents->doublings[index] = agent.doublings;
-	agents->damage[index] = agent.damage;
-	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
-	agents->current_state[index] = agent.current_state;
-}
-
-/**
- *
- */
-__global__ void GPUFLAME_TransitionToFullSenescence(xmachine_memory_Fibroblast_list* agents, RNG_rand48* rand48){
-	
-	//continuous agent: index is agent position in 1D agent list
-	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
-  
-    //For agents not using non partitioned message input check the agent bounds
-    if (index >= d_xmachine_memory_Fibroblast_count)
-        return;
-    
-
-	//SoA to AoS - xmachine_memory_TransitionToFullSenescence Coalesced memory read (arrays point to first item for agent index)
-	xmachine_memory_Fibroblast agent;
-    
-    // Thread bounds already checked, but the agent function will still execute. load default values?
-	
-	agent.id = agents->id[index];
-	agent.x = agents->x[index];
-	agent.y = agents->y[index];
-	agent.z = agents->z[index];
-	agent.doublings = agents->doublings[index];
-	agent.damage = agents->damage[index];
-	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
-	agent.current_state = agents->current_state[index];
-
-	//FLAME function call
-	int dead = !TransitionToFullSenescence(&agent, rand48);
-	
-
-	//continuous agent: set reallocation flag
-	agents->_scan_input[index]  = dead; 
-
-	//AoS to SoA - xmachine_memory_TransitionToFullSenescence Coalesced memory write (ignore arrays)
-	agents->id[index] = agent.id;
-	agents->x[index] = agent.x;
-	agents->y[index] = agent.y;
-	agents->z[index] = agent.z;
-	agents->doublings[index] = agent.doublings;
-	agents->damage[index] = agent.damage;
-	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
-	agents->current_state[index] = agent.current_state;
-}
-
-/**
- *
- */
-__global__ void GPUFLAME_DetectDamage(xmachine_memory_Fibroblast_list* agents, xmachine_message_tissue_damage_report_list* tissue_damage_report_messages, xmachine_message_tissue_damage_report_PBM* partition_matrix){
-	
-	//continuous agent: index is agent position in 1D agent list
-	int index = (blockIdx.x * blockDim.x) + threadIdx.x;
-  
-    //For agents not using non partitioned message input check the agent bounds
-    if (index >= d_xmachine_memory_Fibroblast_count)
-        return;
-    
-
-	//SoA to AoS - xmachine_memory_DetectDamage Coalesced memory read (arrays point to first item for agent index)
-	xmachine_memory_Fibroblast agent;
-    
-    // Thread bounds already checked, but the agent function will still execute. load default values?
-	
-	agent.id = agents->id[index];
-	agent.x = agents->x[index];
-	agent.y = agents->y[index];
-	agent.z = agents->z[index];
-	agent.doublings = agents->doublings[index];
-	agent.damage = agents->damage[index];
-	agent.early_sen_time_counter = agents->early_sen_time_counter[index];
-	agent.current_state = agents->current_state[index];
-
-	//FLAME function call
-	int dead = !DetectDamage(&agent, tissue_damage_report_messages, partition_matrix);
-	
-
-	//continuous agent: set reallocation flag
-	agents->_scan_input[index]  = dead; 
-
-	//AoS to SoA - xmachine_memory_DetectDamage Coalesced memory write (ignore arrays)
-	agents->id[index] = agent.id;
-	agents->x[index] = agent.x;
-	agents->y[index] = agent.y;
-	agents->z[index] = agent.z;
-	agents->doublings[index] = agent.doublings;
-	agents->damage[index] = agent.damage;
-	agents->early_sen_time_counter[index] = agent.early_sen_time_counter;
-	agents->current_state[index] = agent.current_state;
+	agents->go_to_state[index] = agent.go_to_state;
 }
 
 	
