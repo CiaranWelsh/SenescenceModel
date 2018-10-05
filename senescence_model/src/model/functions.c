@@ -755,18 +755,18 @@ __FLAME_GPU_FUNC__ int QuiescentTakesDamage(
     5: repairing
 
  */
-__FLAME_GPU_FUNC__ int TransitionToProliferating(
-        xmachine_memory_Fibroblast *agent,
-        RNG_rand48 *rand48) {
-
-    float random_number = rnd<CONTINUOUS>(rand48);
-    if (random_number < PROLIFERATION_PROB) {
-        agent->current_state = 4;
-//        agent->colour = 4;
-    }
-
-    return 0;
-}
+//__FLAME_GPU_FUNC__ int TransitionToProliferating(
+//        xmachine_memory_Fibroblast *agent,
+//        RNG_rand48 *rand48) {
+//
+//    float random_number = rnd<CONTINUOUS>(rand48);
+//    if (random_number < PROLIFERATION_PROB) {
+//        agent->current_state = 4;
+////        agent->colour = 4;
+//    }
+//
+//    return 0;
+//}
 
 /**
  * Proliferation FLAMEGPU Agent Function
@@ -774,34 +774,34 @@ __FLAME_GPU_FUNC__ int TransitionToProliferating(
  * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
  * @param Fibroblast_agents Pointer to agent list of type xmachine_memory_Fibroblast_list. This must be passed as an argument to the add_Fibroblast_agent function to add a new agent.
  */
-__FLAME_GPU_FUNC__ int Proliferation(
-        xmachine_memory_Fibroblast* agent,
-        xmachine_memory_Fibroblast_list* Fibroblast_agents){
-
-
-    //Template for agent output functions
-    int id = agent->id+1000;
-    float x = agent->x;
-    float y = agent->y;
-    float z = agent->z;
-    float doublings = 0;
-    int damage = 0;
-    int early_sen_time_counter = 0;
-    int current_state = 0;
-
-    add_Fibroblast_agent(
-            Fibroblast_agents,
-            id,
-            x,
-            y,
-            z,
-            doublings,
-            damage,
-            early_sen_time_counter,
-            current_state);
-      return 0;
-}
-
+//__FLAME_GPU_FUNC__ int Proliferation(
+//        xmachine_memory_Fibroblast* agent,
+//        xmachine_memory_Fibroblast_list* Fibroblast_agents){
+//
+//
+//    //Template for agent output functions
+//    int id = agent->id+1000;
+//    float x = agent->x;
+//    float y = agent->y;
+//    float z = agent->z;
+//    float doublings = 0;
+//    int damage = 0;
+//    int early_sen_time_counter = 0;
+//    int current_state = 0;
+//
+//    add_Fibroblast_agent(
+//            Fibroblast_agents,
+//            id,
+//            x,
+//            y,
+//            z,
+//            doublings,
+//            damage,
+//            early_sen_time_counter,
+//            current_state);
+//      return 0;
+//}
+//
 
 
 /**
@@ -816,49 +816,49 @@ __FLAME_GPU_FUNC__ int Proliferation(
     4: proliferating
     5: repairing
  */
-__FLAME_GPU_FUNC__ int BystanderEffect(
-        xmachine_memory_Fibroblast *agent,
-        xmachine_message_fibroblast_location_report_list *fibroblast_location_report_messages,
-        xmachine_message_fibroblast_location_report_PBM *partition_matrix,
-        RNG_rand48* rand48) {
-
-    // Position within space
-    float agent_x = agent->x;
-    float agent_y = agent->y;
-    float agent_z = agent->z;
-
-    glm::vec3 fibroblast_loc = glm::vec3(agent_x, agent_y, agent_z);
-
-    //Template for input message iteration
-    xmachine_message_fibroblast_location_report *current_message = get_first_fibroblast_location_report_message(
-            fibroblast_location_report_messages,
-            partition_matrix,
-            agent_x, agent_y, agent_z);
-
-    while (current_message) {
-        if (current_message->current_state == 2) {
-
-            glm::vec3 senescent_fib_loc = glm::vec3(
-                    current_message->x,
-                    current_message->y,
-                    current_message->z);
-
-            //        glm::vec3 distance = subtract_a_from_b(fibroblast_loc, senescent_fib_loc);
-            float separation = length(subtract_a_from_b(senescent_fib_loc,fibroblast_loc));
-            if (separation > BYSTANDER_DISTANCE) {
-                float random_number = rnd<CONTINUOUS>(rand48);
-                if (random_number < BYSTANDER_PROB) {
-                    agent->current_state = 1;
-                }
-            }
-        }
-        current_message = get_next_fibroblast_location_report_message(
-                current_message,
-                fibroblast_location_report_messages,
-                partition_matrix);
-    }
-    return 0;
-}
+//__FLAME_GPU_FUNC__ int BystanderEffect(
+//        xmachine_memory_Fibroblast *agent,
+//        xmachine_message_fibroblast_location_report_list *fibroblast_location_report_messages,
+//        xmachine_message_fibroblast_location_report_PBM *partition_matrix,
+//        RNG_rand48* rand48) {
+//
+//    // Position within space
+//    float agent_x = agent->x;
+//    float agent_y = agent->y;
+//    float agent_z = agent->z;
+//
+//    glm::vec3 fibroblast_loc = glm::vec3(agent_x, agent_y, agent_z);
+//
+//    //Template for input message iteration
+//    xmachine_message_fibroblast_location_report *current_message = get_first_fibroblast_location_report_message(
+//            fibroblast_location_report_messages,
+//            partition_matrix,
+//            agent_x, agent_y, agent_z);
+//
+//    while (current_message) {
+//        if (current_message->current_state == 2) {
+//
+//            glm::vec3 senescent_fib_loc = glm::vec3(
+//                    current_message->x,
+//                    current_message->y,
+//                    current_message->z);
+//
+//            //        glm::vec3 distance = subtract_a_from_b(fibroblast_loc, senescent_fib_loc);
+//            float separation = length(subtract_a_from_b(senescent_fib_loc,fibroblast_loc));
+//            if (separation > BYSTANDER_DISTANCE) {
+//                float random_number = rnd<CONTINUOUS>(rand48);
+//                if (random_number < BYSTANDER_PROB) {
+//                    agent->current_state = 1;
+//                }
+//            }
+//        }
+//        current_message = get_next_fibroblast_location_report_message(
+//                current_message,
+//                fibroblast_location_report_messages,
+//                partition_matrix);
+//    }
+//    return 0;
+//}
 
 
 /**
@@ -867,19 +867,19 @@ __FLAME_GPU_FUNC__ int BystanderEffect(
  * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
  * @param fibroblast_damage_report_messages  fibroblast_damage_report_messages Pointer to input message list of type xmachine_message__list. Must be passed as an argument to the get_first_fibroblast_damage_report_message and get_next_fibroblast_damage_report_message functions.* @param partition_matrix Pointer to the partition matrix of type xmachine_message_fibroblast_damage_report_PBM. Used within the get_first__message and get_next__message functions for spatially partitioned message access.
  */
-__FLAME_GPU_FUNC__ int ExcessiveDamage(
-        xmachine_memory_Fibroblast* agent,
-        RNG_rand48* rand48) {
-
-    if (agent->damage > EXCESSIVE_DAMAGE_AMOUNT) {
-        float random_number = rnd<CONTINUOUS>(rand48);
-        if (random_number < EXCESSIVE_DAMAGE_PROB){
-            agent->current_state = 1;
-        }
-    };
-
-    return 0;
-}
+//__FLAME_GPU_FUNC__ int ExcessiveDamage(
+//        xmachine_memory_Fibroblast* agent,
+//        RNG_rand48* rand48) {
+//
+//    if (agent->damage > EXCESSIVE_DAMAGE_AMOUNT) {
+//        float random_number = rnd<CONTINUOUS>(rand48);
+//        if (random_number < EXCESSIVE_DAMAGE_PROB){
+//            agent->current_state = 1;
+//        }
+//    };
+//
+//    return 0;
+//}
 
 /**
  * ReplicativeSenescence FLAMEGPU Agent Function
@@ -887,18 +887,18 @@ __FLAME_GPU_FUNC__ int ExcessiveDamage(
  * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
  * @param doublings_messages  doublings_messages Pointer to input message list of type xmachine_message__list. Must be passed as an argument to the get_first_doublings_message and get_next_doublings_message functions.
  */
-__FLAME_GPU_FUNC__ int ReplicativeSenescence(
-        xmachine_memory_Fibroblast* agent,
-        RNG_rand48* rand48){
-
-    if (agent->doublings > REPLICATIVE_SEN_AGE) {
-        float random_number = rnd<CONTINUOUS>(rand48);
-        if (random_number < REPLICATIVE_SEN_PROB){
-            agent->current_state = 1;
-        }
-    };
-    return 0;
-}
+//__FLAME_GPU_FUNC__ int ReplicativeSenescence(
+//        xmachine_memory_Fibroblast* agent,
+//        RNG_rand48* rand48){
+//
+//    if (agent->doublings > REPLICATIVE_SEN_AGE) {
+//        float random_number = rnd<CONTINUOUS>(rand48);
+//        if (random_number < REPLICATIVE_SEN_PROB){
+//            agent->current_state = 1;
+//        }
+//    };
+//    return 0;
+//}
 
 
 /**
@@ -907,12 +907,12 @@ __FLAME_GPU_FUNC__ int ReplicativeSenescence(
  * @param agent Pointer to an agent structure of type xmachine_memory_Fibroblast. This represents a single agent instance and can be modified directly.
 
  */
-__FLAME_GPU_FUNC__ int EarlySenCountTime(xmachine_memory_Fibroblast* agent){
-    if (agent->early_sen_time_counter < EARLY_SENESCENT_MATURATION_TIME ){
-        agent->early_sen_time_counter += 1;
-    }
-    return 0;
-}
+//__FLAME_GPU_FUNC__ int EarlySenCountTime(xmachine_memory_Fibroblast* agent){
+//    if (agent->early_sen_time_counter < EARLY_SENESCENT_MATURATION_TIME ){
+//        agent->early_sen_time_counter += 1;
+//    }
+//    return 0;
+//}
 
 
 /**
@@ -926,18 +926,18 @@ __FLAME_GPU_FUNC__ int EarlySenCountTime(xmachine_memory_Fibroblast* agent){
     4: proliferating
     5: repairing
  */
-__FLAME_GPU_FUNC__ int TransitionToFullSenescence(
-        xmachine_memory_Fibroblast* agent,
-        RNG_rand48 *rand48){
-
-    float random_number = rnd<CONTINUOUS>(rand48);
-    if (random_number < TRANSITION_TO_FULL_SENESCENCE_PROB) {
-        agent->current_state = 2;
-//        agent->colour = 2;
-    }
-
-    return 0;
-}
+//__FLAME_GPU_FUNC__ int TransitionToFullSenescence(
+//        xmachine_memory_Fibroblast* agent,
+//        RNG_rand48 *rand48){
+//
+//    float random_number = rnd<CONTINUOUS>(rand48);
+//    if (random_number < TRANSITION_TO_FULL_SENESCENCE_PROB) {
+//        agent->current_state = 2;
+////        agent->colour = 2;
+//    }
+//
+//    return 0;
+//}
 
 
 ///**

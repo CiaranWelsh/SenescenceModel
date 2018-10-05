@@ -3,3 +3,4 @@
 .ipynb_checkpoints
 *.pyc
 *.csv
+[0-9]*.xml
