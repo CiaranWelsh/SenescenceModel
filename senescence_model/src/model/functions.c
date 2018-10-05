@@ -72,14 +72,6 @@ inline __device__ glm::vec3 compute_next_fibroblast_location(
 return add_a_to_b(a, scale*(subtract_a_from_b(a, b)));
 }
 
-/**
- * declareGlobalConstants FLAMEGPU Init function
- * Automatically generated using functions.xslt
- */
-__FLAME_GPU_INIT_FUNC__ void declareGlobalConstants(){
-//    float REPAIR_RADIUS = get_REPAIR_RADIUS();
-}
-
 
 /**
  * Tissuelogs FLAMEGPU Step function

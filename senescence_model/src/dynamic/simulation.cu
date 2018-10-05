@@ -593,19 +593,6 @@ void initialise(char * inputfile){
 #endif
 
 	
-#if defined(INSTRUMENT_INIT_FUNCTIONS) && INSTRUMENT_INIT_FUNCTIONS
-	cudaEventRecord(instrument_start);
-#endif
-    declareGlobalConstants();
-    PROFILE_PUSH_RANGE("declareGlobalConstants");
-    PROFILE_POP_RANGE();
-#if defined(INSTRUMENT_INIT_FUNCTIONS) && INSTRUMENT_INIT_FUNCTIONS
-	cudaEventRecord(instrument_stop);
-	cudaEventSynchronize(instrument_stop);
-	cudaEventElapsedTime(&instrument_milliseconds, instrument_start, instrument_stop);
-	printf("Instrumentation: declareGlobalConstants = %f (ms)\n", instrument_milliseconds);
-#endif
-	
   
   /* Init CUDA Streams for function layers */
   

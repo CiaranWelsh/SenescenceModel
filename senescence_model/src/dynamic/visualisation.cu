@@ -1,4 +1,4 @@
-
+// modified by Ciaran welsh
 /*
  * FLAME GPU v 1.5.X for CUDA 9
  * Copyright University of Sheffield.
@@ -150,10 +150,10 @@ const char vertexShaderSource[] =
 	"		colour = vec4(0.0, 0.0, 1.0, 0.0);								    \n"
 	"	else if (lookup.w > 1.5)	                							\n"
 	"		colour = vec4(0.0, 1.0, 0.0, 0.0);								    \n"
-    "	else if (lookup.w > 0.5)	                							\n"
+    "	else if (lookup.w > 1.0)	                							\n"
 	"		colour = vec4(1.0, 0.0, 0.0, 0.0);								    \n"
     "	else                      	                							\n"
-	"		colour = vec4(0.0, 0.0, 0.0, 0.0);								    \n"
+	"		colour = vec4(1 - (lookup.w / 100.0), 0.0, 0.0, 0.0);								    \n"
 	"																    		\n"
 	"	lookup.w = 1.0;												    		\n"
 	"	position += lookup;											    		\n"
@@ -202,7 +202,7 @@ __global__ void output_TissueBlock_agent_to_VBO(xmachine_memory_TissueBlock_list
     vbo[index].x = agents->x[index] - centralise.x;
     vbo[index].y = agents->y[index] - centralise.y;
     vbo[index].z = agents->z[index] - centralise.z;
-    vbo[index].w = 1.0;
+    vbo[index].w = agents->damage[index];
 }
 
 __global__ void output_Fibroblast_agent_to_VBO(xmachine_memory_Fibroblast_list* agents, glm::vec4* vbo, glm::vec3 centralise){

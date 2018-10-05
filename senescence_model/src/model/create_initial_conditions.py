@@ -49,7 +49,7 @@ def add_fibroblast_agents(n, root, lower_bound=0, upper_bound=1):
         x, y, z = numpy.random.uniform(lower_bound, upper_bound, 3)
         doublings = 0
         damage = 0
-        current_state = 2
+        current_state = 1
         early_sen_time_counter = 0
         agent_args = {
             'id': id,
@@ -57,22 +57,21 @@ def add_fibroblast_agents(n, root, lower_bound=0, upper_bound=1):
             'x': x,
             'y': y,
             'z': z,
-            'doublings': doublings,
-            'damage': damage,
+            # 'doublings': doublings,
+            # 'damage': damage,
             'currentState': current_state,
-            'early_sen_time_counter': early_sen_time_counter,
-            'colour': 0
+            # 'early_sen_time_counter': early_sen_time_counter,
+            # 'colour': 0
         }
         add_agent(root, agent_args)
 
     return root
 
 
-
 def add_tissue_agents(scale=0.1, grid_size=1):
     centers = []
     ## minus 1 makes numbers by accounting for 0!
-    resolution = grid_size-1 / float(scale)
+    resolution = grid_size - 1 / float(scale)
     for x in numpy.linspace(0, 1, resolution):
         for y in numpy.linspace(0, 1, resolution):
             for z in numpy.linspace(0, 1, resolution):
@@ -123,34 +122,33 @@ def to_file(root, fname):
 
 
 if __name__ == '__main__':
-
     parameters = {
         'TISSUE_DAMAGE_PROB': 0.1,
-
-        'EARLY_SENESCENT_MIGRATION_SCALE':      0.00001,
-        'SENESCENT_MIGRATION_SCALE':            0.00001,
-        'QUIESCENT_MIGRATION_SCALE':            0.00001,
-
-        'PROLIFERATION_PROB':                   0.0001,
-
-        'BYSTANDER_DISTANCE':                   0.001,
-        'BYSTANDER_PROB':                       0.000001,
-
-        'EXCESSIVE_DAMAGE_AMOUNT':              100,
-        'EXCESSIVE_DAMAGE_PROB':                0.000001,
-
-        'REPLICATIVE_SEN_AGE':                  100000,
-        'REPLICATIVE_SEN_PROB':                 0.000001,
-
-        'EARLY_SENESCENT_MATURATION_TIME':      10000,
-
-        'TRANSITION_TO_FULL_SENESCENCE_PROB':   0.0000001,
-
-        'CLEARANCE_EARLY_SEN_PROB': 0.1,
-        'CLEARANCE_SEN_PROB': 0.1,
-
-        'REPAIR_RADIUS': 0.01,
+        'QUIESCENT_MIGRATION_SCALE': 0.0001,
+        'REPAIR_RANGE': 0.00001,
+        'DAMAGE_DETECTION_RANGE': 0.01
     }
+    # 'EARLY_SENESCENT_MIGRATION_SCALE':      0.00001,
+    # 'SENESCENT_MIGRATION_SCALE':            0.00001,
+
+    # 'PROLIFERATION_PROB':                   0.0001,
+
+    # 'BYSTANDER_DISTANCE':                   0.001,
+    # 'BYSTANDER_PROB':                       0.000001,
+
+    # 'EXCESSIVE_DAMAGE_AMOUNT':              100,
+    # 'EXCESSIVE_DAMAGE_PROB':                0.000001,
+
+    # 'REPLICATIVE_SEN_AGE':                  100000,
+    # 'REPLICATIVE_SEN_PROB':                 0.000001,
+
+    # 'EARLY_SENESCENT_MATURATION_TIME':      10000,
+
+    # 'TRANSITION_TO_FULL_SENESCENCE_PROB':   0.0000001,
+
+    # 'CLEARANCE_EARLY_SEN_PROB': 0.1,
+    # 'CLEARANCE_SEN_PROB': 0.1,
+
 
     root = create_root(parameters)
     root = add_fibroblast_agents(100, root, lower_bound=0.5, upper_bound=1.5)

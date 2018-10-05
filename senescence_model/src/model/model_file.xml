@@ -119,11 +119,6 @@
                 <gpu:name>FibroblastRepairlogs</gpu:name>
             </gpu:stepFunction>
         </gpu:stepFunctions>
-        <gpu:initFunctions>
-            <gpu:initFunction>
-                <gpu:name>declareGlobalConstants</gpu:name>
-            </gpu:initFunction>
-        </gpu:initFunctions>
     </gpu:environment>
     <xagents>
         <gpu:xagent>
