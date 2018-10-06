@@ -176,6 +176,10 @@ void saveIterationData(char* outputpath, int iteration_number, xmachine_memory_T
     sprintf(data, "%f", (*get_DAMAGE_DETECTION_RANGE()));
     fputs(data, file);
     fputs("</DAMAGE_DETECTION_RANGE>\n", file);
+    fputs("\t<REPAIR_RATE>", file);
+    sprintf(data, "%d", (*get_REPAIR_RATE()));
+    fputs(data, file);
+    fputs("</REPAIR_RATE>\n", file);
 	fputs("</environment>\n" , file);
 
 	//Write each TissueBlock agent to xml
@@ -316,6 +320,8 @@ PROFILE_SCOPED_RANGE("initEnvVars");
     set_REPAIR_RANGE(&t_REPAIR_RANGE);
     float t_DAMAGE_DETECTION_RANGE = (float)0.001;
     set_DAMAGE_DETECTION_RANGE(&t_DAMAGE_DETECTION_RANGE);
+    int t_REPAIR_RATE = (int)1;
+    set_REPAIR_RATE(&t_REPAIR_RATE);
 }
 
 void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_TissueBlocks, int* h_xmachine_memory_TissueBlock_count,xmachine_memory_Fibroblast_list* h_Fibroblasts, int* h_xmachine_memory_Fibroblast_count)
@@ -361,6 +367,8 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
     
     int in_env_DAMAGE_DETECTION_RANGE;
     
+    int in_env_REPAIR_RATE;
+    
 	/* set agent count to zero */
 	*h_xmachine_memory_TissueBlock_count = 0;
 	*h_xmachine_memory_Fibroblast_count = 0;
@@ -384,6 +392,7 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
     float env_QUIESCENT_MIGRATION_SCALE;
     float env_REPAIR_RANGE;
     float env_DAMAGE_DETECTION_RANGE;
+    int env_REPAIR_RATE;
     
 
 
@@ -418,6 +427,7 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
     in_env_QUIESCENT_MIGRATION_SCALE = 0;
     in_env_REPAIR_RANGE = 0;
     in_env_DAMAGE_DETECTION_RANGE = 0;
+    in_env_REPAIR_RATE = 0;
 	//set all TissueBlock values to 0
 	//If this is not done then it will cause errors in emu mode where undefined memory is not 0
 	for (int k=0; k<xmachine_memory_TissueBlock_MAX; k++)
@@ -462,6 +472,7 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
     env_QUIESCENT_MIGRATION_SCALE = 0.001;
     env_REPAIR_RANGE = 0.001;
     env_DAMAGE_DETECTION_RANGE = 0.001;
+    env_REPAIR_RATE = 1;
     
     
     // If no input path was specified, issue a message and return.
@@ -678,6 +689,8 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
             if(strcmp(buffer, "/REPAIR_RANGE") == 0) in_env_REPAIR_RANGE = 0;
 			if(strcmp(buffer, "DAMAGE_DETECTION_RANGE") == 0) in_env_DAMAGE_DETECTION_RANGE = 1;
             if(strcmp(buffer, "/DAMAGE_DETECTION_RANGE") == 0) in_env_DAMAGE_DETECTION_RANGE = 0;
+			if(strcmp(buffer, "REPAIR_RATE") == 0) in_env_REPAIR_RATE = 1;
+            if(strcmp(buffer, "/REPAIR_RATE") == 0) in_env_REPAIR_RATE = 0;
 			
 
 			/* End of tag and reset buffer */
@@ -761,6 +774,13 @@ void readInitialStates(char* inputpath, xmachine_memory_TissueBlock_list* h_Tiss
                     env_DAMAGE_DETECTION_RANGE = (float) fgpu_atof(buffer);
                     
                     set_DAMAGE_DETECTION_RANGE(&env_DAMAGE_DETECTION_RANGE);
+                  
+              }
+            if(in_env_REPAIR_RATE){
+              
+                    env_REPAIR_RATE = (int) fpgu_strtol(buffer);
+                    
+                    set_REPAIR_RATE(&env_REPAIR_RATE);
                   
               }
             

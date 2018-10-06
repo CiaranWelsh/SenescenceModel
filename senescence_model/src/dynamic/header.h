@@ -94,9 +94,9 @@ typedef glm::dvec4 dvec4;
 
 /* Spatial partitioning grid size definitions */
 //xmachine_message_tissue_damage_report partition grid size (gridDim.X*gridDim.Y*gridDim.Z)
-#define xmachine_message_tissue_damage_report_grid_size 1000
+#define xmachine_message_tissue_damage_report_grid_size 8000
 //xmachine_message_fibroblast_report partition grid size (gridDim.X*gridDim.Y*gridDim.Z)
-#define xmachine_message_fibroblast_report_grid_size 64
+#define xmachine_message_fibroblast_report_grid_size 8000
 
 /* Static Graph size definitions*/
   
@@ -1398,6 +1398,8 @@ __constant__ float REPAIR_RANGE;
 
 __constant__ float DAMAGE_DETECTION_RANGE;
 
+__constant__ int REPAIR_RATE;
+
 /** set_TISSUE_DAMAGE_PROB
  * Sets the constant variable TISSUE_DAMAGE_PROB on the device which can then be used in the agent functions.
  * @param h_TISSUE_DAMAGE_PROB value to set the variable
@@ -1441,6 +1443,17 @@ extern const float* get_DAMAGE_DETECTION_RANGE();
 
 
 extern float h_env_DAMAGE_DETECTION_RANGE;
+
+/** set_REPAIR_RATE
+ * Sets the constant variable REPAIR_RATE on the device which can then be used in the agent functions.
+ * @param h_REPAIR_RATE value to set the variable
+ */
+extern void set_REPAIR_RATE(int* h_REPAIR_RATE);
+
+extern const int* get_REPAIR_RATE();
+
+
+extern int h_env_REPAIR_RATE;
 
 
 /** getMaximumBound

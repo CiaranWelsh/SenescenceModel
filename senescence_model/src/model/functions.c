@@ -20,14 +20,17 @@
 #ifndef _FLAMEGPU_FUNCTIONS
 #define _FLAMEGPU_FUNCTIONS
 
+#define MAX_DAMAGE 100
+#define MIN_DAMAGE 0
+
 #include <header.h>
 
-#define INSTRUMENT_ITERATIONS 1
-#define INSTRUMENT_AGENT_FUNCTIONS 1
-#define INSTRUMENT_INIT_FUNCTIONS 1
-#define INSTRUMENT_STEP_FUNCTIONS 1
-#define INSTRUMENT_EXIT_FUNCTIONS 1
-#define OUTPUT_POPULATION_PER_ITERATION 1
+//#define INSTRUMENT_ITERATIONS 1
+//#define INSTRUMENT_AGENT_FUNCTIONS 1
+//#define INSTRUMENT_INIT_FUNCTIONS 1
+//#define INSTRUMENT_STEP_FUNCTIONS 1
+//#define INSTRUMENT_EXIT_FUNCTIONS 1
+//#define OUTPUT_POPULATION_PER_ITERATION 1
 
 
 // get reference to model constants
@@ -119,6 +122,9 @@ __FLAME_GPU_FUNC__ int TissueTakesDamage(
     float random_number = rnd<CONTINUOUS>(rand48);
     if (random_number < TISSUE_DAMAGE_PROB)
         agent->damage +=1;
+        if (agent->damage > MAX_DAMAGE){
+            agent->damage = MAX_DAMAGE;
+            }
         add_tissue_damage_report_message(
         tissue_damage_report_messages, id, x, y, z, damage);
 
@@ -177,6 +183,9 @@ __FLAME_GPU_FUNC__ int RepairDamage(
 //            float repair_radius = get_REPAIR_RADIUS();
             if (separation < REPAIR_RANGE){
                 agent->damage = agent->damage - 1;
+                if (agent->damage < MIN_DAMAGE){
+                    agent->damage = 0;
+                }
             }
         }
         

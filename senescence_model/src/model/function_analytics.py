@@ -1,10 +1,11 @@
 import pandas, numpy
 import os, glob
 import xml.etree.ElementTree as ET
-from shutil import move
+from shutil import copy
+from shutil import Error as ShutilError
 import matplotlib.pyplot as plt
 import seaborn
-
+from multiprocessing import Pool
 
 def get_files(directory):
     return glob.glob(os.path.join(directory, '[0-9]*.xml'))
@@ -14,8 +15,11 @@ def move_files_to(files, new_dir):
     os.makedirs(new_dir) if not os.path.isdir(new_dir) else None
     if files == []:
         raise ValueError
+
     for i in files:
-        move(i, new_dir)
+        copy(i, new_dir)
+        os.remove(i)
+
 
 
 def parse_element(element, parsed=None):
@@ -63,7 +67,9 @@ def read_one_xml(file):
 def read_xml_data(files):
     tdf_list = []
     fdf_list = []
+    p = Pool(6)
     for f in files:
+        # p.map_async(read_one_xml, f)
         tdf, fdf = read_one_xml(f)
         tdf_list.append(tdf.stack())
         fdf_list.append(fdf.stack())
@@ -99,14 +105,17 @@ if __name__ == '__main__':
     except ValueError:
         files = get_files(xml_output_dir)
 
+    print(files)
     tdf, fdf = read_xml_data(files)
 
     # print(tdf.loc[0])
 
 
-    fig = plot_tissue_damage(tdf, range(100))
+    fig = plot_tissue_damage(tdf, range(10))
 
-    plt.show()
+    tdf_fig_fname = os.path.join(os.path.dirname(xml_output_dir), 'tissue_data.png')
+    # plt.show()
+    fig.savefig(tdf_fig_fname, bbox_inches='tight')
 
 
 

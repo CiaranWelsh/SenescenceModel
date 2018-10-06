@@ -411,7 +411,7 @@ void initialise(char * inputfile){
 	/* Set spatial partitioning tissue_damage_report message variables (min_bounds, max_bounds)*/
 	h_message_tissue_damage_report_radius = (float)0.1;
 	gpuErrchk(cudaMemcpyToSymbol( d_message_tissue_damage_report_radius, &h_message_tissue_damage_report_radius, sizeof(float)));	
-	    h_message_tissue_damage_report_min_bounds = glm::vec3((float)0.0, (float)0.0, (float)0.0);
+	    h_message_tissue_damage_report_min_bounds = glm::vec3((float)-1.0, (float)-1.0, (float)-1.0);
 	gpuErrchk(cudaMemcpyToSymbol( d_message_tissue_damage_report_min_bounds, &h_message_tissue_damage_report_min_bounds, sizeof(glm::vec3)));	
 	h_message_tissue_damage_report_max_bounds = glm::vec3((float)1.0, (float)1.0, (float)1.0);
 	gpuErrchk(cudaMemcpyToSymbol( d_message_tissue_damage_report_max_bounds, &h_message_tissue_damage_report_max_bounds, sizeof(glm::vec3)));	
@@ -422,9 +422,9 @@ void initialise(char * inputfile){
 	
 			
 	/* Set spatial partitioning fibroblast_report message variables (min_bounds, max_bounds)*/
-	h_message_fibroblast_report_radius = (float)0.25;
+	h_message_fibroblast_report_radius = (float)0.1;
 	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_report_radius, &h_message_fibroblast_report_radius, sizeof(float)));	
-	    h_message_fibroblast_report_min_bounds = glm::vec3((float)0.0, (float)0.0, (float)0.0);
+	    h_message_fibroblast_report_min_bounds = glm::vec3((float)-1.0, (float)-1.0, (float)-1.0);
 	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_report_min_bounds, &h_message_fibroblast_report_min_bounds, sizeof(glm::vec3)));	
 	h_message_fibroblast_report_max_bounds = glm::vec3((float)1.0, (float)1.0, (float)1.0);
 	gpuErrchk(cudaMemcpyToSymbol( d_message_fibroblast_report_max_bounds, &h_message_fibroblast_report_max_bounds, sizeof(glm::vec3)));	
@@ -977,6 +977,7 @@ float h_env_TISSUE_DAMAGE_PROB;
 float h_env_QUIESCENT_MIGRATION_SCALE;
 float h_env_REPAIR_RANGE;
 float h_env_DAMAGE_DETECTION_RANGE;
+int h_env_REPAIR_RATE;
 
 
 //constant setter
@@ -1027,6 +1028,19 @@ void set_DAMAGE_DETECTION_RANGE(float* h_DAMAGE_DETECTION_RANGE){
 //constant getter
 const float* get_DAMAGE_DETECTION_RANGE(){
     return &h_env_DAMAGE_DETECTION_RANGE;
+}
+
+
+
+//constant setter
+void set_REPAIR_RATE(int* h_REPAIR_RATE){
+    gpuErrchk(cudaMemcpyToSymbol(REPAIR_RATE, h_REPAIR_RATE, sizeof(int)));
+    memcpy(&h_env_REPAIR_RATE, h_REPAIR_RATE,sizeof(int));
+}
+
+//constant getter
+const int* get_REPAIR_RATE(){
+    return &h_env_REPAIR_RATE;
 }
 
 

@@ -89,6 +89,11 @@
                 <name>DAMAGE_DETECTION_RANGE</name>
                 <defaultValue>0.001</defaultValue>
             </gpu:variable>
+            <gpu:variable>
+                <type>int</type>
+                <name>REPAIR_RATE</name>
+                <defaultValue>1</defaultValue>
+            </gpu:variable>
 
         </gpu:constants>
         <gpu:functionFiles>
@@ -496,11 +501,11 @@
             </variables>
             <gpu:partitioningSpatial>
                 <gpu:radius>0.1</gpu:radius>
-                <gpu:xmin>0.0</gpu:xmin>
+                <gpu:xmin>-1.0</gpu:xmin>
                 <gpu:xmax>1.0</gpu:xmax>
-                <gpu:ymin>0.0</gpu:ymin>
+                <gpu:ymin>-1.0</gpu:ymin>
                 <gpu:ymax>1.0</gpu:ymax>
-                <gpu:zmin>0.0</gpu:zmin>
+                <gpu:zmin>-1.0</gpu:zmin>
                 <gpu:zmax>1.0</gpu:zmax>
             </gpu:partitioningSpatial>
             <gpu:bufferSize>4096</gpu:bufferSize>
@@ -534,12 +539,12 @@
                 </gpu:variable>
             </variables>
             <gpu:partitioningSpatial>
-                <gpu:radius>0.25</gpu:radius>
-                <gpu:xmin>0.0</gpu:xmin>
+                <gpu:radius>0.1</gpu:radius>
+                <gpu:xmin>-1.0</gpu:xmin>
                 <gpu:xmax>1.0</gpu:xmax>
-                <gpu:ymin>0.0</gpu:ymin>
+                <gpu:ymin>-1.0</gpu:ymin>
                 <gpu:ymax>1.0</gpu:ymax>
-                <gpu:zmin>0.0</gpu:zmin>
+                <gpu:zmin>-1.0</gpu:zmin>
                 <gpu:zmax>1.0</gpu:zmax>
             </gpu:partitioningSpatial>
             <gpu:bufferSize>4096</gpu:bufferSize>
