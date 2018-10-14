@@ -3229,95 +3229,17 @@ void Fibroblast_TransitionToRepair(cudaStream_t &stream){
 	
 
 	//******************************** AGENT FUNCTION CONDITION *********************
-	//CONTINUOUS AGENT FUNCTION AND THERE IS A FUNCTION CONDITION
-  	
-	//COPY CURRENT STATE COUNT TO WORKING COUNT (host and device)
+	//THERE IS NOT A FUNCTION CONDITION
+	//currentState maps to working list
+	xmachine_memory_Fibroblast_list* Fibroblasts_Quiescent_temp = d_Fibroblasts;
+	d_Fibroblasts = d_Fibroblasts_Quiescent;
+	d_Fibroblasts_Quiescent = Fibroblasts_Quiescent_temp;
+	//set working count to current state count
 	h_xmachine_memory_Fibroblast_count = h_xmachine_memory_Fibroblast_Quiescent_count;
 	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_count, &h_xmachine_memory_Fibroblast_count, sizeof(int)));	
-	
-	//RESET SCAN INPUTS
-	//reset scan input for currentState
-	cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, reset_Fibroblast_scan_input, no_sm, state_list_size); 
-	gridSize = (state_list_size + blockSize - 1) / blockSize;
-	reset_Fibroblast_scan_input<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts_Quiescent);
-	gpuErrchkLaunch();
-	//reset scan input for working lists
-	reset_Fibroblast_scan_input<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts);
-	gpuErrchkLaunch();
-
-	//APPLY FUNCTION FILTER
-	cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, TransitionToRepair_function_filter, no_sm, state_list_size); 
-	gridSize = (state_list_size + blockSize - 1) / blockSize;
-	TransitionToRepair_function_filter<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts_Quiescent, d_Fibroblasts);
-	gpuErrchkLaunch();
-
-	//GRID AND BLOCK SIZE FOR COMPACT
-	cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, scatter_Fibroblast_Agents, no_sm, state_list_size); 
-	gridSize = (state_list_size + blockSize - 1) / blockSize;
-	
-	//COMPACT CURRENT STATE LIST
-    cub::DeviceScan::ExclusiveSum(
-        d_temp_scan_storage_Fibroblast, 
-        temp_scan_storage_bytes_Fibroblast, 
-        d_Fibroblasts_Quiescent->_scan_input,
-        d_Fibroblasts_Quiescent->_position,
-        h_xmachine_memory_Fibroblast_count, 
-        stream
-    );
-
-	//reset agent count
-	gpuErrchk( cudaMemcpy( &scan_last_sum, &d_Fibroblasts_Quiescent->_position[h_xmachine_memory_Fibroblast_count-1], sizeof(int), cudaMemcpyDeviceToHost));
-	gpuErrchk( cudaMemcpy( &scan_last_included, &d_Fibroblasts_Quiescent->_scan_input[h_xmachine_memory_Fibroblast_count-1], sizeof(int), cudaMemcpyDeviceToHost));
-	if (scan_last_included == 1)
-		h_xmachine_memory_Fibroblast_Quiescent_count = scan_last_sum+1;
-	else		
-		h_xmachine_memory_Fibroblast_Quiescent_count = scan_last_sum;
-	//Scatter into swap
-	scatter_Fibroblast_Agents<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts_swap, d_Fibroblasts_Quiescent, 0, h_xmachine_memory_Fibroblast_count);
-	gpuErrchkLaunch();
-	//use a temp pointer change working swap list with current state list
-	xmachine_memory_Fibroblast_list* Fibroblasts_Quiescent_temp = d_Fibroblasts_Quiescent;
-	d_Fibroblasts_Quiescent = d_Fibroblasts_swap;
-	d_Fibroblasts_swap = Fibroblasts_Quiescent_temp;
-	//update the device count
+	//set current state count to 0
+	h_xmachine_memory_Fibroblast_Quiescent_count = 0;
 	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_Quiescent_count, &h_xmachine_memory_Fibroblast_Quiescent_count, sizeof(int)));	
-		
-	//COMPACT WORKING STATE LIST
-    cub::DeviceScan::ExclusiveSum(
-        d_temp_scan_storage_Fibroblast, 
-        temp_scan_storage_bytes_Fibroblast, 
-        d_Fibroblasts->_scan_input,
-        d_Fibroblasts->_position,
-        h_xmachine_memory_Fibroblast_count, 
-        stream
-    );
-
-	//reset agent count
-	gpuErrchk( cudaMemcpy( &scan_last_sum, &d_Fibroblasts->_position[h_xmachine_memory_Fibroblast_count-1], sizeof(int), cudaMemcpyDeviceToHost));
-	gpuErrchk( cudaMemcpy( &scan_last_included, &d_Fibroblasts->_scan_input[h_xmachine_memory_Fibroblast_count-1], sizeof(int), cudaMemcpyDeviceToHost));
-	//Scatter into swap
-	scatter_Fibroblast_Agents<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts_swap, d_Fibroblasts, 0, h_xmachine_memory_Fibroblast_count);
-	gpuErrchkLaunch();
-	//update working agent count after the scatter
-	if (scan_last_included == 1)
-		h_xmachine_memory_Fibroblast_count = scan_last_sum+1;
-	else		
-		h_xmachine_memory_Fibroblast_count = scan_last_sum;
-    //use a temp pointer change working swap list with current state list
-	xmachine_memory_Fibroblast_list* Fibroblasts_temp = d_Fibroblasts;
-	d_Fibroblasts = d_Fibroblasts_swap;
-	d_Fibroblasts_swap = Fibroblasts_temp;
-	//update the device count
-	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_count, &h_xmachine_memory_Fibroblast_count, sizeof(int)));	
-	
-	//CHECK WORKING LIST COUNT IS NOT EQUAL TO 0
-	if (h_xmachine_memory_Fibroblast_count == 0)
-	{
-		return;
-	}
-	
-	//Update the state list size for occupancy calculations
-	state_list_size = h_xmachine_memory_Fibroblast_count;
 	
  
 
@@ -3407,95 +3329,17 @@ void Fibroblast_TransitionToQuiescent(cudaStream_t &stream){
 	
 
 	//******************************** AGENT FUNCTION CONDITION *********************
-	//CONTINUOUS AGENT FUNCTION AND THERE IS A FUNCTION CONDITION
-  	
-	//COPY CURRENT STATE COUNT TO WORKING COUNT (host and device)
+	//THERE IS NOT A FUNCTION CONDITION
+	//currentState maps to working list
+	xmachine_memory_Fibroblast_list* Fibroblasts_Repair_temp = d_Fibroblasts;
+	d_Fibroblasts = d_Fibroblasts_Repair;
+	d_Fibroblasts_Repair = Fibroblasts_Repair_temp;
+	//set working count to current state count
 	h_xmachine_memory_Fibroblast_count = h_xmachine_memory_Fibroblast_Repair_count;
 	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_count, &h_xmachine_memory_Fibroblast_count, sizeof(int)));	
-	
-	//RESET SCAN INPUTS
-	//reset scan input for currentState
-	cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, reset_Fibroblast_scan_input, no_sm, state_list_size); 
-	gridSize = (state_list_size + blockSize - 1) / blockSize;
-	reset_Fibroblast_scan_input<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts_Repair);
-	gpuErrchkLaunch();
-	//reset scan input for working lists
-	reset_Fibroblast_scan_input<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts);
-	gpuErrchkLaunch();
-
-	//APPLY FUNCTION FILTER
-	cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, TransitionToQuiescent_function_filter, no_sm, state_list_size); 
-	gridSize = (state_list_size + blockSize - 1) / blockSize;
-	TransitionToQuiescent_function_filter<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts_Repair, d_Fibroblasts);
-	gpuErrchkLaunch();
-
-	//GRID AND BLOCK SIZE FOR COMPACT
-	cudaOccupancyMaxPotentialBlockSizeVariableSMem( &minGridSize, &blockSize, scatter_Fibroblast_Agents, no_sm, state_list_size); 
-	gridSize = (state_list_size + blockSize - 1) / blockSize;
-	
-	//COMPACT CURRENT STATE LIST
-    cub::DeviceScan::ExclusiveSum(
-        d_temp_scan_storage_Fibroblast, 
-        temp_scan_storage_bytes_Fibroblast, 
-        d_Fibroblasts_Repair->_scan_input,
-        d_Fibroblasts_Repair->_position,
-        h_xmachine_memory_Fibroblast_count, 
-        stream
-    );
-
-	//reset agent count
-	gpuErrchk( cudaMemcpy( &scan_last_sum, &d_Fibroblasts_Repair->_position[h_xmachine_memory_Fibroblast_count-1], sizeof(int), cudaMemcpyDeviceToHost));
-	gpuErrchk( cudaMemcpy( &scan_last_included, &d_Fibroblasts_Repair->_scan_input[h_xmachine_memory_Fibroblast_count-1], sizeof(int), cudaMemcpyDeviceToHost));
-	if (scan_last_included == 1)
-		h_xmachine_memory_Fibroblast_Repair_count = scan_last_sum+1;
-	else		
-		h_xmachine_memory_Fibroblast_Repair_count = scan_last_sum;
-	//Scatter into swap
-	scatter_Fibroblast_Agents<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts_swap, d_Fibroblasts_Repair, 0, h_xmachine_memory_Fibroblast_count);
-	gpuErrchkLaunch();
-	//use a temp pointer change working swap list with current state list
-	xmachine_memory_Fibroblast_list* Fibroblasts_Repair_temp = d_Fibroblasts_Repair;
-	d_Fibroblasts_Repair = d_Fibroblasts_swap;
-	d_Fibroblasts_swap = Fibroblasts_Repair_temp;
-	//update the device count
+	//set current state count to 0
+	h_xmachine_memory_Fibroblast_Repair_count = 0;
 	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_Repair_count, &h_xmachine_memory_Fibroblast_Repair_count, sizeof(int)));	
-		
-	//COMPACT WORKING STATE LIST
-    cub::DeviceScan::ExclusiveSum(
-        d_temp_scan_storage_Fibroblast, 
-        temp_scan_storage_bytes_Fibroblast, 
-        d_Fibroblasts->_scan_input,
-        d_Fibroblasts->_position,
-        h_xmachine_memory_Fibroblast_count, 
-        stream
-    );
-
-	//reset agent count
-	gpuErrchk( cudaMemcpy( &scan_last_sum, &d_Fibroblasts->_position[h_xmachine_memory_Fibroblast_count-1], sizeof(int), cudaMemcpyDeviceToHost));
-	gpuErrchk( cudaMemcpy( &scan_last_included, &d_Fibroblasts->_scan_input[h_xmachine_memory_Fibroblast_count-1], sizeof(int), cudaMemcpyDeviceToHost));
-	//Scatter into swap
-	scatter_Fibroblast_Agents<<<gridSize, blockSize, 0, stream>>>(d_Fibroblasts_swap, d_Fibroblasts, 0, h_xmachine_memory_Fibroblast_count);
-	gpuErrchkLaunch();
-	//update working agent count after the scatter
-	if (scan_last_included == 1)
-		h_xmachine_memory_Fibroblast_count = scan_last_sum+1;
-	else		
-		h_xmachine_memory_Fibroblast_count = scan_last_sum;
-    //use a temp pointer change working swap list with current state list
-	xmachine_memory_Fibroblast_list* Fibroblasts_temp = d_Fibroblasts;
-	d_Fibroblasts = d_Fibroblasts_swap;
-	d_Fibroblasts_swap = Fibroblasts_temp;
-	//update the device count
-	gpuErrchk( cudaMemcpyToSymbol( d_xmachine_memory_Fibroblast_count, &h_xmachine_memory_Fibroblast_count, sizeof(int)));	
-	
-	//CHECK WORKING LIST COUNT IS NOT EQUAL TO 0
-	if (h_xmachine_memory_Fibroblast_count == 0)
-	{
-		return;
-	}
-	
-	//Update the state list size for occupancy calculations
-	state_list_size = h_xmachine_memory_Fibroblast_count;
 	
  
 

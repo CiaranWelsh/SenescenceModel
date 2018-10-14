@@ -5,7 +5,7 @@ MODEL := senescence_model
 HAS_VISUALISATION := 1
 
 # Flag indicating if a custom visulisation is used. 0 = no, 1 = yes.
-CUSTOM_VISUALISATION := 1
+CUSTOM_VISUALISATION := 0
 
 # Relative path to the root FLAME GPU directory. Must end with a trainling slash.
 FLAMEGPU_ROOT := ../
@@ -217,6 +217,7 @@ ALL_LDFLAGS += $(addprefix -Xlinker ,$(LDFLAGS))
 # Build the actual include compiler arguments, for both console and visualisation targets
 CONSOLE_INCLUDES := $(addprefix -I ,$(INCLUDE_DIRS))
 VISUALISATION_INCLUDES := $(addprefix -I ,$(INCLUDE_DIRS_VISUALISATION))
+VISUALISATION_INCLUDES := $(addprefix -I ,D:\Documents\SenescenceModel\include)
 
 # Generate the full path to target executable files
 TARGET_VISUALISATION := $(BIN_DIR)/$(Mode_TYPE)_Visualisation/$(MODEL)$(BIN_EXT)

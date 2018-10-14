@@ -277,15 +277,15 @@
                     <description>Transition of quiescent fibroblast to repair mode</description>
                     <currentState>Quiescent</currentState>
                     <nextState>Repair</nextState>
-                    <condition>
-                        <lhs>
-                            <agentVariable>go_to_state</agentVariable>
-                        </lhs>
-                        <operator>==</operator>
-                        <rhs>
-                            <value>2</value>
-                        </rhs>
-                    </condition>
+                    <!--<condition>-->
+                        <!--<lhs>-->
+                            <!--<agentVariable>go_to_state</agentVariable>-->
+                        <!--</lhs>-->
+                        <!--<operator>==</operator>-->
+                        <!--<rhs>-->
+                            <!--<value>2</value>-->
+                        <!--</rhs>-->
+                    <!--</condition>-->
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
                     <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
                 </gpu:function>
@@ -294,15 +294,15 @@
                     <description>Transition of repair fibroblast to quiescent</description>
                     <currentState>Repair</currentState>
                     <nextState>Quiescent</nextState>
-                    <condition>
-                        <lhs>
-                            <agentVariable>go_to_state</agentVariable>
-                        </lhs>
-                        <operator>==</operator>
-                        <rhs>
-                            <value>1</value>
-                        </rhs>
-                    </condition>
+                    <!--<condition>-->
+                        <!--<lhs>-->
+                            <!--<agentVariable>go_to_state</agentVariable>-->
+                        <!--</lhs>-->
+                        <!--<operator>==</operator>-->
+                        <!--<rhs>-->
+                            <!--<value>1</value>-->
+                        <!--</rhs>-->
+                    <!--</condition>-->
                     <gpu:reallocate>false</gpu:reallocate>          <!-- optional -->
                     <gpu:RNG>false</gpu:RNG>                        <!-- optional -->
                 </gpu:function>

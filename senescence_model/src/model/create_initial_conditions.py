@@ -151,7 +151,7 @@ if __name__ == '__main__':
 
 
     root = create_root(parameters)
-    root = add_fibroblast_agents(100, root, lower_bound=0.5, upper_bound=1.5)
+    root = add_fibroblast_agents(1, root, lower_bound=0.5, upper_bound=1.5)
     root = add_tissue_agents(scale=1, grid_size=10)
 
     fname = os.path.join(os.path.dirname(__file__), 'init10.xml')
