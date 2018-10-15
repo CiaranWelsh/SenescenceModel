@@ -1,4 +1,4 @@
-//new asdaosdfh;awiudlhfa
+
 /*
  * FLAME GPU v 1.5.X for CUDA 9
  * Copyright University of Sheffield.

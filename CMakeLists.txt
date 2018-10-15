@@ -333,4 +333,4 @@ add_executable(FirstFlameProject
         include/rapidjson/schema.h
         include/rapidjson/stream.h
         include/rapidjson/stringbuffer.h
-        include/rapidjson/writer.h flaming_project/src/visualisation/custom_visualisation.cpp senescence_model/src/visualisation/custom_visualisation.cpp senescence_model/src/visualisation/BufferObjects.cpp senescence_model/src/visualisation/flame_globals.cpp senescence_model/src/visualisation/flame_globals.h senescence_model/src/visualisation/cube.cpp)
+        include/rapidjson/writer.h flaming_project/src/visualisation/custom_visualisation.cpp senescence_model/src/visualisation/custom_visualisation.cpp senescence_model/src/visualisation/BufferObjects.cpp senescence_model/src/visualisation/flame_globals.cpp senescence_model/src/visualisation/flame_globals.h senescence_model/src/visualisation/cube.cpp senescence_model/src/visualisation/cube.h)
